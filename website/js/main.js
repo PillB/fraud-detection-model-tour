@@ -51,7 +51,7 @@
                 wrapper.className = 'mt-1.5';
                 wrapper.innerHTML = `
                     <div class="flex items-center gap-2">
-                        <div class="metric-bar-container flex-1" title="PR-AUC ${value.toFixed(3)} (synthetic toy)">
+                        <div class="metric-bar-container flex-1" title="PR-AUC ${value.toFixed(3)} (synthetic benchmark)">
                             <div class="metric-bar" style="width: ${pct}%"></div>
                         </div>
                         <span class="font-mono text-[10px] text-slate-500 w-9 text-right">${value.toFixed(3)}</span>
@@ -108,9 +108,9 @@
         });
     }
 
-    // Add "Copy command" buttons next to toy links for live feel
+    // Add "Copy command" buttons next to script links for live feel
     function initCopyButtons() {
-        document.querySelectorAll('a[href*="/experiments/"]').forEach(link => {
+        document.querySelectorAll('a[href*="experiments/"]').forEach(link => {
             const container = link.parentElement;
             if (!container || container.querySelector('.copy-btn')) return;
             

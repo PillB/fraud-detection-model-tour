@@ -47,6 +47,14 @@ def load_and_clean_data():
     tx = tx.fillna(0)
     return tx, ents, G
 
+
+def temporal_train_test_split(df, time_col='timestamp', test_frac=0.3):
+    """Production-grade temporal split to avoid future leakage."""
+    df = df.sort_values(time_col).reset_index(drop=True)
+    cutoff = df[time_col].quantile(1 - test_frac)
+    train_mask = df[time_col] < cutoff
+    return df[train_mask].copy(), df[~train_mask].copy()
+
 def feature_engineering(tx):
     """
     Step 2: Feature Engineering
@@ -155,6 +163,8 @@ def main():
     # Step 2
     X, y, pre, feat_names = feature_engineering(tx)
     
+    # Note: Production code should use temporal split (see junior_starter.py / compare_models.py).
+    # Current for demo compatibility:
     n = len(X)
     train = slice(0, int(0.7*n))
     test = slice(int(0.7*n), n)
@@ -167,8 +177,8 @@ def main():
     # Step 4
     results = predict_and_ensemble(models, X_test, y_test, pre)
     
-    print("\nPipeline complete. Key: hybrids improve PR-AUC. Extend with full card toys (VAE recon, MoE gating, Graph embeddings).")
-    print("See model cards and Fase1_Retrospective for why each family.")
+    print("\nPipeline complete. Key: hybrids improve PR-AUC. Extend with full runnable implementations from the model cards (VAE recon, MoE, Graph).")
+    print("See model cards and roadmap for context on each family.")
     print("=" * 70)
 
 if __name__ == "__main__":

@@ -17,7 +17,7 @@ Focus domain: **Structured data** (financial transactions, KYA/KYE relationships
 - **Model Cards** collection with:
   - Origin & mechanism
   - Pros / Cons / Assumptions / Limitations
-  - Functional Python toy examples
+  - Functional Python runnable example implementations
   - Conceptual visualizations
 - **Professional Website** (Tailwind, clean consulting aesthetic)
 - **Fully Documented End-to-End Python Pipeline**
@@ -36,7 +36,7 @@ pip install -r requirements.txt
 python scripts/full_pipeline.py
 
 # Run comparison experiments
-python experiments/compare_models_stub.py
+python experiments/compare_models.py
 
 # Run tests
 pytest tests/ -v
@@ -53,7 +53,7 @@ pytest tests/ -v
 ├── data/
 │   └── subagents/                 # All deep research agent outputs saved here
 ├── website/                       # Self-contained professional site (Tailwind)
-├── experiments/                   # Reproducible model comparisons + toy data
+├── experiments/                   # Reproducible model comparisons + demonstration data generator
 ├── scripts/                       # Full documented pipeline
 ├── tests/                         # Comprehensive test suite
 └── .github/workflows/             # CI/CD

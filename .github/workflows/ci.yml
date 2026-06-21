@@ -28,7 +28,7 @@ jobs:
         python experiments/toy_isolation_forest.py
         python experiments/toy_xgboost.py
         python scripts/full_pipeline.py
-    - name: Test compare stub
-      run: python experiments/compare_models_stub.py
+    - name: Test compare
+      run: python experiments/compare_models.py
     - name: Note for deploy (Fase 5)
       run: echo "Website fully polished and ready for GitHub Pages deploy."

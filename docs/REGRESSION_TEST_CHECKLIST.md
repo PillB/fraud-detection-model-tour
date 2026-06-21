@@ -30,6 +30,7 @@ This document + `scripts/validate_regression_checklist.py` enforce that rule.
 |----------------------------------|----------------------------------------------|----------------|
 | `tests/test_synthetic_data.py`   | Data generator quality + reproducibility     | Seed equality, fraud rate bounds, graph structure, columns, temporal order |
 | `tests/test_isolation_forest_toy.py` | IForest toy functional + metric floor     | Runs end-to-end, PR-AUC > 0.15 floor, scores ranked |
+| (Future) Pipeline regression | Temporal split, multi-seed, Recall@K, cost | Full pipeline produces consistent metrics with temporal awareness |
 
 ## Adding New Regression Tests
 
