@@ -5,3 +5,19 @@ node_modules/
 .DS_Store
 *.log
 
+
+# Test and temp
+test-results/
+playwright.config.js
+package*.json
+tests/website-flow.spec.js
+data/subagents/editor-review/
+data/subagents/quality-review/
+
+# Keep core
+!AGENT_STATE.md
+!docs/
+!experiments/
+!scripts/
+!website/
+! .github/
