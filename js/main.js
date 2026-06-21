@@ -51,7 +51,7 @@
                 wrapper.className = 'mt-1.5';
                 wrapper.innerHTML = `
                     <div class="flex items-center gap-2">
-                        <div class="metric-bar-container flex-1" title="PR-AUC ${value.toFixed(3)} (synthetic toy)">
+                        <div class="metric-bar-container flex-1" title="PR-AUC ${value.toFixed(3)} (synthetic benchmark)">
                             <div class="metric-bar" style="width: ${pct}%"></div>
                         </div>
                         <span class="font-mono text-[10px] text-slate-500 w-9 text-right">${value.toFixed(3)}</span>
@@ -73,7 +73,6 @@
         filterBar.innerHTML = `
             <span class="text-slate-500 self-center mr-1 font-medium">Filter:</span>
             <span class="filter-chip active px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50" data-filter="all">All</span>
-            <span class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50" data-filter="classical">Classical / AD</span>
             <span class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50" data-filter="generative">Generative / AD</span>
             <span class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50" data-filter="hybrid">Hybrid / MoE</span>
             <span class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50" data-filter="sequence">Sequence / Behavioral</span>
@@ -97,11 +96,10 @@
                     const label = (card.textContent + ' ' + (card.dataset.category || '')).toLowerCase();
                     let show = (filter === 'all');
                     
-                    if (filter === 'classical') show = /xgboost|isolation|iforest|classical|supervised/.test(label);
-                    if (filter === 'generative') show = /vae|generative|anomaly|recon|if/.test(label);
+                    if (filter === 'generative') show = /vae|generative|anomaly|recon/.test(label);
                     if (filter === 'hybrid') show = /moe|hybrid|mixture|ensemble/.test(label);
                     if (filter === 'sequence') show = /lstm|seq|behavior|velocity/.test(label);
-                    if (filter === 'tabular') show = /tab|graph|transformer|tabular|relational|graphsage/.test(label);
+                    if (filter === 'tabular') show = /xgboost|tab|graph|transformer|tabular|relational/.test(label);
                     
                     card.style.display = show ? '' : 'none';
                     if (show) card.classList.add('animate-in');
@@ -110,9 +108,9 @@
         });
     }
 
-    // Add "Copy command" buttons next to toy links for live feel
+    // Add "Copy command" buttons next to script links for live feel
     function initCopyButtons() {
-        document.querySelectorAll('a[href*="/experiments/"]').forEach(link => {
+        document.querySelectorAll('a[href*="experiments/"]').forEach(link => {
             const container = link.parentElement;
             if (!container || container.querySelector('.copy-btn')) return;
             

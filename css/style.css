@@ -158,24 +158,3 @@ a[href^="#"] {
     color: white;
     border-color: #1e3a8a;
 }
-
-/* Additional production polish */
-.model-card, .consulting-card {
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
-}
-
-.comparison-table tr:nth-child(even) {
-    background: #fafbfc;
-}
-
-#pipeline .border-l-4 {
-    transition: border-color 0.2s ease;
-}
-
-#pipeline .border-l-4:hover {
-    border-color: #166534;
-}
-
-footer {
-    font-feature-settings: "tnum" 1;
-}
