@@ -57,6 +57,7 @@ def test_primary_website_flows_with_playwright():
 
         page.locator('a[href="#cards"]').first.click()
         page.wait_for_function("location.hash === '#cards'")
+        assert page.locator("#cards [data-card-model-visible]").count() == 73
         page.get_by_role("button", name="Graph / Network").click()
         graph_card = page.locator("#cards .model-card").filter(has_text="GraphSAGE")
         xgb_card = page.locator("#cards .model-card").filter(has_text="XGBoost")
@@ -82,6 +83,7 @@ def test_primary_website_flows_with_playwright():
         page.wait_for_function("document.documentElement.lang === 'es-419'")
         assert "es" in page.url
         assert page.get_by_role("button", name="Ejecutar inferencia").is_visible()
+        assert page.locator("#cards [data-card-model-visible]").count() == 73
 
         mobile = browser.new_page(viewport={"width": 390, "height": 900}, is_mobile=True)
         mobile.goto(url, wait_until="networkidle")

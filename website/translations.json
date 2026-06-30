@@ -491,6 +491,18 @@
     "en": "The six flagship cards teach the main path. The expanded catalog above covers every additional family used in experiments and production cascades, including Isolation Forest, LOF, OCSVM, density outlier models, R-GCN, GAT, link prediction, and entity resolution.",
     "es": "Las seis tarjetas principales enseñan la ruta central. El catálogo ampliado de arriba cubre cada familia adicional usada en experimentos y cascadas de producción, incluyendo Isolation Forest, LOF, OCSVM, modelos de densidad para outliers, R-GCN, GAT, predicción de enlaces y resolución de entidades."
   },
+  "cards.coverage.title": {
+    "en": "All Models Visible in This Section",
+    "es": "Todos los modelos visibles en esta sección"
+  },
+  "cards.coverage.desc": {
+    "en": "The flagship cards are the guided path; the complete visible inventory below keeps the Model Cards section aligned with the 73 required model and technique entries.",
+    "es": "Las tarjetas principales son la ruta guiada; el inventario completo visible de abajo mantiene la sección de tarjetas alineada con las 73 entradas requeridas de modelos y técnicas."
+  },
+  "cards.coverage.count": {
+    "en": "73 visible here",
+    "es": "73 visibles aquí"
+  },
   "exp.badge": {
     "en": "Comparative Experiments • Reproducible",
     "es": "Experimentos Comparativos • Reproducibles"
