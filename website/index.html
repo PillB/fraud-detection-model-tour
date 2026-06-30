@@ -247,19 +247,19 @@
                 <p class="text-sm text-slate-500 mt-1 max-w-3xl" data-i18n="paths.desc">The site is structured as a professional workflow, not a glossary: understand the fraud problem, choose the right model family, inspect runnable evidence, then map it to an analyst or production pipeline.</p>
             </div>
             <div class="grid md:grid-cols-3 gap-4">
-                <a href="#tour" class="consulting-card bg-white rounded-3xl p-6 block">
+                <a href="#tour" class="bg-white border rounded-3xl p-6 block transition hover:-translate-y-0.5 hover:shadow-lg">
                     <div class="text-xs font-semibold text-emerald-700 tracking-wider" data-i18n="paths.beginner.badge">BEGINNER</div>
                     <div class="font-semibold text-lg mt-1" data-i18n="paths.beginner.title">Learn the concepts</div>
                     <p class="text-sm text-slate-600 mt-2" data-i18n="paths.beginner.desc">Start with the plain-English scenario, glossary, guided tour, and first runnable scripts.</p>
                     <div class="mt-4 text-xs font-semibold text-blue-700" data-i18n="paths.beginner.cta">Go to guided tour -></div>
                 </a>
-                <a href="#experiments" class="consulting-card bg-white rounded-3xl p-6 block">
+                <a href="#experiments" class="bg-white border rounded-3xl p-6 block transition hover:-translate-y-0.5 hover:shadow-lg">
                     <div class="text-xs font-semibold text-blue-700 tracking-wider" data-i18n="paths.practitioner.badge">PRACTITIONER</div>
                     <div class="font-semibold text-lg mt-1" data-i18n="paths.practitioner.title">Compare working models</div>
                     <p class="text-sm text-slate-600 mt-2" data-i18n="paths.practitioner.desc">Jump to PR-AUC, Recall@K, scripts, trade-offs, and production cascade guidance.</p>
                     <div class="mt-4 text-xs font-semibold text-blue-700" data-i18n="paths.practitioner.cta">Review experiments -></div>
                 </a>
-                <a href="#workbench" class="consulting-card bg-white rounded-3xl p-6 block">
+                <a href="#workbench" class="bg-white border rounded-3xl p-6 block transition hover:-translate-y-0.5 hover:shadow-lg">
                     <div class="text-xs font-semibold text-violet-700 tracking-wider" data-i18n="paths.analyst.badge">RESEARCHER / ANALYST</div>
                     <div class="font-semibold text-lg mt-1" data-i18n="paths.analyst.title">Trace evidence and networks</div>
                     <p class="text-sm text-slate-600 mt-2" data-i18n="paths.analyst.desc">Use the catalog, temporal graph view, and GraphRAG-style case workflow to reason about criminal networks.</p>
@@ -453,7 +453,7 @@
                             <div class="font-semibold text-sm" data-i18n="catalog.coverage.title">Required Model Coverage Matrix</div>
                             <div class="text-xs text-slate-500 mt-1" data-i18n="catalog.coverage.desc">Discrete model and technique entries counted from the requested fraud, anomaly, graph, temporal, and criminal-network inventory.</div>
                         </div>
-                        <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full" data-i18n="catalog.coverage.count">73 required • 73 visible</div>
+                        <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full" data-i18n="catalog.coverage.count">74 required • 74 visible</div>
                     </div>
                     <div class="mt-3 flex flex-wrap gap-1.5 text-[10px] leading-none" aria-label="Required model coverage matrix">
                         <span class="px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-700" data-model-covered="Z-Score">Z-Score</span>
@@ -481,6 +481,7 @@
                         <span class="px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-700" data-model-covered="Transformer Sequences">Transformer Sequences</span>
                         <span class="px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-700" data-model-covered="Centrality">Centrality</span>
                         <span class="px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-700" data-model-covered="Community Detection">Community Detection</span>
+                        <span class="px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-700" data-model-covered="Collusion Detection">Collusion Detection</span>
                         <span class="px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-700" data-model-covered="Louvain">Louvain</span>
                         <span class="px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-700" data-model-covered="Leiden">Leiden</span>
                         <span class="px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-700" data-model-covered="k-core">k-core</span>
@@ -705,7 +706,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list">
                 
                 <!-- XGBoost -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card" role="listitem" data-category="supervised">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" role="listitem" data-category="supervised" data-model-name="XGBoost">
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.xgboost.title">XGBoost</div>
@@ -727,7 +728,7 @@
                 </div>
 
                 <!-- VAE -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="generative">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="generative" data-model-name="VAE">
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.vae.title">VAE</div>
@@ -749,7 +750,7 @@
                 </div>
 
                 <!-- MoE Hybrid -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="hybrid">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="hybrid" data-model-name="MoE">
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.moe.title">MoE Hybrid</div>
@@ -771,7 +772,7 @@
                 </div>
 
                 <!-- LSTM Sequence -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="sequence">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="sequence" data-model-name="LSTM">
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.lstm.title">LSTM Sequence</div>
@@ -793,7 +794,7 @@
                 </div>
 
                 <!-- TabTransformer -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="tabular">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="tabular" data-model-name="TabTransformer">
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.tab.title">TabTransformer</div>
@@ -815,7 +816,7 @@
                 </div>
 
                 <!-- GraphSAGE -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="graph">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="graph" data-model-name="GraphSAGE">
                     <div class="flex justify-between items-start">
                         <div>
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.graph.title">GraphSAGE</div>
@@ -841,9 +842,9 @@
                 <div class="flex flex-wrap items-baseline justify-between gap-2">
                     <div>
                         <div class="font-semibold text-sm" data-i18n="cards.coverage.title">All Models Visible in This Section</div>
-                        <div class="text-xs text-slate-500 mt-1" data-i18n="cards.coverage.desc">The flagship cards are the guided path; the complete visible inventory below keeps the Model Cards section aligned with the 73 required model and technique entries.</div>
+                        <div class="text-xs text-slate-500 mt-1" data-i18n="cards.coverage.desc">The flagship cards are the guided path; the complete visible inventory below keeps the Model Cards section aligned with the 74 required model and technique entries.</div>
                     </div>
-                    <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full" data-i18n="cards.coverage.count">73 visible here</div>
+                    <div class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full" data-i18n="cards.coverage.count">74 visible here</div>
                 </div>
                 <div id="cards-coverage-matrix" class="mt-3 flex flex-wrap gap-1.5 text-[10px] leading-none" aria-label="All model cards coverage matrix"></div>
             </div>

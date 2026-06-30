@@ -57,7 +57,8 @@ def test_primary_website_flows_with_playwright():
 
         page.locator('a[href="#cards"]').first.click()
         page.wait_for_function("location.hash === '#cards'")
-        assert page.locator("#cards [data-card-model-visible]").count() == 73
+        assert page.locator(".consulting-card").count() == 74
+        assert page.locator("#cards [data-card-model-visible]").count() == 74
         page.get_by_role("button", name="Graph / Network").click()
         graph_card = page.locator("#cards .model-card").filter(has_text="GraphSAGE")
         xgb_card = page.locator("#cards .model-card").filter(has_text="XGBoost")
@@ -66,6 +67,7 @@ def test_primary_website_flows_with_playwright():
 
         page.locator('a[href="#experiments"]').first.click()
         page.wait_for_function("location.hash === '#experiments'")
+        assert page.locator(".comparison-table tbody tr").count() == 74
         pr_header = page.locator(".comparison-table th").nth(2)
         pr_header.focus()
         page.keyboard.press("Enter")
@@ -83,7 +85,9 @@ def test_primary_website_flows_with_playwright():
         page.wait_for_function("document.documentElement.lang === 'es-419'")
         assert "es" in page.url
         assert page.get_by_role("button", name="Ejecutar inferencia").is_visible()
-        assert page.locator("#cards [data-card-model-visible]").count() == 73
+        assert page.locator(".consulting-card").count() == 74
+        assert page.locator("#cards [data-card-model-visible]").count() == 74
+        assert page.locator(".comparison-table tbody tr").count() == 74
 
         mobile = browser.new_page(viewport={"width": 390, "height": 900}, is_mobile=True)
         mobile.goto(url, wait_until="networkidle")

@@ -496,12 +496,12 @@
     "es": "Todos los modelos visibles en esta sección"
   },
   "cards.coverage.desc": {
-    "en": "The flagship cards are the guided path; the complete visible inventory below keeps the Model Cards section aligned with the 73 required model and technique entries.",
-    "es": "Las tarjetas principales son la ruta guiada; el inventario completo visible de abajo mantiene la sección de tarjetas alineada con las 73 entradas requeridas de modelos y técnicas."
+    "en": "The flagship cards are the guided path; the complete visible inventory below keeps the Model Cards section aligned with the 74 required model and technique entries.",
+    "es": "Las tarjetas principales son la ruta guiada; el inventario completo visible de abajo mantiene la sección de tarjetas alineada con las 74 entradas requeridas de modelos y técnicas."
   },
   "cards.coverage.count": {
-    "en": "73 visible here",
-    "es": "73 visibles aquí"
+    "en": "74 visible here",
+    "es": "74 visibles aquí"
   },
   "exp.badge": {
     "en": "Comparative Experiments • Reproducible",
@@ -1540,8 +1540,8 @@
     "es": "Entradas discretas de modelos y técnicas contadas desde el inventario solicitado de fraude, anomalías, grafos, temporalidad y redes criminales."
   },
   "catalog.coverage.count": {
-    "en": "73 required • 73 visible",
-    "es": "73 requeridos • 73 visibles"
+    "en": "74 required • 74 visible",
+    "es": "74 requeridos • 74 visibles"
   },
   "workbench.badge": {
     "en": "CASE INVESTIGATION FLOW",

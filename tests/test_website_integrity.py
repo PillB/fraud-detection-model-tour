@@ -139,6 +139,7 @@ def test_required_user_model_inventory_is_visible_on_website():
         "Transformer Sequences",
         "Centrality",
         "Community Detection",
+        "Collusion Detection",
         "Louvain",
         "Leiden",
         "k-core",
@@ -191,6 +192,6 @@ def test_required_user_model_inventory_is_visible_on_website():
     html = (WEBSITE / "index.html").read_text(encoding="utf-8")
     covered = set(re.findall(r'data-model-covered="([^"]+)"', html))
 
-    assert len(required_models) == 73
+    assert len(required_models) == 74
     assert len(covered) >= len(required_models)
     assert sorted(required_models - covered) == []
