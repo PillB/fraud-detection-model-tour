@@ -749,7 +749,7 @@
 
     async function loadTranslations() {
         try {
-            const res = await fetch('translations.json');
+            const res = await fetch('translations.json?v=20260630-bilingual', { cache: 'no-store' });
             translations = await res.json();
         } catch (e) {
             console.warn('Could not load translations.json, using fallback English');
