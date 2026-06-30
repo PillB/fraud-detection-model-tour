@@ -304,7 +304,7 @@
                         <span data-i18n="synthetic.title">Synthetic Data Generator</span>
                     </div>
                     <div class="text-sm text-slate-600 space-y-2.5">
-                        <p data-i18n="synthetic.desc">Realistic transactional + relational benchmark data (engineered to mirror production fraud signals) that includes:</p>
+                        <p data-i18n="synthetic.desc">Realistic transactional and relational benchmark data, engineered to mirror the signals a fraud team would expect in production:</p>
                         <ul class="text-xs grid grid-cols-1 gap-y-[3px] pl-1 text-slate-500">
                             <li data-i18n="synthetic.li1">• 200 users + 80 merchants + 30 workers (KYE)</li>
                             <li data-i18n="synthetic.li2">• Timestamped txns with amount, category, hour</li>
@@ -343,7 +343,7 @@
                 <p class="mt-2" data-i18n="newto.p2">Most transactions are normal. Fraud is rare (often &lt;1-2%). A model that always says “legit” would be 98-99% accurate yet useless. The goal is to rank the truly suspicious cases high enough that investigators can review the top 50–200 alerts and catch the real fraud without drowning in false alarms.</p>
                 <p class="mt-2" data-i18n="newto.p3">This site walks through the main techniques banks and fintechs actually use — from simple velocity rules and trees to representation learning, graphs for collusion rings, and hybrids — with real runnable code and the metrics that matter on imbalanced data (PR-AUC first).</p>
             </div>
-            <div class="mt-3 text-xs text-slate-500" data-i18n="newto.terms">Key terms you will see: <strong>PR-AUC</strong> (how well the model ranks the rare bad cases — random guessing scores roughly the fraud rate), <strong>velocity</strong> (how fast activity is happening), <strong>KYA/KYE</strong> (know-your-account / know-your-entity signals about the people and businesses involved).</div>
+            <div class="mt-3 text-xs text-slate-500" data-i18n="newto.terms">Key terms: <strong>PR-AUC</strong> measures how well the model ranks rare bad cases; random guessing scores roughly the fraud rate. <strong>Velocity</strong> means how quickly activity is happening. <strong>KYA/KYE</strong> captures know-your-account and know-your-entity signals about the people, businesses, devices, and workers involved.</div>
         </div>
 
         <!-- Roadmap Summary -->
@@ -827,8 +827,8 @@
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.graph.desc">Inductive graph neural network that learns node embeddings via neighbor sampling and aggregation. Critical for detecting collusion rings, mule networks, and shared-device or KYA-linked fraud that is invisible to purely tabular models. Naturally handles new entities at inference time.</p>
                     
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700" data-i18n="cards.graph.pr">Representative PR-AUC: 0.319 (networkx-based educational proxy)</div>
-                        <div class="text-[10px] text-slate-500" data-i18n="cards.graph.note">Uses networkx + mean aggregation on synthetic transaction + KYA graph (educational proxy). Production: use PyG / DGL with proper sampling.</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.graph.pr">Representative PR-AUC: 0.319 (NetworkX-based educational proxy)</div>
+                        <div class="text-[10px] text-slate-500" data-i18n="cards.graph.note">Uses NetworkX plus mean aggregation over the synthetic transaction/KYA graph. Production systems use PyG or DGL with sampling, temporal splits, and graph explainability.</div>
                     </div>
                     
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
@@ -1002,7 +1002,7 @@
             </div>
 
             <div class="mt-4 text-xs bg-white border rounded-2xl p-4 text-slate-600">
-                <strong data-i18n="exp.key">Key takeaway from experiments:</strong> <span data-i18n="exp.key.text">Hybrids (VAE+IF, ensemble+AD) consistently deliver the highest PR-AUC on this data. Graph features add lift for relational patterns. Simple supervised baselines remain competitive once velocity and KYA features are engineered. All models pass the regression gate (PR-AUC &gt; 0.15).</span>
+                <strong data-i18n="exp.key">Key takeaway from experiments:</strong> <span data-i18n="exp.key.text">On this synthetic benchmark, VAE+IF and ensemble+AD hybrids rank rare fraud cases highest. Graph features add lift for relational patterns. Supervised baselines remain competitive once velocity and KYA features are engineered. Treat these values as reproducible learning signals, not production guarantees.</span>
             </div>
         </div>
 
