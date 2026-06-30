@@ -32,9 +32,10 @@ ROOT = Path(__file__).parent.parent
 REGRESSION_TEST_FILES = [
     "tests/test_synthetic_data.py",
     "tests/test_isolation_forest_toy.py",
-    # Add more regression files here as they are created:
-    # "tests/test_full_pipeline.py",
-    # "tests/regression/test_model_comparison.py",
+    "tests/test_expansion_examples.py",
+    "tests/test_website_integrity.py",
+    # Playwright flow tests require a local HTTP server and may need elevated
+    # sandbox permissions in managed environments; run them in the full suite.
 ]
 
 def run_regression_tests() -> bool:

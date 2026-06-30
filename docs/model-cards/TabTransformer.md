@@ -37,10 +37,8 @@ TabTransformer uses self-attention on categorical features for contextual embedd
 
 **Fraud-Specific Fit**: Excellent for structured tx data with KYA categoricals. Captures "unusual combination" fraud patterns. Use in production tabular pipelines alongside velocity FE.
 
-## Toy Example (Functional Python)
-See companion script: experiments/toy_tabtransformer.py (sklearn-based simulation of TabTransformer using embeddings + attention proxy for educational runnability without heavy DL deps; in full would use PyTorch TabTransformer).
-
-The script demonstrates contextual feature processing on synthetic data and reports metrics.
+## Runnable Example (Production Note)
+See companion script: experiments/toy_tabtransformer.py. In production use the real TabTransformer (or TabNet/FT-Transformer variants) from PyTorch or HuggingFace for full attention on categoricals + numericals. The toy uses a proxy for runnability.
 
 ## Conceptual Visualization
 - Attention heatmap: Shows which features (e.g., amount + KYA link) the model focuses on for a fraud tx.
@@ -52,4 +50,4 @@ The script demonstrates contextual feature processing on synthetic data and repo
 - Fraud papers using TabTrans + cost-sensitive (2024-2025).
 - Full sources in data/subagents/sequence-hybrid-dl/papers_and_sources.md.
 
-**Status**: Educational card with runnable toy. Ready for experiments.
+**Production Note**: Educational card with runnable script. Ready for experiments.

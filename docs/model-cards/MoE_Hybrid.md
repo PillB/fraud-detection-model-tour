@@ -43,8 +43,8 @@ MoE uses a gating network to dynamically route inputs to specialized "expert" su
 
 **Fraud-Specific Fit**: Excellent for mixed fraud (collusion rings + velocity bursts + novel amounts). KYA as features or in interaction expert. Logs as additional seq input to RNN expert. Use in layered pipeline after classical gate.
 
-## Toy Example (Functional Python)
-See companion: experiments/toy_moe_hybrid.py (uses sklearn only for guaranteed run).
+## Runnable Example (Production Note)
+See companion: experiments/toy_moe_hybrid.py. For production, implement learned gating with load-balancing loss and monitor expert utilization.
 
 Simplified: 3 "experts" (RF, GBT, IF scores) with simple feature-based gate (e.g., if high velocity -> seq expert).
 
@@ -61,4 +61,4 @@ Full example reports metrics on synthetic data.
 - Chen 2025 survey (hybrids).
 - Full in data/subagents/ensembles-sota-llm/ and deep-generative-models/.
 
-**Status**: Core mixture example for roadmap. Tested runnable toy.
+**Production Note**: Core mixture example for roadmap. Tested runnable script.
