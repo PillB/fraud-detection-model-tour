@@ -18,6 +18,32 @@ body {
     overflow: hidden;
 }
 
+/* Mobile & touch improvements */
+@media (max-width: 640px) {
+    .model-card,
+    .consulting-card {
+        padding: 1rem;
+    }
+    
+    .filter-chip,
+    .copy-btn,
+    a[href*="experiments/"] {
+        min-height: 40px;
+        min-width: 44px; /* WCAG touch target */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .grid.md\\:grid-cols-2 {
+        gap: 0.75rem;
+    }
+}
+
 .model-card::after {
     content: '';
     position: absolute;
@@ -44,6 +70,20 @@ body {
 .comparison-table {
     border-collapse: separate;
     border-spacing: 0;
+}
+
+/* Trade-offs table responsiveness */
+table[aria-label="Model family production trade-offs"] {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+    table[aria-label="Model family production trade-offs"] {
+        display: table;
+        white-space: normal;
+    }
 }
 
 .comparison-table th {
@@ -93,6 +133,18 @@ body {
     font-size: 1.5rem;
     letter-spacing: -0.03em;
     color: #0f172a;
+}
+
+/* Better mobile SVG and bar scaling */
+svg {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 480px) {
+    .metric-bar-container {
+        height: 8px;
+    }
 }
 
 .insight-box {
@@ -147,14 +199,41 @@ a[href^="#"] {
     scroll-behavior: smooth;
 }
 
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
 /* Model filter chips */
 .filter-chip {
     cursor: pointer;
     transition: all 0.15s ease;
+    user-select: none;
+}
+
+.filter-chip:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 .filter-chip.active {
     background: #1e3a8a;
     color: white;
     border-color: #1e3a8a;
+}
+
+/* Language toggle styling */
+.lang-btn {
+    transition: all 0.1s ease;
+}
+
+.lang-btn.active {
+    background-color: #0f172a;
+    color: white;
+}
+
+.lang-btn:not(.active):hover {
+    background-color: #f1f5f9;
 }
