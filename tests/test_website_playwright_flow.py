@@ -88,6 +88,11 @@ def test_primary_website_flows_with_playwright():
         assert page.locator(".consulting-card").count() == 74
         assert page.locator("#cards [data-card-model-visible]").count() == 74
         assert page.locator(".comparison-table tbody tr").count() == 74
+        assert graph_card.is_visible()
+        assert xgb_card.is_hidden()
+        assert page.locator('#cards [data-generated-model-card="true"]').filter(has_text="Implementado").count() > 0
+        assert page.locator(".comparison-table tbody tr").filter(has_text="Anomalías nuevas").count() > 0
+        assert page.locator("#lab-status").get_by_text("Completadas").is_visible()
 
         mobile = browser.new_page(viewport={"width": 390, "height": 900}, is_mobile=True)
         mobile.goto(url, wait_until="networkidle")

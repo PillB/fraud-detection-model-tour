@@ -34,6 +34,14 @@
             .filter(Boolean);
     }
 
+    function activeLang() {
+        return document.documentElement.lang === 'es-419' || currentLang === 'es' ? 'es' : 'en';
+    }
+
+    function localizedText(value) {
+        return typeof value === 'object' ? value[activeLang()] : value;
+    }
+
     function modelMeta(name) {
         const graph = ['Centrality', 'Community Detection', 'Collusion Detection', 'Louvain', 'Leiden', 'k-core', 'Motif Counting', 'Link Prediction', 'GraphSAGE', 'GAT', 'R-GCN', 'HGT', 'GCN', 'Heterogeneous GNN', 'Graph Attention Evidence', 'Entity Resolution', 'Knowledge Graph', 'CrimeGNN', 'BRIGHT'];
         const sequence = ['LSTM', 'GRU', 'Transformer Sequences', 'Interleaved RNN', 'BERT4ETH', 'TGN', 'TGAT', 'JODIE', 'DyRep', 'EvolveGCN', 'Temporal Graph Validation'];
@@ -52,20 +60,38 @@
         if (supervised.includes(name)) category = 'supervised';
 
         const bestByCategory = {
-            supervised: 'Known labeled fraud patterns, calibrated risk scoring, and engineered tabular features.',
-            generative: 'Novel anomalies, weak labels, rare attack surfacing, and fast triage gates.',
-            hybrid: 'Layered production decisioning, score fusion, adaptive routing, and analyst handoff.',
-            sequence: 'Behavioral histories, burst patterns, account takeover, and temporal drift.',
-            tabular: 'High-cardinality categorical KYA/KYE features and nonlinear feature interactions.',
-            graph: 'Collusion rings, mule networks, shared-entity exposure, and criminal-network structure.'
+            supervised: {
+                en: 'Known labeled fraud patterns, calibrated risk scoring, and engineered tabular features.',
+                es: 'Patrones de fraude etiquetados, puntaje de riesgo calibrado y variables tabulares construidas.'
+            },
+            generative: {
+                en: 'Novel anomalies, weak labels, rare attack surfacing, and fast triage gates.',
+                es: 'Anomalías nuevas, etiquetas escasas, ataques raros y filtros rápidos de priorización.'
+            },
+            hybrid: {
+                en: 'Layered production decisioning, score fusion, adaptive routing, and analyst handoff.',
+                es: 'Decisiones por capas, fusión de puntajes, enrutamiento adaptativo y derivación a analistas.'
+            },
+            sequence: {
+                en: 'Behavioral histories, burst patterns, account takeover, and temporal drift.',
+                es: 'Historiales de comportamiento, ráfagas de actividad, toma de cuentas y deriva temporal.'
+            },
+            tabular: {
+                en: 'High-cardinality categorical KYA/KYE features and nonlinear feature interactions.',
+                es: 'Variables categóricas KYA/KYE de alta cardinalidad e interacciones no lineales.'
+            },
+            graph: {
+                en: 'Collusion rings, mule networks, shared-entity exposure, and criminal-network structure.',
+                es: 'Anillos de colusión, redes de cuentas mula, entidades compartidas y estructura criminal.'
+            }
         };
         const complexityByCategory = {
-            supervised: 'Low-Medium',
-            generative: 'Low-Medium',
-            hybrid: 'High',
-            sequence: 'Medium-High',
-            tabular: 'Medium',
-            graph: 'Medium-High'
+            supervised: { en: 'Low-Medium', es: 'Baja-media' },
+            generative: { en: 'Low-Medium', es: 'Baja-media' },
+            hybrid: { en: 'High', es: 'Alta' },
+            sequence: { en: 'Medium-High', es: 'Media-alta' },
+            tabular: { en: 'Medium', es: 'Media' },
+            graph: { en: 'Medium-High', es: 'Media-alta' }
         };
         const scoreByCategory = {
             supervised: '0.24',
@@ -104,8 +130,30 @@
 
         return {
             category,
-            best: bestByCategory[category],
-            complexity: complexityByCategory[category],
+            label: {
+                en: category.toUpperCase(),
+                es: {
+                    supervised: 'SUPERVISADO',
+                    generative: 'ANOMALÍAS',
+                    hybrid: 'HÍBRIDO',
+                    sequence: 'SECUENCIAL',
+                    tabular: 'TABULAR',
+                    graph: 'GRAFO / RED'
+                }[category]
+            },
+            family: {
+                en: category,
+                es: {
+                    supervised: 'supervisados',
+                    generative: 'detección de anomalías',
+                    hybrid: 'híbridos',
+                    sequence: 'secuenciales',
+                    tabular: 'tabulares',
+                    graph: 'grafos y redes'
+                }[category]
+            },
+            best: localizedText(bestByCategory[category]),
+            complexity: localizedText(complexityByCategory[category]),
             score: overrides[name] || scoreByCategory[category],
             docs: docsByCategory[category],
             script: scriptByCategory[category]
@@ -115,45 +163,55 @@
     function initFullModelSurfaces() {
         const models = getRequiredModels();
         if (!models.length) return;
+
+        function renderGeneratedCard(card, name, meta) {
+            card.dataset.category = meta.category;
+            card.dataset.modelName = name;
+            card.dataset.generatedModelCard = 'true';
+            card.innerHTML = `
+                <div class="flex justify-between items-start gap-3">
+                    <div>
+                        <div class="font-semibold text-base tracking-tight"></div>
+                        <div class="model-badge bg-slate-100 text-slate-700 rounded mt-1 inline-block">${localizedText(meta.label)}</div>
+                    </div>
+                    <span class="text-[10px] px-2 py-px bg-emerald-50 text-emerald-700 font-medium rounded">${activeLang() === 'es' ? 'Implementado' : 'Implemented'}</span>
+                </div>
+                <p class="mt-3 text-xs leading-snug text-slate-600">${meta.best}</p>
+                <div class="mt-3 text-xs">
+                    <div class="font-medium text-emerald-700">${activeLang() === 'es' ? 'PR-AUC de referencia aproximado' : 'Benchmark/proxy PR-AUC'}: ${meta.score}</div>
+                    <div class="text-[10px] text-slate-500">${activeLang() === 'es' ? `Cubierto por el laboratorio ejecutable del navegador y la familia local de experimentos ${localizedText(meta.family)}.` : `Covered by the runnable browser lab plus the local ${meta.category} experiment family.`}</div>
+                </div>
+                <div class="mt-auto pt-3 border-t text-xs flex flex-wrap gap-2">
+                    <a href="${meta.docs}" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">${activeLang() === 'es' ? 'Ficha' : 'Card'}</a>
+                    <a href="${meta.script}" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">${activeLang() === 'es' ? 'Ejecutar' : 'Run'}</a>
+                </div>
+            `;
+            card.querySelector('.font-semibold').textContent = name;
+        }
+
         const cardsGrid = document.querySelector('#cards .grid[role="list"]');
-        if (cardsGrid && !cardsGrid.dataset.expanded) {
-            const existing = new Set(Array.from(cardsGrid.querySelectorAll('[data-model-name]')).map((card) => card.dataset.modelName));
+        if (cardsGrid) {
+            const existing = new Map(Array.from(cardsGrid.querySelectorAll('[data-model-name]')).map((card) => [card.dataset.modelName, card]));
             const fragment = document.createDocumentFragment();
             models.forEach((name) => {
-                if (existing.has(name)) return;
                 const meta = modelMeta(name);
+                const existingCard = existing.get(name);
+                if (existingCard && existingCard.dataset.generatedModelCard === 'true') {
+                    renderGeneratedCard(existingCard, name, meta);
+                    return;
+                }
+                if (existingCard) return;
                 const card = document.createElement('div');
                 card.className = 'consulting-card bg-white rounded-3xl p-5 model-card flex flex-col';
                 card.setAttribute('role', 'listitem');
-                card.dataset.category = meta.category;
-                card.dataset.modelName = name;
-                card.innerHTML = `
-                    <div class="flex justify-between items-start gap-3">
-                        <div>
-                            <div class="font-semibold text-base tracking-tight"></div>
-                            <div class="model-badge bg-slate-100 text-slate-700 rounded mt-1 inline-block">${meta.category.toUpperCase()}</div>
-                        </div>
-                        <span class="text-[10px] px-2 py-px bg-emerald-50 text-emerald-700 font-medium rounded">Implemented</span>
-                    </div>
-                    <p class="mt-3 text-xs leading-snug text-slate-600">${meta.best}</p>
-                    <div class="mt-3 text-xs">
-                        <div class="font-medium text-emerald-700">Benchmark/proxy PR-AUC: ${meta.score}</div>
-                        <div class="text-[10px] text-slate-500">Covered by runnable browser lab plus local ${meta.category} experiment family.</div>
-                    </div>
-                    <div class="mt-auto pt-3 border-t text-xs flex flex-wrap gap-2">
-                        <a href="${meta.docs}" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">Card</a>
-                        <a href="${meta.script}" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">Run</a>
-                    </div>
-                `;
-                card.querySelector('.font-semibold').textContent = name;
+                renderGeneratedCard(card, name, meta);
                 fragment.appendChild(card);
             });
             cardsGrid.appendChild(fragment);
-            cardsGrid.dataset.expanded = 'true';
         }
 
         const tbody = document.querySelector('.comparison-table tbody');
-        if (tbody && !tbody.dataset.expanded) {
+        if (tbody) {
             tbody.replaceChildren(...models.map((name) => {
                 const meta = modelMeta(name);
                 const row = document.createElement('tr');
@@ -168,7 +226,6 @@
                 row.children[1].textContent = meta.best;
                 return row;
             }));
-            tbody.dataset.expanded = 'true';
         }
     }
 
@@ -560,11 +617,11 @@
                 <div class="rounded-2xl border border-slate-200 p-3 flex justify-between gap-3">
                     <div>
                         <div class="font-mono text-slate-800">${item.row.id}</div>
-                        <div class="text-slate-500">amount $${item.row.amount.toFixed(2)} · v1h ${item.row.velocity1h} · graph ${item.row.graphRisk.toFixed(2)}</div>
+                        <div class="text-slate-500">${activeLang() === 'es' ? 'monto' : 'amount'} $${item.row.amount.toFixed(2)} · v1h ${item.row.velocity1h} · ${activeLang() === 'es' ? 'grafo' : 'graph'} ${item.row.graphRisk.toFixed(2)}</div>
                     </div>
                     <div class="text-right">
                         <div class="font-semibold ${item.row.fraud ? 'text-red-700' : 'text-slate-700'}">${item.score.toFixed(3)}</div>
-                        <div class="text-[10px] text-slate-400">${item.row.fraud ? 'fraud label' : 'normal label'}</div>
+                        <div class="text-[10px] text-slate-400">${item.row.fraud ? (activeLang() === 'es' ? 'etiqueta fraude' : 'fraud label') : (activeLang() === 'es' ? 'etiqueta normal' : 'normal label')}</div>
                     </div>
                 </div>
             `).join('');
@@ -576,12 +633,12 @@
             const labels = rows.map(r => r.fraud);
             const scores = scoreRows(rows);
             const modelNames = {
-                rules: 'Rules + velocity gate',
-                iforest: 'Isolation Forest proxy',
-                gbdt: 'GBDT / XGBoost proxy',
-                vae: 'VAE reconstruction proxy',
-                graph: 'Graph risk proxy',
-                moe: 'MoE hybrid proxy'
+                rules: activeLang() === 'es' ? 'Reglas + filtro de velocidad' : 'Rules + velocity gate',
+                iforest: activeLang() === 'es' ? 'Proxy Isolation Forest' : 'Isolation Forest proxy',
+                gbdt: activeLang() === 'es' ? 'Proxy GBDT / XGBoost' : 'GBDT / XGBoost proxy',
+                vae: activeLang() === 'es' ? 'Proxy de reconstrucción VAE' : 'VAE reconstruction proxy',
+                graph: activeLang() === 'es' ? 'Proxy de riesgo de grafo' : 'Graph risk proxy',
+                moe: activeLang() === 'es' ? 'Proxy híbrido MoE' : 'MoE hybrid proxy'
             };
             const results = Object.keys(modelNames).map(key => ({
                 key,
@@ -593,7 +650,9 @@
             render(results, rows, modelSelect.value);
             if (status) {
                 const fraudCount = labels.reduce((sum, v) => sum + v, 0);
-                status.textContent = `Completed ${rows.length} rows with ${fraudCount} fraud labels.`;
+                status.textContent = activeLang() === 'es'
+                    ? `Completadas ${rows.length} filas con ${fraudCount} etiquetas de fraude.`
+                    : `Completed ${rows.length} rows with ${fraudCount} fraud labels.`;
             }
         }
 
@@ -602,12 +661,15 @@
         });
         runBtn.addEventListener('click', runLab);
         modelSelect.addEventListener('change', runLab);
+        window.ModelTour = window.ModelTour || {};
+        window.ModelTour.runBrowserLab = runLab;
         runLab();
     }
 
     // Public API for future (e.g. updateMetrics from external)
     window.ModelTour = {
         refreshBars: initMetricBars,
+        runBrowserLab: window.ModelTour ? window.ModelTour.runBrowserLab : null,
         filterModels: (cat) => {
             const chip = document.querySelector(`.filter-chip[data-filter="${cat}"]`);
             if (chip) chip.click();
@@ -770,6 +832,13 @@
 
         // Persist
         localStorage.setItem('siteLang', lang);
+
+        // Re-render JavaScript-generated surfaces that are not backed by data-i18n.
+        initFullModelSurfaces();
+        initMetricBars();
+        if (window.ModelTour && typeof window.ModelTour.runBrowserLab === 'function') {
+            window.ModelTour.runBrowserLab();
+        }
 
         // Optional: update URL without reload
         const url = new URL(window.location);

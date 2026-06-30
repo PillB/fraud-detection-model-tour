@@ -41,7 +41,7 @@
   },
   "nav.runExperiments": {
     "en": "View Benchmarks",
-    "es": "Ver benchmarks"
+    "es": "Ver pruebas comparativas"
   },
   "hero.badge": {
     "en": "RESEARCH-BACKED • REGRESSION-GATED SCRIPTS • 2024-2026 LITERATURE",
@@ -65,7 +65,7 @@
   },
   "hero.runOnline": {
     "en": "Run Examples Online",
-    "es": "Ejecutar ejemplos online"
+    "es": "Ejecutar ejemplos en línea"
   },
   "hero.viewSource": {
     "en": "View source on GitHub →",
@@ -93,7 +93,7 @@
   },
   "overview.p1": {
     "en": "Fraud in financial transactions is usually rare, often around <strong>0.01% to 2%</strong>. A trivial “all legitimate” classifier can exceed 99% accuracy while catching no fraud at all.",
-    "es": "El fraude en transacciones financieras suele ser raro, a menudo alrededor de <strong>0.01% a 2%</strong>. Un clasificador trivial que marque todo como “legítimo” puede superar 99% de accuracy sin detectar ningún fraude."
+    "es": "El fraude en transacciones financieras suele ser poco frecuente, a menudo alrededor de <strong>0.01% a 2%</strong>. Un clasificador trivial que marque todo como “legítimo” puede superar 99% de exactitud sin detectar ningún fraude."
   },
   "overview.p2": {
     "en": "Production-grade systems must detect <strong>known patterns</strong> such as velocity bursts and mule accounts, while also surfacing <strong>novel attacks</strong>. They must handle severe class imbalance, concept drift, low-latency decisions, and auditable explanations.",
@@ -141,7 +141,7 @@
   },
   "synthetic.desc": {
     "en": "Realistic transactional and relational benchmark data, engineered to mirror the signals a fraud team would expect in production:",
-    "es": "Datos de benchmark transaccionales y relacionales, diseñados para reflejar señales que un equipo antifraude esperaría en producción:"
+    "es": "Datos transaccionales y relacionales realistas para pruebas comparativas, diseñados para reflejar señales que un equipo antifraude esperaría en producción:"
   },
   "synthetic.li1": {
     "en": "• 200 users + 80 merchants + 30 workers (KYE)",
@@ -189,7 +189,7 @@
   },
   "newto.terms": {
     "en": "Key terms: <strong>PR-AUC</strong> measures how well the model ranks rare bad cases; random guessing scores roughly the fraud rate. <strong>Velocity</strong> means how quickly activity is happening. <strong>KYA/KYE</strong> captures know-your-account and know-your-entity signals about the people, businesses, devices, and workers involved.",
-    "es": "Términos clave: <strong>PR-AUC</strong> mide qué tan bien el modelo ordena casos malos y raros; el azar puntúa aproximadamente como la tasa de fraude. <strong>Velocidad</strong> indica qué tan rápido ocurre la actividad. <strong>KYA/KYE</strong> captura señales know-your-account y know-your-entity sobre personas, negocios, dispositivos y empleados involucrados."
+    "es": "Términos clave: <strong>PR-AUC</strong> mide qué tan bien el modelo ordena los casos malos y poco frecuentes; adivinar al azar puntúa aproximadamente como la tasa de fraude. <strong>Velocidad</strong> indica qué tan rápido ocurre la actividad. <strong>KYA/KYE</strong> captura señales de conocimiento de la cuenta y de la entidad sobre personas, negocios, dispositivos y empleados involucrados."
   },
   "roadmap.badge": {
     "en": "STRUCTURED LEARNING PATH",
@@ -333,11 +333,11 @@
   },
   "cards.xgboost.pr": {
     "en": "Representative PR-AUC: 0.284",
-    "es": "PR-AUC Representativo: 0.284"
+    "es": "PR-AUC representativo: 0.284"
   },
   "cards.xgboost.note": {
     "en": "Velocity and KYA aggregates dominate importance rankings. Primary supervised layer; pairs naturally with anomaly scores.",
-    "es": "Velocidad y agregados KYA dominan los rankings de importancia. Capa supervisada primaria; se empareja naturalmente con scores de anomalía."
+    "es": "Velocidad y agregados KYA dominan las clasificaciones de importancia. Es la capa supervisada primaria y se combina naturalmente con puntajes de anomalía."
   },
   "cards.xgboost.full": {
     "en": "Full Card",
@@ -365,7 +365,7 @@
   },
   "cards.vae.pr": {
     "en": "Representative PR-AUC: 0.367 (VAE + IF hybrid)",
-    "es": "PR-AUC Representativo: 0.367 (híbrido VAE + IF)"
+    "es": "PR-AUC representativo: 0.367 (híbrido VAE + IF)"
   },
   "cards.vae.note": {
     "en": "An &amp; Cho (2015) reconstruction probability. Latents integrate directly into hybrid pipelines.",
@@ -393,7 +393,7 @@
   },
   "cards.moe.pr": {
     "en": "Representative PR-AUC: 0.295 • 91.5% Recall (Vallarino 2025)",
-    "es": "PR-AUC Representativo: 0.295 • 91.5% Recall (Vallarino 2025)"
+    "es": "PR-AUC representativo: 0.295 • 91.5% de recall (Vallarino 2025)"
   },
   "cards.moe.note": {
     "en": "Gating routes seq-heavy or anomalous cases to specialized experts. Flagship mixture.",
@@ -421,7 +421,7 @@
   },
   "cards.lstm.pr": {
     "en": "Representative PR-AUC: 0.261",
-    "es": "PR-AUC Representativo: 0.261"
+    "es": "PR-AUC representativo: 0.261"
   },
   "cards.lstm.note": {
     "en": "Runnable proxy uses lagged and velocity features; a production LSTM consumes padded per-user event sequences.",
@@ -449,7 +449,7 @@
   },
   "cards.tab.pr": {
     "en": "Representative PR-AUC: 0.278",
-    "es": "PR-AUC Representativo: 0.278"
+    "es": "PR-AUC representativo: 0.278"
   },
   "cards.tab.note": {
     "en": "Runnable implementation uses embeddings plus a classifier; production systems use full tabular Transformer variants with careful imbalance handling.",
@@ -476,8 +476,8 @@
     "es": "Red neuronal de grafos inductiva que aprende embeddings de nodos mediante muestreo y agregación de vecinos. Es crítica para detectar anillos de colusión, redes de cuentas mula y fraude vinculado a dispositivos compartidos o señales KYA que son invisibles para modelos puramente tabulares. Maneja naturalmente nuevas entidades en tiempo de inferencia."
   },
   "cards.graph.pr": {
-    "en": "Representative PR-AUC: 0.319 (networkx-based educational proxy)",
-    "es": "PR-AUC Representativo: 0.319 (proxy educativo basado en networkx)"
+    "en": "Representative PR-AUC: 0.319 (NetworkX-based educational proxy)",
+    "es": "PR-AUC representativo: 0.319 (proxy educativo basado en NetworkX)"
   },
   "cards.graph.note": {
     "en": "Uses NetworkX plus mean aggregation over the synthetic transaction/KYA graph. Production systems use PyG or DGL with sampling, temporal splits, and graph explainability.",
@@ -489,7 +489,7 @@
   },
   "cards.footer": {
     "en": "The six flagship cards teach the main path. The expanded catalog above covers every additional family used in experiments and production cascades, including Isolation Forest, LOF, OCSVM, density outlier models, R-GCN, GAT, link prediction, and entity resolution.",
-    "es": "Las seis tarjetas principales enseñan la ruta central. El catálogo ampliado de arriba cubre cada familia adicional usada en experimentos y cascadas de producción, incluyendo Isolation Forest, LOF, OCSVM, modelos de densidad para outliers, R-GCN, GAT, predicción de enlaces y resolución de entidades."
+    "es": "Las seis tarjetas principales enseñan la ruta central. El catálogo ampliado de arriba cubre cada familia adicional usada en experimentos y cascadas de producción, incluyendo Isolation Forest, LOF, OCSVM, modelos de densidad para valores atípicos, R-GCN, GAT, predicción de enlaces y resolución de entidades."
   },
   "cards.coverage.title": {
     "en": "All Models Visible in This Section",
@@ -513,7 +513,7 @@
   },
   "exp.table.perf": {
     "en": "Model Performance (PR-AUC)",
-    "es": "Rendimiento del Modelo (PR-AUC)"
+    "es": "Rendimiento del modelo (PR-AUC)"
   },
   "exp.table.note": {
     "en": "Higher is better • Imbalanced evaluation",
@@ -529,7 +529,7 @@
   },
   "exp.table.pr": {
     "en": "Benchmark PR-AUC (synthetic data)",
-    "es": "PR-AUC de Benchmark (datos sintéticos)"
+    "es": "PR-AUC de referencia (datos sintéticos)"
   },
   "exp.table.complex": {
     "en": "Complexity",
@@ -593,7 +593,7 @@
   },
   "exp.takeaway": {
     "en": "All runs use the shared synthetic generator (1,500-4,000 transactions, 1.2% fraud rate). Use temporal splits in production. PR-AUC is the primary metric; Recall@K and review cost determine operational value. The comparison harness orchestrates the six flagship families plus classical baselines.",
-    "es": "Todas las ejecuciones usan el generador sintético compartido (1,500-4,000 transacciones, tasa de fraude 1.2%). En producción usa cortes temporales. PR-AUC es la métrica principal; Recall@K y el costo de revisión determinan el valor operativo. El arnés de comparación orquesta las seis familias principales más baselines clásicos."
+    "es": "Todas las ejecuciones usan el generador sintético compartido (1,500-4,000 transacciones, tasa de fraude de 1.2%). En producción usa cortes temporales. PR-AUC es la métrica principal; Recall@K y el costo de revisión determinan el valor operativo. El arnés de comparación coordina las seis familias principales más líneas base clásicas."
   },
   "exp.cmd": {
     "en": "python experiments/compare_models.py",
@@ -605,7 +605,7 @@
   },
   "exp.runOnline": {
     "en": "Run examples online",
-    "es": "Ejecutar ejemplos online"
+    "es": "Ejecutar ejemplos en línea"
   },
   "exp.runAll": {
     "en": "Run-all script",
@@ -613,11 +613,11 @@
   },
   "exp.bar.title": {
     "en": "PR-AUC Comparison (Reproducible Runs)",
-    "es": "Comparación PR-AUC (Ejecuciones Reproducibles)"
+    "es": "Comparación de PR-AUC (ejecuciones reproducibles)"
   },
   "exp.bar.note": {
     "en": "Representative values from reproducible runs on synthetic benchmark data (seeds and hyperparameters affect results). Execute the comparison script locally for current outputs.",
-    "es": "Valores representativos de ejecuciones reproducibles en datos de benchmark sintéticos (semillas e hiperparámetros afectan resultados). Ejecuta el script de comparación localmente para salidas actuales."
+    "es": "Valores representativos de ejecuciones reproducibles en datos sintéticos de referencia (las semillas y los hiperparámetros afectan los resultados). Ejecuta el script de comparación localmente para obtener salidas actuales."
   },
   "exp.key": {
     "en": "Key takeaway from experiments:",
@@ -625,7 +625,7 @@
   },
   "exp.key.text": {
     "en": "On this synthetic benchmark, VAE+IF and ensemble+AD hybrids rank rare fraud cases highest. Graph features add lift for relational patterns. Supervised baselines remain competitive once velocity and KYA features are engineered. Treat these values as reproducible learning signals, not production guarantees.",
-    "es": "En este benchmark sintético, los híbridos VAE+IF y ensemble+AD ordenan mejor los casos raros de fraude. Las variables de grafo agregan mejora en patrones relacionales. Los baselines supervisados siguen siendo competitivos cuando se construyen variables de velocidad y KYA. Trata estos valores como señales reproducibles de aprendizaje, no como garantías de producción."
+    "es": "En esta prueba sintética de referencia, los híbridos VAE+IF y ensamble+detección de anomalías colocan más arriba los casos raros de fraude. Las variables de grafo mejoran los patrones relacionales. Las líneas base supervisadas siguen siendo competitivas cuando se construyen variables de velocidad y KYA. Trata estos valores como señales reproducibles de aprendizaje, no como garantías de producción."
   },
   "lab.badge": {
     "en": "Runnable In-Browser Lab",
@@ -753,7 +753,7 @@
   },
   "pipeline.step4.desc": {
     "en": "Fuse supervised and anomaly scores, report PR-AUC, and rank the highest-risk transactions with multi-view explanations such as feature importance, reconstruction, attention, or graph evidence.",
-    "es": "Fusiona scores supervisados y de anomalía, reporta PR-AUC y ordena las transacciones de mayor riesgo con explicaciones multivista como importancia de variables, reconstrucción, atención o evidencia de grafo."
+    "es": "Fusiona puntajes supervisados y de anomalía, reporta PR-AUC y ordena las transacciones de mayor riesgo con explicaciones multivista como importancia de variables, reconstrucción, atención o evidencia de grafo."
   },
   "pipeline.run": {
     "en": "Run:",
@@ -765,7 +765,7 @@
   },
   "pipeline.runOnline": {
     "en": "Run all examples online",
-    "es": "Ejecutar todos los ejemplos online"
+    "es": "Ejecutar todos los ejemplos en línea"
   },
   "pipeline.notebook": {
     "en": "View notebook",
@@ -841,7 +841,7 @@
   },
   "insights.core.4": {
     "en": "• PR-AUC and Recall@K matter far more than accuracy, and often more than ROC-AUC, in production fraud review queues.",
-    "es": "• PR-AUC y Recall@K importan mucho más que accuracy, y a menudo más que ROC-AUC, en colas reales de revisión antifraude."
+    "es": "• PR-AUC y Recall@K importan mucho más que la exactitud, y a menudo más que ROC-AUC, en colas reales de revisión antifraude."
   },
   "insights.choose.title": {
     "en": "When to Choose What",
@@ -861,7 +861,7 @@
   },
   "insights.choose.novel.text": {
     "en": "VAE, Isolation Forest, or anomaly-score hybrids.",
-    "es": "VAE, Isolation Forest o híbridos con scores de anomalía."
+    "es": "VAE, Isolation Forest o híbridos con puntajes de anomalía."
   },
   "insights.choose.rich": {
     "en": "Rich categorical / KYA:",
@@ -1257,7 +1257,7 @@
   },
   "svg.risk": {
     "en": "RISK SCORE",
-    "es": "SCORE DE RIESGO"
+    "es": "PUNTAJE DE RIESGO"
   },
   "svg.risk1": {
     "en": "+ Explanations",
@@ -1381,7 +1381,7 @@
   },
   "paths.practitioner.desc": {
     "en": "Jump to PR-AUC, Recall@K, scripts, trade-offs, and production cascade guidance.",
-    "es": "Ve directo a PR-AUC, Recall@K, scripts, trade-offs y guía para cascadas de producción."
+    "es": "Ve directo a PR-AUC, Recall@K, scripts, compensaciones técnicas y guía para cascadas de producción."
   },
   "paths.practitioner.cta": {
     "en": "Review experiments ->",
@@ -1437,7 +1437,7 @@
   },
   "catalog.classical.desc": {
     "en": "Rules, robust z-score/MAD, IQR, Isolation Forest, LOF, One-Class SVM, robust covariance, PCA reconstruction, and HBOS/ECOD/COPOD-style density scoring.",
-    "es": "Reglas, z-score robusto/MAD, IQR, Isolation Forest, LOF, One-Class SVM, covarianza robusta, reconstrucción PCA y scoring de densidad estilo HBOS/ECOD/COPOD."
+    "es": "Reglas, z-score robusto/MAD, IQR, Isolation Forest, LOF, One-Class SVM, covarianza robusta, reconstrucción PCA y puntuación de densidad estilo HBOS/ECOD/COPOD."
   },
   "catalog.ensembles.title": {
     "en": "Cost-Sensitive Ensembles",
@@ -1481,7 +1481,7 @@
   },
   "catalog.cards.density": {
     "en": "Density Outlier Models",
-    "es": "Modelos de densidad para outliers"
+    "es": "Modelos de densidad para valores atípicos"
   },
   "catalog.cards.community": {
     "en": "Community + Role Detection",
@@ -1529,7 +1529,7 @@
   },
   "catalog.success": {
     "en": "Success condition for this layer: every model named in experiments, cascades, or tradeoffs has a visible model card, runnable local example or dependency-light proxy, and production upgrade guidance.",
-    "es": "Condición de éxito de esta capa: cada modelo nombrado en experimentos, cascadas o trade-offs tiene una tarjeta visible, un ejemplo local ejecutable o proxy ligero, y guía para llevarlo a producción."
+    "es": "Condición de éxito de esta capa: cada modelo nombrado en experimentos, cascadas o compensaciones técnicas tiene una tarjeta visible, un ejemplo local ejecutable o proxy ligero, y guía para llevarlo a producción."
   },
   "catalog.coverage.title": {
     "en": "Required Model Coverage Matrix",
@@ -1549,7 +1549,7 @@
   },
   "workbench.title": {
     "en": "Analyst Workbench: From Score to Evidence",
-    "es": "Mesa de análisis: del score a la evidencia"
+    "es": "Mesa de análisis: del puntaje a la evidencia"
   },
   "workbench.desc": {
     "en": "A useful fraud product does not stop at a score. It helps an analyst understand why the alert exists, what graph context matters, what evidence is missing, and which action is defensible.",
@@ -1613,7 +1613,7 @@
   },
   "workbench.memo.body": {
     "en": "Prioritize review. Retrieved evidence shows amount anomaly, unusual timing, repeated merchant-neighborhood exposure, and KYE adjacency. Missing data: device history and recent KYA change log.",
-    "es": "Priorizar revisión. La evidencia recuperada muestra anomalía de monto, horario inusual, exposición repetida al vecindario del comercio y adyacencia KYE. Datos faltantes: historial del dispositivo y cambios KYA recientes."
+    "es": "Priorizar revisión. La evidencia recuperada muestra anomalía de monto, horario inusual, exposición repetida al entorno del comercio y adyacencia KYE. Datos faltantes: historial del dispositivo y registro reciente de cambios KYA."
   },
   "metrics.title": {
     "en": "Metrics that matter",
@@ -1657,11 +1657,11 @@
   },
   "glossary.cascades": {
     "en": "<strong>Layered Cascades</strong>: fast cheap gate first, then heavier models only for uncertain or high-risk cases. This is the standard latency/coverage trade-off in production.",
-    "es": "<strong>Cascadas por capas</strong>: primero un filtro rápido y barato, luego modelos más pesados solo para casos inciertos o de alto riesgo. Es el trade-off estándar entre latencia y cobertura en producción."
+    "es": "<strong>Cascadas por capas</strong>: primero un filtro rápido y barato; luego modelos más pesados solo para casos inciertos o de alto riesgo. Es la compensación estándar entre latencia y cobertura en producción."
   },
   "glossary.hybrid": {
     "en": "<strong>Hybrid / MoE</strong>: combines model families, such as trees, anomaly detectors, sequence models, and graph models, with routing or score fusion.",
-    "es": "<strong>Híbrido / MoE</strong>: combina familias de modelos, como árboles, detectores de anomalías, modelos de secuencia y modelos de grafos, mediante enrutamiento o fusión de scores."
+    "es": "<strong>Híbrido / MoE</strong>: combina familias de modelos, como árboles, detectores de anomalías, modelos de secuencia y modelos de grafos, mediante enrutamiento o fusión de puntajes."
   },
   "filter.supervised": {
     "en": "Supervised",
