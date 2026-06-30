@@ -15,6 +15,7 @@
         initTooltips();
         initSmoothAnchors();
         initMobileJumpNav();
+        initBrowserModelLab();
         
         // Mark animations
         document.querySelectorAll('.card, .bg-white.border').forEach((el, i) => {
@@ -80,23 +81,23 @@
                 <label for="model-filter-select" class="text-slate-500 font-medium" data-i18n="filter.label">Filter:</label>
                 <select id="model-filter-select" class="px-3 py-1 border rounded text-slate-700 bg-white">
                     <option value="all" data-i18n="filter.all">All</option>
-                    <option value="supervised">Supervised</option>
+                    <option value="supervised" data-i18n="filter.supervised">Supervised</option>
                     <option value="generative" data-i18n="filter.generative">Generative / AD</option>
                     <option value="hybrid" data-i18n="filter.hybrid">Hybrid / MoE</option>
                     <option value="sequence" data-i18n="filter.sequence">Sequence / Behavioral</option>
                     <option value="tabular" data-i18n="filter.tabular">Tabular</option>
-                    <option value="graph">Graph / Network</option>
+                    <option value="graph" data-i18n="filter.graph">Graph / Network</option>
                 </select>
             </div>
             <div class="hidden md:flex flex-wrap gap-2 text-xs" role="group" aria-label="Filter model cards">
                 <span class="text-slate-500 self-center mr-1 font-medium" data-i18n="filter.label">Filter:</span>
                 <button type="button" class="filter-chip active px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500" data-filter="all" aria-pressed="true" data-i18n="filter.all">All</button>
-                <button type="button" class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500" data-filter="supervised" aria-pressed="false">Supervised</button>
+                <button type="button" class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500" data-filter="supervised" aria-pressed="false" data-i18n="filter.supervised">Supervised</button>
                 <button type="button" class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500" data-filter="generative" aria-pressed="false" data-i18n="filter.generative">Generative / AD</button>
                 <button type="button" class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500" data-filter="hybrid" aria-pressed="false" data-i18n="filter.hybrid">Hybrid / MoE</button>
                 <button type="button" class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500" data-filter="sequence" aria-pressed="false" data-i18n="filter.sequence">Sequence / Behavioral</button>
                 <button type="button" class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500" data-filter="tabular" aria-pressed="false" data-i18n="filter.tabular">Tabular</button>
-                <button type="button" class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500" data-filter="graph" aria-pressed="false">Graph / Network</button>
+                <button type="button" class="filter-chip px-3 py-1 bg-white border rounded-full text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500" data-filter="graph" aria-pressed="false" data-i18n="filter.graph">Graph / Network</button>
             </div>
         `;
 
@@ -254,6 +255,194 @@
         });
     }
 
+    function initBrowserModelLab() {
+        const runBtn = document.getElementById('lab-run');
+        const sizeInput = document.getElementById('lab-size');
+        const sizeLabel = document.getElementById('lab-size-label');
+        const modelSelect = document.getElementById('lab-model-select');
+        const chart = document.getElementById('lab-chart');
+        const alerts = document.getElementById('lab-alerts');
+        const status = document.getElementById('lab-status');
+        if (!runBtn || !sizeInput || !modelSelect || !chart || !alerts) return;
+
+        const rng = (seed) => {
+            let t = seed >>> 0;
+            return () => {
+                t += 0x6D2B79F5;
+                let r = Math.imul(t ^ (t >>> 15), 1 | t);
+                r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+                return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+            };
+        };
+
+        const gaussian = (random) => {
+            const u = Math.max(random(), 1e-9);
+            const v = Math.max(random(), 1e-9);
+            return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+        };
+
+        function generateTransactions(n) {
+            const random = rng(20260630 + n);
+            const rows = [];
+            for (let i = 0; i < n; i += 1) {
+                const user = Math.floor(random() * 210);
+                const merchant = Math.floor(random() * 85);
+                const hour = Math.floor(random() * 24);
+                const isNight = hour < 6 || hour > 22 ? 1 : 0;
+                const amount = Math.max(1, Math.exp(4 + gaussian(random) * 0.9));
+                const velocity1h = Math.floor(random() * 5 + random() * 3);
+                const velocity24h = Math.floor(random() * 20 + random() * 8);
+                const categoryRisk = random() < 0.1 ? 1 : random() < 0.4 ? 0.45 : 0.15;
+                const graphRisk = ((user % 17 === 0) || (merchant % 13 === 0)) ? 0.75 : random() * 0.25;
+                let fraud = 0;
+                let amt = amount;
+                let v1 = velocity1h;
+                let v24 = velocity24h;
+                const pattern = random();
+                if (pattern < 0.004) {
+                    fraud = 1; amt *= 6; v1 += 1;
+                } else if (pattern < 0.008) {
+                    fraud = 1; v1 += 9; v24 += 22;
+                } else if (pattern < 0.012) {
+                    fraud = 1; amt *= 2.2; v24 += 8;
+                }
+                rows.push({
+                    id: `TXN${String(i).padStart(6, '0')}`,
+                    user,
+                    merchant,
+                    amount: Math.round(amt * 100) / 100,
+                    hour,
+                    isNight,
+                    velocity1h: v1,
+                    velocity24h: v24,
+                    categoryRisk,
+                    graphRisk,
+                    fraud
+                });
+            }
+            return rows;
+        }
+
+        function normalizeScores(values) {
+            const min = Math.min(...values);
+            const max = Math.max(...values);
+            return values.map(v => (v - min) / (max - min || 1));
+        }
+
+        function scoreRows(rows) {
+            const amounts = rows.map(r => r.amount).sort((a, b) => a - b);
+            const median = amounts[Math.floor(amounts.length / 2)];
+            const deviations = rows.map(r => Math.abs(r.amount - median)).sort((a, b) => a - b);
+            const mad = deviations[Math.floor(deviations.length / 2)] || 1;
+            const raw = {
+                rules: rows.map(r => (r.amount > median + 6 * mad ? 0.45 : 0) + (r.velocity1h > 7 ? 0.35 : 0) + (r.isNight ? 0.12 : 0) + r.categoryRisk * 0.08),
+                iforest: rows.map(r => Math.abs(r.amount - median) / (mad * 12) + r.velocity1h / 18 + r.velocity24h / 60 + r.isNight * 0.08),
+                gbdt: rows.map(r => 1 / (1 + Math.exp(-(0.004 * (r.amount - median) + 0.18 * r.velocity1h + 0.05 * r.velocity24h + 0.45 * r.categoryRisk + 0.3 * r.isNight - 2.6)))),
+                vae: rows.map(r => Math.pow((r.amount - median) / (mad * 10), 2) + Math.pow((r.velocity1h - 3) / 8, 2) + Math.pow((r.velocity24h - 12) / 32, 2)),
+                graph: rows.map(r => r.graphRisk + (r.user % 23 === 0 ? 0.18 : 0) + (r.merchant % 19 === 0 ? 0.14 : 0))
+            };
+            const normalized = Object.fromEntries(Object.entries(raw).map(([k, v]) => [k, normalizeScores(v)]));
+            normalized.moe = rows.map((_, i) => (
+                normalized.rules[i] * 0.18 +
+                normalized.iforest[i] * 0.20 +
+                normalized.gbdt[i] * 0.28 +
+                normalized.vae[i] * 0.16 +
+                normalized.graph[i] * 0.18
+            ));
+            return normalized;
+        }
+
+        function prAuc(labels, scores) {
+            const pairs = scores.map((score, i) => ({ score, label: labels[i] })).sort((a, b) => b.score - a.score);
+            const positives = labels.reduce((sum, v) => sum + v, 0);
+            if (!positives) return 0;
+            let tp = 0;
+            let fp = 0;
+            let prevRecall = 0;
+            let area = 0;
+            pairs.forEach(p => {
+                if (p.label) tp += 1; else fp += 1;
+                const recall = tp / positives;
+                const precision = tp / Math.max(tp + fp, 1);
+                area += (recall - prevRecall) * precision;
+                prevRecall = recall;
+            });
+            return area;
+        }
+
+        function recallAtK(labels, scores, k) {
+            const positives = labels.reduce((sum, v) => sum + v, 0);
+            if (!positives) return 0;
+            const top = scores.map((score, i) => ({ score, label: labels[i] })).sort((a, b) => b.score - a.score).slice(0, k);
+            return top.reduce((sum, p) => sum + p.label, 0) / positives;
+        }
+
+        function render(results, rows, selected) {
+            const filtered = selected === 'all' ? results : results.filter(r => r.key === selected);
+            const maxPr = Math.max(...filtered.map(r => r.prAuc), 0.01);
+            chart.innerHTML = filtered.map(r => `
+                <div>
+                    <div class="flex justify-between gap-2 text-xs mb-1">
+                        <span class="font-medium text-slate-700">${r.name}</span>
+                        <span class="font-mono text-emerald-700">PR-AUC ${r.prAuc.toFixed(3)} · R@50 ${r.recall50.toFixed(2)}</span>
+                    </div>
+                    <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
+                        <div class="h-full bg-blue-700 rounded-full" style="width:${Math.max(4, (r.prAuc / maxPr) * 100)}%"></div>
+                    </div>
+                </div>
+            `).join('');
+
+            const topModel = filtered.slice().sort((a, b) => b.prAuc - a.prAuc)[0];
+            const topAlerts = topModel.scores.map((score, i) => ({ score, row: rows[i] })).sort((a, b) => b.score - a.score).slice(0, 6);
+            alerts.innerHTML = topAlerts.map(item => `
+                <div class="rounded-2xl border border-slate-200 p-3 flex justify-between gap-3">
+                    <div>
+                        <div class="font-mono text-slate-800">${item.row.id}</div>
+                        <div class="text-slate-500">amount $${item.row.amount.toFixed(2)} · v1h ${item.row.velocity1h} · graph ${item.row.graphRisk.toFixed(2)}</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="font-semibold ${item.row.fraud ? 'text-red-700' : 'text-slate-700'}">${item.score.toFixed(3)}</div>
+                        <div class="text-[10px] text-slate-400">${item.row.fraud ? 'fraud label' : 'normal label'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function runLab() {
+            const n = parseInt(sizeInput.value, 10);
+            const rows = generateTransactions(n);
+            const labels = rows.map(r => r.fraud);
+            const scores = scoreRows(rows);
+            const modelNames = {
+                rules: 'Rules + velocity gate',
+                iforest: 'Isolation Forest proxy',
+                gbdt: 'GBDT / XGBoost proxy',
+                vae: 'VAE reconstruction proxy',
+                graph: 'Graph risk proxy',
+                moe: 'MoE hybrid proxy'
+            };
+            const results = Object.keys(modelNames).map(key => ({
+                key,
+                name: modelNames[key],
+                scores: scores[key],
+                prAuc: prAuc(labels, scores[key]),
+                recall50: recallAtK(labels, scores[key], Math.min(50, rows.length))
+            })).sort((a, b) => b.prAuc - a.prAuc);
+            render(results, rows, modelSelect.value);
+            if (status) {
+                const fraudCount = labels.reduce((sum, v) => sum + v, 0);
+                status.textContent = `Completed ${rows.length} rows with ${fraudCount} fraud labels.`;
+            }
+        }
+
+        sizeInput.addEventListener('input', () => {
+            if (sizeLabel) sizeLabel.textContent = sizeInput.value;
+        });
+        runBtn.addEventListener('click', runLab);
+        modelSelect.addEventListener('change', runLab);
+        runLab();
+    }
+
     // Public API for future (e.g. updateMetrics from external)
     window.ModelTour = {
         refreshBars: initMetricBars,
@@ -397,7 +586,10 @@
             'svg-risk': 'svg.risk',
             'svg-risk1': 'svg.risk1',
             'svg-risk2': 'svg.risk2',
-            'svg-risk3': 'svg.risk3'
+            'svg-risk3': 'svg.risk3',
+            'svg-device': 'svg.device',
+            'svg-peer': 'svg.peer',
+            'svg-worker': 'svg.worker'
         };
         Object.keys(svgTexts).forEach(id => {
             const el = document.getElementById(id);

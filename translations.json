@@ -1,11 +1,11 @@
 {
   "title": {
-    "en": "Fraud Detection ML Techniques | Model Tour — PillB",
-    "es": "Técnicas de ML para Detección de Fraude | Model Tour — PillB"
+    "en": "Fraud Detection ML Techniques | Model Tour - PillB",
+    "es": "Técnicas de ML para detección de fraude | Model Tour - PillB"
   },
   "meta.description": {
-    "en": "Professional guide to fraud detection ML techniques: classical baselines to SOTA hybrids (VAE, MoE, GraphSAGE, LSTM, TabTransformer, XGBoost). Research-backed model cards, experiments, pipeline, and guided learning. PillB.",
-    "es": "Guía profesional de técnicas de ML para detección de fraude: desde métodos clásicos hasta híbridos SOTA (VAE, MoE, GraphSAGE, LSTM, TabTransformer, XGBoost). Tarjetas de modelos respaldadas por investigación, experimentos, pipeline y aprendizaje guiado. PillB."
+    "en": "Professional guide to fraud detection ML techniques: classical baselines, anomaly detection, graph models, temporal analysis, and SOTA hybrids. Includes model cards, runnable experiments, analyst workflows, and guided learning. PillB.",
+    "es": "Guía profesional de técnicas de ML para detección de fraude: baselines clásicos, detección de anomalías, modelos de grafos, análisis temporal e híbridos de última generación. Incluye tarjetas de modelo, experimentos ejecutables, flujos de analista y aprendizaje guiado. PillB."
   },
   "nav.overview": {
     "en": "Overview",
@@ -13,15 +13,19 @@
   },
   "nav.roadmap": {
     "en": "Roadmap",
-    "es": "Hoja de Ruta"
+    "es": "Hoja de ruta"
   },
   "nav.cards": {
     "en": "Model Cards",
-    "es": "Tarjetas de Modelos"
+    "es": "Tarjetas de modelos"
   },
   "nav.experiments": {
     "en": "Experiments",
     "es": "Experimentos"
+  },
+  "nav.lab": {
+    "en": "Lab",
+    "es": "Lab"
   },
   "nav.pipeline": {
     "en": "Pipeline",
@@ -29,27 +33,27 @@
   },
   "nav.tour": {
     "en": "Guided Tour",
-    "es": "Tour Guiado"
+    "es": "Ruta guiada"
   },
   "nav.github": {
     "en": "GitHub",
     "es": "GitHub"
   },
   "nav.runExperiments": {
-    "en": "Run Experiments",
-    "es": "Ejecutar Experimentos"
+    "en": "View Benchmarks",
+    "es": "Ver benchmarks"
   },
   "hero.badge": {
-    "en": "RESEARCH-BACKED • ALL SCRIPTS GATE-VALIDATED • 2024–2026 SURVEYS",
-    "es": "RESPALDADO POR INVESTIGACIÓN • TODOS LOS SCRIPTS VALIDADOS POR GATE • ENCUESTAS 2024–2026"
+    "en": "RESEARCH-BACKED • REGRESSION-GATED SCRIPTS • 2024-2026 LITERATURE",
+    "es": "RESPALDADO POR INVESTIGACIÓN • SCRIPTS CON PRUEBAS DE REGRESIÓN • LITERATURA 2024-2026"
   },
   "hero.title": {
     "en": "Fraud Detection<br>ML Techniques",
     "es": "Técnicas de ML para<br>Detección de Fraude"
   },
   "hero.subtitle": {
-    "en": "Classical baselines to state-of-the-art hybrids.<br>A practitioner reference for structured financial data and relational fraud signals.",
-    "es": "Desde métodos clásicos hasta híbridos de última generación.<br>Una referencia para profesionales sobre datos financieros estructurados y señales de fraude relacionales."
+    "en": "Classical baselines to state-of-the-art hybrids.<br>A practitioner reference for structured financial data, behavioral signals, and relational fraud networks.",
+    "es": "De baselines clásicos a híbridos de última generación.<br>Una referencia práctica para datos financieros estructurados, señales de comportamiento y redes relacionales de fraude."
   },
   "hero.exploreCards": {
     "en": "Explore Cards + Catalog",
@@ -57,7 +61,11 @@
   },
   "hero.viewPipeline": {
     "en": "View Full Pipeline",
-    "es": "Ver Pipeline Completo"
+    "es": "Ver pipeline completo"
+  },
+  "hero.runOnline": {
+    "en": "Run Examples Online",
+    "es": "Ejecutar ejemplos online"
   },
   "hero.viewSource": {
     "en": "View source on GitHub →",
@@ -65,7 +73,7 @@
   },
   "hero.badge1": {
     "en": "Regression gate enforced",
-    "es": "Gate de regresión aplicado"
+    "es": "Pruebas de regresión activas"
   },
   "hero.badge2": {
     "en": "PR-AUC primary metric",
@@ -84,12 +92,12 @@
     "es": "Por qué el ML estándar falla en fraude"
   },
   "overview.p1": {
-    "en": "Fraud incidence in financial transactions typically ranges from <strong>0.01% to 2%</strong>. A trivial “all legitimate” classifier attains >99% accuracy while detecting zero fraud events.",
-    "es": "La incidencia de fraude en transacciones financieras generalmente oscila entre <strong>0.01% y 2%</strong>. Un clasificador trivial de “todo legítimo” alcanza >99% de precisión mientras detecta cero eventos de fraude."
+    "en": "Fraud in financial transactions is usually rare, often around <strong>0.01% to 2%</strong>. A trivial “all legitimate” classifier can exceed 99% accuracy while catching no fraud at all.",
+    "es": "El fraude en transacciones financieras suele ser raro, a menudo alrededor de <strong>0.01% a 2%</strong>. Un clasificador trivial que marque todo como “legítimo” puede superar 99% de accuracy sin detectar ningún fraude."
   },
   "overview.p2": {
-    "en": "Production-grade systems must detect <strong>known patterns</strong> (velocity bursts, mule accounts) alongside <strong>novel attacks</strong> (zero-day schemes), operate under extreme class imbalance, accommodate concept drift, and produce auditable, explainable scores for regulatory scrutiny.",
-    "es": "Los sistemas de grado de producción deben detectar <strong>patrones conocidos</strong> (ráfagas de velocidad, cuentas mula) junto con <strong>ataques novedosos</strong> (esquemas de día cero), operar bajo desequilibrio extremo de clases, acomodar deriva de concepto y producir puntuaciones auditables y explicables para escrutinio regulatorio."
+    "en": "Production-grade systems must detect <strong>known patterns</strong> such as velocity bursts and mule accounts, while also surfacing <strong>novel attacks</strong>. They must handle severe class imbalance, concept drift, low-latency decisions, and auditable explanations.",
+    "es": "Los sistemas de producción deben detectar <strong>patrones conocidos</strong>, como ráfagas de actividad y cuentas mula, y también sacar a la superficie <strong>ataques nuevos</strong>. Deben manejar fuerte desbalance de clases, deriva de concepto, decisiones de baja latencia y explicaciones auditables."
   },
   "insight.metric.title": {
     "en": "METRIC OF CHOICE",
@@ -105,15 +113,15 @@
   },
   "insight.cascades.title": {
     "en": "PRODUCTION PATTERN",
-    "es": "PATTERN DE PRODUCCIÓN"
+    "es": "PATRÓN DE PRODUCCIÓN"
   },
   "insight.cascades.value": {
     "en": "Layered Cascades",
     "es": "Cascadas en Capas"
   },
   "insight.cascades.desc": {
-    "en": "Fast high-recall gate (rules + IF) → strong classifier → graph / generative → selective review.",
-    "es": "Gate rápido de alto recall (reglas + IF) → clasificador fuerte → gráfico / generativo → revisión selectiva."
+    "en": "Fast high-recall gate (rules + IF) -> strong classifier -> graph / generative layer -> selective review.",
+    "es": "Filtro rápido de alto recall (reglas + IF) -> clasificador fuerte -> capa de grafos o generativa -> revisión selectiva."
   },
   "insight.signals.title": {
     "en": "KEY SIGNALS",
@@ -132,28 +140,28 @@
     "es": "Generador de Datos Sintéticos"
   },
   "synthetic.desc": {
-    "en": "Realistic transactional + relational benchmark data (engineered to mirror production fraud signals) that includes:",
-    "es": "Datos de benchmark transaccionales + relacionales realistas (diseñados para reflejar señales de fraude de producción) que incluyen:"
+    "en": "Realistic transactional and relational benchmark data, engineered to mirror the signals a fraud team would expect in production:",
+    "es": "Datos de benchmark transaccionales y relacionales, diseñados para reflejar señales que un equipo antifraude esperaría en producción:"
   },
   "synthetic.li1": {
     "en": "• 200 users + 80 merchants + 30 workers (KYE)",
-    "es": "• 200 usuarios + 80 comerciantes + 30 trabajadores (KYE)"
+    "es": "• 200 usuarios + 80 comercios + 30 empleados/analistas (KYE)"
   },
   "synthetic.li2": {
-    "en": "• Timestamped txns with amount, category, hour",
-    "es": "• Transacciones con marca de tiempo, monto, categoría, hora"
+    "en": "• Timestamped transactions with amount, category, and hour",
+    "es": "• Transacciones con fecha/hora, monto, categoría y hora del día"
   },
   "synthetic.li3": {
     "en": "• Engineered velocity features (1h/24h counts)",
-    "es": "• Características de velocidad ingenierizadas (conteos 1h/24h)"
+    "es": "• Variables de velocidad construidas (conteos en 1h/24h)"
   },
   "synthetic.li4": {
-    "en": "• Fraud injected at 1.2% with 3 realistic patterns",
-    "es": "• Fraude inyectado al 1.2% con 3 patrones realistas"
+    "en": "• Fraud injected at 1.2% with three realistic patterns",
+    "es": "• Fraude inyectado al 1.2% con tres patrones realistas"
   },
   "synthetic.li5": {
-    "en": "• NetworkX graph: transaction edges + KYA / KYE links",
-    "es": "• Gráfico NetworkX: bordes de transacciones + enlaces KYA / KYE"
+    "en": "• NetworkX graph: transaction edges plus KYA/KYE links",
+    "es": "• Grafo en NetworkX: aristas de transacción y vínculos KYA/KYE"
   },
   "synthetic.cmd": {
     "en": "python experiments/synthetic_fraud_data.py",
@@ -164,36 +172,36 @@
     "es": "¿NUEVO EN ML PARA DETECCIÓN DE FRAUDE?"
   },
   "newto.title": {
-    "en": "The 90-second plain English version",
-    "es": "La versión en inglés sencillo de 90 segundos"
+    "en": "The 90-second plain-language version",
+    "es": "La versión simple en 90 segundos"
   },
   "newto.p1": {
-    "en": "Imagine Alice buys a $5 coffee every weekday at 8am using her usual card and phone. One night at 3:17am a $4,800 charge appears at a new merchant in another country from a device she has never used, right after a new linked account was added.",
-    "es": "Imagina que Alice compra un café de $5 todos los días de semana a las 8am usando su tarjeta y teléfono habituales. Una noche a las 3:17am aparece un cargo de $4,800 en un nuevo comercio en otro país desde un dispositivo que nunca ha usado, justo después de agregar una nueva cuenta vinculada."
+    "en": "Imagine Alice buys a $5 coffee every weekday at 8:00 using her usual card and phone. One night at 3:17, a $4,800 charge appears at a new merchant in another country from a device she has never used, right after a new linked account was added.",
+    "es": "Imagina que Alice compra un café de $5 todos los días laborables a las 8:00 con su tarjeta y teléfono habituales. Una noche a las 3:17 aparece un cargo de $4,800 en un comercio nuevo de otro país, desde un dispositivo que nunca ha usado, justo después de agregar una cuenta vinculada."
   },
   "newto.p2": {
-    "en": "Most transactions are normal. Fraud is rare (often &lt;1-2%). A model that always says “legit” would be 98-99% accurate yet useless. The goal is to rank the truly suspicious cases high enough that investigators can review the top 50–200 alerts and catch the real fraud without drowning in false alarms.",
-    "es": "La mayoría de las transacciones son normales. El fraude es raro (a menudo &lt;1-2%). Un modelo que siempre dice “legítimo” sería 98-99% preciso pero inútil. El objetivo es clasificar los casos realmente sospechosos lo suficientemente alto para que los investigadores puedan revisar las 50–200 alertas principales y atrapar el fraude real sin ahogarse en falsas alarmas."
+    "en": "Most transactions are normal. Fraud is rare, often below 1-2%. A model that always says “legit” can look accurate but be useless. The goal is to rank the truly suspicious cases high enough that investigators can review the top alerts without drowning in false positives.",
+    "es": "La mayoría de transacciones son normales. El fraude es raro, muchas veces por debajo de 1-2%. Un modelo que siempre diga “legítimo” puede parecer preciso, pero ser inútil. El objetivo es ordenar los casos realmente sospechosos arriba, para que los investigadores revisen las alertas principales sin ahogarse en falsos positivos."
   },
   "newto.p3": {
-    "en": "This site walks through the main techniques banks and fintechs actually use — from simple velocity rules and trees to representation learning, graphs for collusion rings, and hybrids — with real runnable code and the metrics that matter on imbalanced data (PR-AUC first).",
-    "es": "Este sitio explica las principales técnicas que bancos y fintechs usan realmente — desde reglas simples de velocidad y árboles hasta aprendizaje de representaciones, gráficos para anillos de colusión e híbridos — con código real ejecutable y las métricas que importan en datos desequilibrados (PR-AUC primero)."
+    "en": "This site walks through the main techniques banks and fintechs actually use: velocity rules, tree models, anomaly detection, representation learning, graphs for collusion rings, temporal models, and hybrids. Every major idea is tied to runnable code and fraud-appropriate metrics.",
+    "es": "Este sitio recorre las principales técnicas que bancos y fintechs usan en la práctica: reglas de velocidad, modelos de árboles, detección de anomalías, aprendizaje de representaciones, grafos para anillos de colusión, modelos temporales e híbridos. Cada idea central se conecta con código ejecutable y métricas apropiadas para fraude."
   },
   "newto.terms": {
-    "en": "Key terms you will see: <strong>PR-AUC</strong> (how well the model ranks the rare bad cases — random guessing scores roughly the fraud rate), <strong>velocity</strong> (how fast activity is happening), <strong>KYA/KYE</strong> (know-your-account / know-your-entity signals about the people and businesses involved).",
-    "es": "Términos clave que verás: <strong>PR-AUC</strong> (qué tan bien el modelo clasifica los casos malos raros — el azar puntúa aproximadamente la tasa de fraude), <strong>velocidad</strong> (qué tan rápido ocurre la actividad), <strong>KYA/KYE</strong> (señales know-your-account / know-your-entity sobre las personas y negocios involucrados)."
+    "en": "Key terms: <strong>PR-AUC</strong> measures how well the model ranks rare bad cases; random guessing scores roughly the fraud rate. <strong>Velocity</strong> means how quickly activity is happening. <strong>KYA/KYE</strong> captures know-your-account and know-your-entity signals about the people, businesses, devices, and workers involved.",
+    "es": "Términos clave: <strong>PR-AUC</strong> mide qué tan bien el modelo ordena casos malos y raros; el azar puntúa aproximadamente como la tasa de fraude. <strong>Velocidad</strong> indica qué tan rápido ocurre la actividad. <strong>KYA/KYE</strong> captura señales know-your-account y know-your-entity sobre personas, negocios, dispositivos y empleados involucrados."
   },
   "roadmap.badge": {
     "en": "STRUCTURED LEARNING PATH",
     "es": "RUTA DE APRENDIZAJE ESTRUCTURADA"
   },
   "roadmap.title": {
-    "en": "Roadmap: Classical to SOTA",
-    "es": "Hoja de Ruta: De Clásico a SOTA"
+    "en": "Roadmap: Classical to State of the Art",
+    "es": "Hoja de ruta: de lo clásico al estado del arte"
   },
   "roadmap.full": {
-    "en": "Full roadmap document →",
-    "es": "Documento completo de hoja de ruta →"
+    "en": "Full roadmap document ->",
+    "es": "Documento completo ->"
   },
   "roadmap.tier0.title": {
     "en": "TIERS 0–2",
@@ -204,8 +212,8 @@
     "es": "Reglas • ML Clásico • Detección de Anomalías"
   },
   "roadmap.tier0.detail": {
-    "en": "Velocity thresholds, blacklists, XGBoost/LightGBM on engineered features, Isolation Forest and LOF. Mandatory first production layer for latency and regulatory compliance.",
-    "es": "Umbrales de velocidad, listas negras, XGBoost/LightGBM en características ingenierizadas, Isolation Forest y LOF. Primera capa de producción obligatoria para latencia y cumplimiento regulatorio."
+    "en": "Velocity thresholds, allow/deny lists, XGBoost or LightGBM on engineered features, Isolation Forest, and LOF. This is the first production layer for latency, auditability, and regulatory control.",
+    "es": "Umbrales de velocidad, listas de permiso/bloqueo, XGBoost o LightGBM sobre variables construidas, Isolation Forest y LOF. Esta es la primera capa de producción por latencia, auditabilidad y control regulatorio."
   },
   "roadmap.tier0.note": {
     "en": "Feature engineering frequently exceeds model choice",
@@ -220,8 +228,8 @@
     "es": "Aprendizaje de Representaciones • DL Tabular • Gráficos"
   },
   "roadmap.tier3.detail": {
-    "en": "VAE/AE for reconstruction-based novel fraud, TabTransformer for contextual KYA categorical embeddings, GraphSAGE for mule networks and collusion detection.",
-    "es": "VAE/AE para fraude novedoso basado en reconstrucción, TabTransformer para embeddings categóricos contextuales de KYA, GraphSAGE para redes mula y detección de colusión."
+    "en": "VAE/AE for reconstruction-based novel fraud, TabTransformer for contextual KYA categorical embeddings, and GraphSAGE for mule networks and collusion detection.",
+    "es": "VAE/AE para fraude nuevo basado en reconstrucción, TabTransformer para embeddings categóricos contextuales de KYA y GraphSAGE para redes de cuentas mula y colusión."
   },
   "roadmap.tier3.note": {
     "en": "Captures signals invisible to flat tabular models",
@@ -236,8 +244,8 @@
     "es": "Secuencia • Gráficos Temporales • Híbridos"
   },
   "roadmap.tier5.detail": {
-    "en": "LSTM for per-entity behavioral trajectories. MoE hybrids routing across RNN, Transformer, and AE experts. TGN/HTGNN for evolving transaction graphs.",
-    "es": "LSTM para trayectorias conductuales por entidad. Híbridos MoE enrutando entre expertos RNN, Transformer y AE. TGN/HTGNN para gráficos de transacciones en evolución."
+    "en": "LSTM for per-entity behavioral trajectories, MoE hybrids that route across RNN/Transformer/AE experts, and TGN/HTGNN for evolving transaction graphs.",
+    "es": "LSTM para trayectorias de comportamiento por entidad, híbridos MoE que enrutan entre expertos RNN/Transformer/AE y TGN/HTGNN para grafos transaccionales en evolución."
   },
   "roadmap.tier5.note": {
     "en": "Adaptive specialization across fraud archetypes",
@@ -252,64 +260,32 @@
     "es": "Ensembles • SSL • LLM Selectivo"
   },
   "roadmap.tier7.detail": {
-    "en": "Layered cascades, self-supervised pretraining (e.g. SEFraud-style), GraphRAG and agentic review on high-uncertainty cases only. The production standard.",
-    "es": "Cascadas en capas, preentrenamiento auto-supervisado (ej. estilo SEFraud), GraphRAG y revisión agéntica solo en casos de alta incertidumbre. El estándar de producción."
+    "en": "Layered cascades, self-supervised pretraining, GraphRAG, and agentic review only for high-uncertainty or high-risk cases. This is the production pattern, not a single-model bet.",
+    "es": "Cascadas por capas, preentrenamiento autosupervisado, GraphRAG y revisión agéntica solo para casos de alta incertidumbre o alto riesgo. Este es el patrón de producción, no una apuesta por un único modelo."
   },
   "roadmap.tier7.note": {
     "en": "Cost-sensitive, explainable, drift-resilient",
     "es": "Sensible al costo, explicable, resistente a deriva"
   },
   "roadmap.recommended": {
-    "en": "Recommended path: Strong feature engineering + XGBoost + Isolation Forest gate → augment with VAE latents or TabTransformer embeddings → introduce graph and sequence layers → cap with MoE hybrids or full cascades.",
-    "es": "Ruta recomendada: Ingeniería de características fuerte + XGBoost + gate Isolation Forest → aumentar con latentes VAE o embeddings TabTransformer → introducir capas de gráfico y secuencia → coronar con híbridos MoE o cascadas completas."
+    "en": "Recommended path: strong feature engineering + XGBoost + Isolation Forest gate -> VAE latents or TabTransformer embeddings -> graph and sequence layers -> MoE hybrids or full cascades.",
+    "es": "Ruta recomendada: ingeniería de variables sólida + XGBoost + filtro Isolation Forest -> latentes VAE o embeddings TabTransformer -> capas de grafo y secuencia -> híbridos MoE o cascadas completas."
   },
   "roadmap.tier0.subtitle": {
     "en": "Rules • Classical ML • Anomaly Detection",
-    "es": "Reglas • ML Clásico • Detección de Anomalías"
-  },
-  "roadmap.tier0.detail": {
-    "en": "Velocity thresholds, blacklists, XGBoost/LightGBM on engineered features, Isolation Forest and LOF. Mandatory first production layer for latency and regulatory compliance.",
-    "es": "Umbrales de velocidad, listas negras, XGBoost/LightGBM en características ingenierizadas, Isolation Forest y LOF. Primera capa de producción obligatoria para latencia y cumplimiento regulatorio."
-  },
-  "roadmap.tier0.note": {
-    "en": "Feature engineering frequently exceeds model choice",
-    "es": "La ingeniería de características frecuentemente supera la elección del modelo"
+    "es": "Reglas • ML clásico • Detección de anomalías"
   },
   "roadmap.tier3.subtitle": {
     "en": "Representation Learning • Tabular DL • Graphs",
-    "es": "Aprendizaje de Representaciones • DL Tabular • Gráficos"
-  },
-  "roadmap.tier3.detail": {
-    "en": "VAE/AE for reconstruction-based novel fraud, TabTransformer for contextual KYA categorical embeddings, GraphSAGE for mule networks and collusion detection.",
-    "es": "VAE/AE para fraude novedoso basado en reconstrucción, TabTransformer para embeddings categóricos contextuales de KYA, GraphSAGE para redes mula y detección de colusión."
-  },
-  "roadmap.tier3.note": {
-    "en": "Captures signals invisible to flat tabular models",
-    "es": "Captura señales invisibles para modelos tabulares planos"
+    "es": "Representaciones • DL tabular • Grafos"
   },
   "roadmap.tier5.subtitle": {
-    "en": "Sequence • Temporal Graphs • Hybrids",
-    "es": "Secuencia • Gráficos Temporales • Híbridos"
-  },
-  "roadmap.tier5.detail": {
-    "en": "LSTM for per-entity behavioral trajectories. MoE hybrids routing across RNN, Transformer, and AE experts. TGN/HTGNN for evolving transaction graphs.",
-    "es": "LSTM para trayectorias conductuales por entidad. Híbridos MoE enrutando entre expertos RNN, Transformer y AE. TGN/HTGNN para gráficos de transacciones en evolución."
-  },
-  "roadmap.tier5.note": {
-    "en": "Adaptive specialization across fraud archetypes",
-    "es": "Especialización adaptativa a través de arquetipos de fraude"
+    "en": "Sequences • Temporal Graphs • Hybrids",
+    "es": "Secuencias • Grafos temporales • Híbridos"
   },
   "roadmap.tier7.subtitle": {
     "en": "Ensembles • SSL • Selective LLM",
-    "es": "Ensembles • SSL • LLM Selectivo"
-  },
-  "roadmap.tier7.detail": {
-    "en": "Layered cascades, self-supervised pretraining (e.g. SEFraud-style), GraphRAG and agentic review on high-uncertainty cases only. The production standard.",
-    "es": "Cascadas en capas, preentrenamiento auto-supervisado (ej. estilo SEFraud), GraphRAG y revisión agéntica solo en casos de alta incertidumbre. El estándar de producción."
-  },
-  "roadmap.tier7.note": {
-    "en": "Cost-sensitive, explainable, drift-resilient",
-    "es": "Sensible al costo, explicable, resistente a deriva"
+    "es": "Ensambles • SSL • LLM selectivo"
   },
   "arch.title": {
     "en": "Layered Fraud Detection Architecture",
@@ -321,19 +297,19 @@
   },
   "arch.caption": {
     "en": "All six model families feed the ensemble. Classical gates protect latency; generative and graph layers address coverage gaps.",
-    "es": "Las seis familias de modelos alimentan el ensemble. Las compuertas clásicas protegen la latencia; las capas generativas y de gráfico abordan brechas de cobertura."
+    "es": "Las seis familias de modelos alimentan el ensamble. Los filtros clásicos protegen la latencia; las capas generativas y de grafo abordan brechas de cobertura."
   },
   "cards.badge": {
-    "en": "6 RESEARCH-BACKED MODELS",
-    "es": "6 MODELOS RESPALDADOS POR INVESTIGACIÓN"
+    "en": "FLAGSHIP CARDS + PRODUCTION MODEL LIBRARY",
+    "es": "TARJETAS PRINCIPALES + BIBLIOTECA DE MODELOS DE PRODUCCIÓN"
   },
   "cards.title": {
     "en": "Model Cards",
-    "es": "Tarjetas de Modelos"
+    "es": "Tarjetas de modelos"
   },
   "cards.desc": {
     "en": "Concise, executive-grade overviews with mechanism, performance, fraud fit, limitations, and directly executable implementations linked to source documentation.",
-    "es": "Resúmenes concisos de nivel ejecutivo con mecanismo, rendimiento, ajuste al fraude, limitaciones e implementaciones ejecutables directamente vinculadas a documentación fuente."
+    "es": "Resúmenes concisos de nivel ejecutivo con mecanismo, rendimiento, ajuste al problema de fraude, limitaciones e implementaciones ejecutables vinculadas a documentación fuente."
   },
   "cards.badge2": {
     "en": "All implementations validated • PR-AUC measured",
@@ -352,8 +328,8 @@
     "es": "Nivel 1"
   },
   "cards.xgboost.desc": {
-    "en": "Gradient-boosted trees constitute the production standard for labeled tabular fraud. Strong feature engineering—velocity, amount deviation, KYA aggregates—yields high PR-AUC on known patterns while delivering native feature importances and SHAP explanations.",
-    "es": "Los árboles potenciados por gradiente constituyen el estándar de producción para fraude tabular etiquetado. La ingeniería fuerte de características —velocidad, desviación de monto, agregados KYA— produce alto PR-AUC en patrones conocidos mientras entrega importancias de características nativas y explicaciones SHAP."
+    "en": "Gradient-boosted trees are the production standard for labeled tabular fraud. With strong velocity, amount-deviation, and KYA aggregate features, they perform well on known patterns and support SHAP-style explanations.",
+    "es": "Los árboles potenciados por gradiente son un estándar de producción para fraude tabular etiquetado. Con buenas variables de velocidad, desviación de monto y agregados KYA, funcionan bien en patrones conocidos y soportan explicaciones estilo SHAP."
   },
   "cards.xgboost.pr": {
     "en": "Representative PR-AUC: 0.284",
@@ -384,8 +360,8 @@
     "es": "Nivel 3"
   },
   "cards.vae.desc": {
-    "en": "VAE trained exclusively on legitimate transactions learns a probabilistic manifold of normal behavior. Per An &amp; Cho (2015), reconstruction probability provides a calibrated anomaly score that surfaces novel and zero-day fraud where labels are absent. Latent representations also serve as high-value features for downstream supervised models.",
-    "es": "El VAE entrenado exclusivamente en transacciones legítimas aprende una variedad probabilística de comportamiento normal. Según An &amp; Cho (2015), la probabilidad de reconstrucción proporciona un score de anomalía calibrado que detecta fraude novedoso y de día cero donde faltan etiquetas. Las representaciones latentes también sirven como características de alto valor para modelos supervisados posteriores."
+    "en": "A VAE trained mainly on legitimate transactions learns a probabilistic manifold of normal behavior. Reconstruction probability can surface novel fraud when labels are scarce, and latent features can feed supervised downstream models.",
+    "es": "Un VAE entrenado principalmente con transacciones legítimas aprende una variedad probabilística del comportamiento normal. La probabilidad de reconstrucción puede revelar fraude nuevo cuando hay pocas etiquetas, y las variables latentes pueden alimentar modelos supervisados posteriores."
   },
   "cards.vae.pr": {
     "en": "Representative PR-AUC: 0.367 (VAE + IF hybrid)",
@@ -412,8 +388,8 @@
     "es": "Nivel 5–6"
   },
   "cards.moe.desc": {
-    "en": "Mixture-of-Experts architecture routes inputs to specialized experts (sequence / RNN for behavior, transformer / MLP for high-order KYA interactions, autoencoder for reconstruction anomalies). Learned or heuristic gating enables adaptive coverage across fraud archetypes. Vallarino 2025 demonstrated strong results on high-fidelity synthetic credit card data.",
-    "es": "La arquitectura Mixture-of-Experts enruta entradas a expertos especializados (secuencia / RNN para comportamiento, transformer / MLP para interacciones KYA de alto orden, autoencoder para anomalías de reconstrucción). El gating aprendido o heurístico permite cobertura adaptativa a través de arquetipos de fraude. Vallarino 2025 demostró resultados fuertes en datos sintéticos de alta fidelidad de tarjetas de crédito."
+    "en": "A Mixture-of-Experts routes cases to specialized experts: sequence/RNN for behavior, Transformer/MLP for high-order KYA interactions, and autoencoder for reconstruction anomalies. The value is adaptive coverage across fraud archetypes, not a single universal expert.",
+    "es": "Un Mixture-of-Experts enruta casos hacia expertos especializados: secuencia/RNN para comportamiento, Transformer/MLP para interacciones KYA de alto orden y autoencoder para anomalías de reconstrucción. Su valor es la cobertura adaptativa de arquetipos de fraude, no un único experto universal."
   },
   "cards.moe.pr": {
     "en": "Representative PR-AUC: 0.295 • 91.5% Recall (Vallarino 2025)",
@@ -441,15 +417,15 @@
   },
   "cards.lstm.desc": {
     "en": "Recurrent models capture temporal dependencies across a user’s transaction history. Sudden deviations in velocity, amount patterns, or merchant sequences become detectable even when individual transactions appear benign. Essential for modeling drift and behavioral fraud.",
-    "es": "Los modelos recurrentes capturan dependencias temporales a través del historial de transacciones de un usuario. Desviaciones repentinas en velocidad, patrones de monto o secuencias de comerciantes se vuelven detectables incluso cuando transacciones individuales parecen benignas. Esencial para modelar deriva y fraude conductual."
+    "es": "Los modelos recurrentes capturan dependencias temporales en el historial de transacciones de un usuario. Desviaciones repentinas en velocidad, patrones de monto o secuencias de comercios se vuelven detectables incluso cuando las transacciones individuales parecen benignas. Esencial para modelar deriva y fraude conductual."
   },
   "cards.lstm.pr": {
     "en": "Representative PR-AUC: 0.261",
     "es": "PR-AUC Representativo: 0.261"
   },
   "cards.lstm.note": {
-    "en": "Educational proxy uses lagged + velocity features; native LSTM uses per-user sequences.",
-    "es": "Proxy educativo usa características rezagadas + velocidad; LSTM nativo usa secuencias por usuario."
+    "en": "Runnable proxy uses lagged and velocity features; a production LSTM consumes padded per-user event sequences.",
+    "es": "El proxy ejecutable usa rezagos y variables de velocidad; un LSTM de producción consume secuencias de eventos por usuario con padding."
   },
   "cards.lstm.run": {
     "en": "Run Script",
@@ -469,15 +445,15 @@
   },
   "cards.tab.desc": {
     "en": "Self-attention applied to categorical features (merchant type, KYA risk buckets, time-of-day) produces contextual embeddings. Captures complex interactions that tree models require explicit cross-features to detect. Highly effective when tabular data includes rich categorical signals from KYA/KYE profiles.",
-    "es": "Auto-atención aplicada a características categóricas (tipo de comerciante, cubos de riesgo KYA, hora del día) produce embeddings contextuales. Captura interacciones complejas que los modelos de árboles requieren características cruzadas explícitas para detectar. Altamente efectivo cuando los datos tabulares incluyen señales categóricas ricas de perfiles KYA/KYE."
+    "es": "La autoatención aplicada a variables categóricas (tipo de comercio, bandas de riesgo KYA, hora del día) produce embeddings contextuales. Captura interacciones complejas que los modelos de árboles solo detectan si se construyen cruces de variables explícitos. Es muy efectiva cuando los datos tabulares incluyen señales categóricas ricas de perfiles KYA/KYE."
   },
   "cards.tab.pr": {
     "en": "Representative PR-AUC: 0.278",
     "es": "PR-AUC Representativo: 0.278"
   },
   "cards.tab.note": {
-    "en": "Educational simulation using embeddings + classifier; attention provides feature-level interpretability. Production: use full TabTransformer.",
-    "es": "Simulación educativa usando embeddings + clasificador; la atención proporciona interpretabilidad a nivel de característica. Producción: usa TabTransformer completo."
+    "en": "Runnable implementation uses embeddings plus a classifier; production systems use full tabular Transformer variants with careful imbalance handling.",
+    "es": "La implementación ejecutable usa embeddings más un clasificador; en producción se usan variantes completas de Transformers tabulares con manejo cuidadoso del desbalance."
   },
   "cards.tab.run": {
     "en": "Run Script",
@@ -497,23 +473,23 @@
   },
   "cards.graph.desc": {
     "en": "Inductive graph neural network that learns node embeddings via neighbor sampling and aggregation. Critical for detecting collusion rings, mule networks, and shared-device or KYA-linked fraud that is invisible to purely tabular models. Naturally handles new entities at inference time.",
-    "es": "Red neuronal de gráficos inductiva que aprende embeddings de nodos mediante muestreo y agregación de vecinos. Crítica para detectar anillos de colusión, redes mula y fraude vinculado a dispositivos compartidos o KYA que es invisible para modelos puramente tabulares. Maneja naturalmente nuevas entidades en tiempo de inferencia."
+    "es": "Red neuronal de grafos inductiva que aprende embeddings de nodos mediante muestreo y agregación de vecinos. Es crítica para detectar anillos de colusión, redes de cuentas mula y fraude vinculado a dispositivos compartidos o señales KYA que son invisibles para modelos puramente tabulares. Maneja naturalmente nuevas entidades en tiempo de inferencia."
   },
   "cards.graph.pr": {
     "en": "Representative PR-AUC: 0.319 (networkx-based educational proxy)",
     "es": "PR-AUC Representativo: 0.319 (proxy educativo basado en networkx)"
   },
   "cards.graph.note": {
-    "en": "Uses networkx + mean aggregation on synthetic transaction + KYA graph (educational proxy). Production: use PyG / DGL with proper sampling.",
-    "es": "Usa networkx + agregación media en gráfico de transacciones sintéticas + KYA (proxy educativo). Producción: usa PyG / DGL con muestreo adecuado."
+    "en": "Uses NetworkX plus mean aggregation over the synthetic transaction/KYA graph. Production systems use PyG or DGL with sampling, temporal splits, and graph explainability.",
+    "es": "Usa NetworkX más agregación por promedio sobre el grafo sintético de transacciones/KYA. En producción se usa PyG o DGL con muestreo, cortes temporales y explicabilidad de grafos."
   },
   "cards.graph.run": {
     "en": "Run Script",
     "es": "Ejecutar Script"
   },
   "cards.footer": {
-    "en": "All six cards include: origin &amp; mechanism, pros/cons/assumptions/limitations, fraud-specific fit, key references, and a fully functional runnable implementation. Isolation Forest (classical AD baseline) is covered via pipeline and dedicated example.",
-    "es": "Las seis tarjetas incluyen: origen y mecanismo, pros/contras/suposiciones/limitaciones, ajuste específico al fraude, referencias clave y una implementación ejecutable completamente funcional. Isolation Forest (baseline AD clásico) se cubre vía pipeline y ejemplo dedicado."
+    "en": "The six flagship cards teach the main path. The expanded catalog above covers every additional family used in experiments and production cascades, including Isolation Forest, LOF, OCSVM, density outlier models, R-GCN, GAT, link prediction, and entity resolution.",
+    "es": "Las seis tarjetas principales enseñan la ruta central. El catálogo ampliado de arriba cubre cada familia adicional usada en experimentos y cascadas de producción, incluyendo Isolation Forest, LOF, OCSVM, modelos de densidad para outliers, R-GCN, GAT, predicción de enlaces y resolución de entidades."
   },
   "exp.badge": {
     "en": "Comparative Experiments • Reproducible",
@@ -553,7 +529,7 @@
   },
   "exp.table.if.best": {
     "en": "Novel anomalies; fast gate",
-    "es": "Anomalías novedosas; gate rápido"
+    "es": "Anomalías nuevas; filtro rápido"
   },
   "exp.table.xgb": {
     "en": "XGBoost",
@@ -561,7 +537,7 @@
   },
   "exp.table.xgb.best": {
     "en": "Known patterns with rich feature engineering",
-    "es": "Patrones conocidos con ingeniería de características rica"
+    "es": "Patrones conocidos con buena ingeniería de variables"
   },
   "exp.table.graph": {
     "en": "GraphSAGE",
@@ -593,7 +569,7 @@
   },
   "exp.table.tab.best": {
     "en": "Categorical KYA signals and feature interactions",
-    "es": "Señales categóricas KYA e interacciones de características"
+    "es": "Señales categóricas KYA e interacciones entre variables"
   },
   "exp.table.lstm": {
     "en": "LSTM Sequence",
@@ -604,16 +580,24 @@
     "es": "Velocidad conductual y deriva temporal"
   },
   "exp.takeaway": {
-    "en": "All runs use the shared synthetic generator (1,500–4,000 transactions, 1.2% fraud rate). Temporal splits recommended in production. PR-AUC is the primary metric; hybrids and relational layers deliver measurable lift. Full scripts and additional baselines (e.g., pure IF) reside in experiments/. The comparison harness orchestrates all six families plus classical baselines.",
-    "es": "Todas las ejecuciones usan el generador sintético compartido (1,500–4,000 transacciones, tasa de fraude 1.2%). Divisiones temporales recomendadas en producción. PR-AUC es la métrica principal; los híbridos y capas relacionales entregan levantamiento medible. Scripts completos y baselines adicionales (ej., IF puro) residen en experiments/. El arnés de comparación orquesta las seis familias más baselines clásicos."
+    "en": "All runs use the shared synthetic generator (1,500-4,000 transactions, 1.2% fraud rate). Use temporal splits in production. PR-AUC is the primary metric; Recall@K and review cost determine operational value. The comparison harness orchestrates the six flagship families plus classical baselines.",
+    "es": "Todas las ejecuciones usan el generador sintético compartido (1,500-4,000 transacciones, tasa de fraude 1.2%). En producción usa cortes temporales. PR-AUC es la métrica principal; Recall@K y el costo de revisión determinan el valor operativo. El arnés de comparación orquesta las seis familias principales más baselines clásicos."
   },
   "exp.cmd": {
     "en": "python experiments/compare_models.py",
     "es": "python experiments/compare_models.py"
   },
   "exp.note": {
-    "en": "Production comparison harness (proxies for heavier families (full production uses PyG/DGL etc.) + real runnable implementations). See also <code>experiments/junior_starter.py</code> for explicit pandas starter.",
-    "es": "Arnés de comparación de producción (proxies para familias más pesadas (producción completa usa PyG/DGL etc.) + implementaciones reales ejecutables). Ver también <code>experiments/junior_starter.py</code> para starter explícito de pandas."
+    "en": "Comparison harness with runnable implementations and lightweight proxies for heavier families. Full production graph models usually use PyG/DGL; see <code>experiments/junior_starter.py</code> for an explicit pandas starter.",
+    "es": "Arnés de comparación con implementaciones ejecutables y proxies ligeros para familias más pesadas. En producción, los modelos de grafo suelen usar PyG/DGL; consulta <code>experiments/junior_starter.py</code> para un inicio explícito con pandas."
+  },
+  "exp.runOnline": {
+    "en": "Run examples online",
+    "es": "Ejecutar ejemplos online"
+  },
+  "exp.runAll": {
+    "en": "Run-all script",
+    "es": "Script para ejecutar todo"
   },
   "exp.bar.title": {
     "en": "PR-AUC Comparison (Reproducible Runs)",
@@ -628,8 +612,88 @@
     "es": "Conclusión clave de los experimentos:"
   },
   "exp.key.text": {
-    "en": "Hybrids (VAE+IF, ensemble+AD) consistently deliver the highest PR-AUC on this data. Graph features add lift for relational patterns. Simple supervised baselines remain competitive once velocity and KYA features are engineered. All models pass the regression gate (PR-AUC &gt; 0.15).",
-    "es": "Los híbridos (VAE+IF, ensemble+AD) consistentemente entregan el PR-AUC más alto en estos datos. Las características de gráfico agregan lift para patrones relacionales. Las baselines supervisadas simples permanecen competitivas una vez que las características de velocidad y KYA están ingenierizadas. Todos los modelos pasan el gate de regresión (PR-AUC &gt; 0.15)."
+    "en": "On this synthetic benchmark, VAE+IF and ensemble+AD hybrids rank rare fraud cases highest. Graph features add lift for relational patterns. Supervised baselines remain competitive once velocity and KYA features are engineered. Treat these values as reproducible learning signals, not production guarantees.",
+    "es": "En este benchmark sintético, los híbridos VAE+IF y ensemble+AD ordenan mejor los casos raros de fraude. Las variables de grafo agregan mejora en patrones relacionales. Los baselines supervisados siguen siendo competitivos cuando se construyen variables de velocidad y KYA. Trata estos valores como señales reproducibles de aprendizaje, no como garantías de producción."
+  },
+  "lab.badge": {
+    "en": "Runnable In-Browser Lab",
+    "es": "Lab ejecutable en el navegador"
+  },
+  "lab.title": {
+    "en": "Run Fraud Models in the Website",
+    "es": "Ejecuta modelos antifraude en el sitio"
+  },
+  "lab.desc": {
+    "en": "Generate synthetic transactions, run lightweight JavaScript model proxies, compute PR-AUC and Recall@K, and inspect the highest-risk alerts without leaving the page. Python remains the source of truth; this browser lab makes execution part of the website flow.",
+    "es": "Genera transacciones sintéticas, ejecuta proxies ligeros de modelos en JavaScript, calcula PR-AUC y Recall@K, e inspecciona las alertas de mayor riesgo sin salir de la página. Python sigue siendo la fuente de verdad; este lab en navegador integra la ejecución al flujo del sitio."
+  },
+  "lab.controls": {
+    "en": "Controls",
+    "es": "Controles"
+  },
+  "lab.model": {
+    "en": "Model family",
+    "es": "Familia de modelos"
+  },
+  "lab.model.all": {
+    "en": "All models",
+    "es": "Todos los modelos"
+  },
+  "lab.model.rules": {
+    "en": "Rules + velocity gate",
+    "es": "Reglas + filtro de velocidad"
+  },
+  "lab.model.iforest": {
+    "en": "Isolation Forest proxy",
+    "es": "Proxy de Isolation Forest"
+  },
+  "lab.model.gbdt": {
+    "en": "GBDT / XGBoost proxy",
+    "es": "Proxy GBDT / XGBoost"
+  },
+  "lab.model.vae": {
+    "en": "VAE reconstruction proxy",
+    "es": "Proxy de reconstrucción VAE"
+  },
+  "lab.model.graph": {
+    "en": "Graph risk proxy",
+    "es": "Proxy de riesgo de grafo"
+  },
+  "lab.model.moe": {
+    "en": "MoE hybrid proxy",
+    "es": "Proxy híbrido MoE"
+  },
+  "lab.size": {
+    "en": "Transactions",
+    "es": "Transacciones"
+  },
+  "lab.rows": {
+    "en": "rows",
+    "es": "filas"
+  },
+  "lab.run": {
+    "en": "Run inference",
+    "es": "Ejecutar inferencia"
+  },
+  "lab.status.ready": {
+    "en": "Ready. Runs locally in your browser.",
+    "es": "Listo. Se ejecuta localmente en tu navegador."
+  },
+  "lab.note": {
+    "en": "Educational JavaScript proxies avoid heavy downloads. Production implementations use Python, PyOD, XGBoost/LightGBM/CatBoost, PyG/DGL, TensorFlow, or PyTorch.",
+    "es": "Los proxies educativos en JavaScript evitan descargas pesadas. Las implementaciones de producción usan Python, PyOD, XGBoost/LightGBM/CatBoost, PyG/DGL, TensorFlow o PyTorch."
+  },
+  "lab.metrics": {
+    "en": "Metrics",
+    "es": "Métricas"
+  },
+  "lab.metric.note": {
+    "en": "PR-AUC + Recall@50",
+    "es": "PR-AUC + Recall@50"
+  },
+  "lab.alerts": {
+    "en": "Top risk alerts",
+    "es": "Alertas de mayor riesgo"
   },
   "pipeline.badge": {
     "en": "Production-Style End-to-End",
@@ -652,88 +716,96 @@
     "es": "1. Cargar y Limpiar"
   },
   "pipeline.step1.desc": {
-    "en": "Generate synthetic transactional + entity + graph data. Clean missing values. Profile distributions and injected fraud archetypes (velocity, amount deviation, relational). Reproducible with fixed seeds.",
-    "es": "Generar datos sintéticos transaccionales + entidad + gráfico. Limpiar valores faltantes. Perfil de distribuciones y arquetipos de fraude inyectados (velocidad, desviación de monto, relacional). Reproducible con semillas fijas."
+    "en": "Generate synthetic transaction, entity, and graph data. Clean missing values. Profile distributions and injected fraud archetypes such as velocity bursts, amount deviation, and relational risk.",
+    "es": "Genera datos sintéticos de transacciones, entidades y grafos. Limpia valores faltantes. Perfila distribuciones y arquetipos de fraude inyectados, como ráfagas de velocidad, desviación de monto y riesgo relacional."
   },
   "pipeline.step2.title": {
     "en": "2. Feature Engineering",
     "es": "2. Ingeniería de Características"
   },
   "pipeline.step2.desc": {
-    "en": "Core signals: velocity (1h/24h counts), amount statistics vs. history, temporal (hour, night), KYA risk proxies. StandardScaler + OneHot. Feature engineering routinely outperforms model swaps (Bahnsen et al.).",
-    "es": "Señales principales: velocidad (conteos 1h/24h), estadísticas de monto vs. historial, temporal (hora, noche), proxies de riesgo KYA. StandardScaler + OneHot. La ingeniería de características rutinariamente supera los intercambios de modelos (Bahnsen et al.)."
+    "en": "Core signals: velocity counts, amount versus history, time-of-day, night activity, and KYA risk proxies. Feature engineering routinely beats model swapping when raw fraud signal is weak.",
+    "es": "Señales centrales: conteos de velocidad, monto contra historial, hora del día, actividad nocturna y proxies de riesgo KYA. La ingeniería de variables suele superar el simple cambio de modelo cuando la señal cruda de fraude es débil."
   },
   "pipeline.step3.title": {
     "en": "3. Modeling",
     "es": "3. Modelado"
   },
   "pipeline.step3.desc": {
-    "en": "Parallel training across families: supervised (XGBoost), tabular proxies, Isolation Forest (anomaly gate), ensemble meta-learner. Covers known patterns, novel deviations, and relational signals.",
-    "es": "Entrenamiento paralelo a través de familias: supervisado (XGBoost), proxies tabulares, Isolation Forest (gate de anomalía), meta-aprendiz ensemble. Cubre patrones conocidos, desviaciones novedosas y señales relacionales."
+    "en": "Train complementary families: supervised trees, tabular proxies, Isolation Forest anomaly gate, and an ensemble meta-learner. The goal is coverage across known patterns, novel deviations, and relational context.",
+    "es": "Entrena familias complementarias: árboles supervisados, proxies tabulares, filtro de anomalía Isolation Forest y un meta-aprendiz de ensamble. El objetivo es cubrir patrones conocidos, desviaciones nuevas y contexto relacional."
   },
   "pipeline.step4.title": {
     "en": "4. Ensemble + Output",
     "es": "4. Ensemble + Salida"
   },
   "pipeline.step4.desc": {
-    "en": "Late score fusion (supervised + anomaly). Report PR-AUC for ensemble and hybrid. Rank highest-risk transactions with multi-view explanations (importance, reconstruction, attention). Foundation for production cascades.",
-    "es": "Fusión tardía de scores (supervisado + anomalía). Reportar PR-AUC para ensemble e híbrido. Clasificar transacciones de mayor riesgo con explicaciones multi-vista (importancia, reconstrucción, atención). Fundación para cascadas de producción."
+    "en": "Fuse supervised and anomaly scores, report PR-AUC, and rank the highest-risk transactions with multi-view explanations such as feature importance, reconstruction, attention, or graph evidence.",
+    "es": "Fusiona scores supervisados y de anomalía, reporta PR-AUC y ordena las transacciones de mayor riesgo con explicaciones multivista como importancia de variables, reconstrucción, atención o evidencia de grafo."
   },
   "pipeline.run": {
     "en": "Run:",
     "es": "Ejecutar:"
   },
   "pipeline.run.text": {
-    "en": "The script emits documented rationales per step, Ensemble PR-AUC, Hybrid PR-AUC (typically 0.29–0.35 range on synthetic benchmark data), and ranked top transactions with explanations. \n                    This is the canonical reference implementation invoked by model cards, the comparison harness, and the guided tour.",
-    "es": "El script emite racionalidades documentadas por paso, PR-AUC de Ensemble, PR-AUC Híbrido (típicamente rango 0.29–0.35 en datos de benchmark sintéticos), y transacciones principales clasificadas con explicaciones. \n                    Esta es la implementación de referencia canónica invocada por las tarjetas de modelos, el arnés de comparación y el tour guiado."
+    "en": "The script prints the rationale for each step, ensemble PR-AUC, hybrid PR-AUC, and the top-ranked suspicious transactions with explanations. It is the canonical reference implementation used by the model cards, comparison harness, and guided tour.",
+    "es": "El script imprime la razón de cada paso, PR-AUC del ensamble, PR-AUC híbrido y las transacciones sospechosas mejor posicionadas con explicaciones. Es la implementación de referencia usada por las tarjetas de modelo, el arnés de comparación y la ruta guiada."
+  },
+  "pipeline.runOnline": {
+    "en": "Run all examples online",
+    "es": "Ejecutar todos los ejemplos online"
+  },
+  "pipeline.notebook": {
+    "en": "View notebook",
+    "es": "Ver notebook"
   },
   "tour.title": {
     "en": "Guided Tour for Beginners",
-    "es": "Tour Guiado para Principiantes"
+    "es": "Ruta guiada para principiantes"
   },
   "tour.desc": {
     "en": "A progressive curriculum. Run the scripts locally to internalize concepts.",
     "es": "Un currículo progresivo. Ejecuta los scripts localmente para internalizar conceptos."
   },
   "tour.01.title": {
-    "en": "Baseline supervised.",
-    "es": "Supervisado baseline."
+    "en": "Start with a supervised baseline.",
+    "es": "Comienza con un baseline supervisado."
   },
   "tour.01.desc": {
-    "en": "Engineer velocity + KYA features. Train XGBoost. Inspect feature importance. This is your production foundation.",
-    "es": "Ingeniería de características de velocidad + KYA. Entrena XGBoost. Inspecciona importancia de características. Esta es tu fundación de producción."
+    "en": "Engineer velocity and KYA features, train XGBoost, and inspect feature importance. This is the practical production foundation.",
+    "es": "Construye variables de velocidad y KYA, entrena XGBoost e inspecciona la importancia de variables. Esta es la base práctica de producción."
   },
   "tour.02.title": {
     "en": "Add unsupervised representation.",
     "es": "Agrega representación no supervisada."
   },
   "tour.02.desc": {
-    "en": "Train VAE on normal transactions. Use reconstruction probability or latent vectors as additional features. Combine with the baseline.",
-    "es": "Entrena VAE en transacciones normales. Usa probabilidad de reconstrucción o vectores latentes como características adicionales. Combina con el baseline."
+    "en": "Train a VAE on mostly normal transactions. Use reconstruction probability or latent vectors as extra features, then combine them with the supervised baseline.",
+    "es": "Entrena un VAE principalmente con transacciones normales. Usa probabilidad de reconstrucción o vectores latentes como variables adicionales y combínalos con el baseline supervisado."
   },
   "tour.03.title": {
     "en": "Incorporate behavior and context.",
     "es": "Incorpora comportamiento y contexto."
   },
   "tour.03.desc": {
-    "en": "Model sequences with LSTM-style features or TabTransformer for categorical interactions. Observe lift on velocity-driven or merchant-pattern fraud.",
-    "es": "Modela secuencias con características estilo LSTM o TabTransformer para interacciones categóricas. Observa lift en fraude impulsado por velocidad o patrones de comerciantes."
+    "en": "Use LSTM-style features for behavior over time or TabTransformer-style embeddings for categorical interactions. Watch where each adds lift and where trees remain enough.",
+    "es": "Usa variables estilo LSTM para comportamiento temporal o embeddings estilo TabTransformer para interacciones categóricas. Observa dónde aportan mejora y dónde los árboles siguen siendo suficientes."
   },
   "tour.04.title": {
     "en": "Add relational signals.",
     "es": "Agrega señales relacionales."
   },
   "tour.04.desc": {
-    "en": "Construct the transaction + KYA/KYE graph. Use GraphSAGE embeddings as features. Detect rings that tabular models miss.",
-    "es": "Construye el gráfico de transacciones + KYA/KYE. Usa embeddings de GraphSAGE como características. Detecta anillos que los modelos tabulares pierden."
+    "en": "Build the transaction + KYA/KYE graph and use GraphSAGE-style embeddings or graph features to detect rings that flat tabular models miss.",
+    "es": "Construye el grafo de transacciones + KYA/KYE y usa embeddings estilo GraphSAGE o variables de grafo para detectar anillos que los modelos tabulares planos no ven."
   },
   "tour.05.title": {
     "en": "Move to adaptive hybrids.",
     "es": "Pasa a híbridos adaptativos."
   },
   "tour.05.desc": {
-    "en": "Implement simple MoE routing or stacked ensembles. Gate with fast classical layer. This mirrors production layered systems.",
-    "es": "Implementa enrutamiento MoE simple o ensembles apilados. Gate con capa clásica rápida. Esto refleja sistemas en capas de producción."
+    "en": "Add simple MoE routing or stacked ensembles. Keep a fast classical gate first; route only uncertain or high-risk cases to heavier specialists.",
+    "es": "Agrega enrutamiento MoE simple o ensambles apilados. Mantén primero un filtro clásico rápido; envía solo casos inciertos o de alto riesgo a especialistas más pesados."
   },
   "tour.note": {
     "en": "All experiments use the same data generator. Execute with different seeds to explore variance and robustness.",
@@ -745,19 +817,19 @@
   },
   "insights.core.1": {
     "en": "• Feature engineering (velocity + entity aggregates) often yields larger gains than switching model families.",
-    "es": "• La ingeniería de características (velocidad + agregados de entidad) a menudo produce mayores ganancias que cambiar familias de modelos."
+    "es": "• La ingeniería de variables (velocidad + agregados de entidad) suele aportar más que cambiar de familia de modelo."
   },
   "insights.core.2": {
-    "en": "• Hybrids dominate: generative models surface novel fraud; supervised models surface known patterns.",
-    "es": "• Los híbridos dominan: los modelos generativos detectan fraude novedoso; los modelos supervisados detectan patrones conocidos."
+    "en": "• Hybrids dominate because anomaly models surface novel behavior while supervised models capture known fraud patterns.",
+    "es": "• Los híbridos dominan porque los modelos de anomalía detectan comportamiento nuevo, mientras los supervisados capturan patrones conocidos."
   },
   "insights.core.3": {
-    "en": "• Graph layers are essential once KYA/KYE data exists; they close coverage gaps tabular models cannot see.",
-    "es": "• Las capas de gráfico son esenciales una vez que existen datos KYA/KYE; cierran brechas de cobertura que los modelos tabulares no pueden ver."
+    "en": "• Graph layers become essential once KYA/KYE data exists; they close coverage gaps that flat tabular models cannot see.",
+    "es": "• Las capas de grafo se vuelven esenciales cuando existe KYA/KYE; cierran brechas de cobertura que los modelos tabulares planos no ven."
   },
   "insights.core.4": {
-    "en": "• PR-AUC and Recall@K matter far more than accuracy or even ROC-AUC in production settings.",
-    "es": "• PR-AUC y Recall@K importan mucho más que la precisión o incluso ROC-AUC en entornos de producción."
+    "en": "• PR-AUC and Recall@K matter far more than accuracy, and often more than ROC-AUC, in production fraud review queues.",
+    "es": "• PR-AUC y Recall@K importan mucho más que accuracy, y a menudo más que ROC-AUC, en colas reales de revisión antifraude."
   },
   "insights.choose.title": {
     "en": "When to Choose What",
@@ -768,52 +840,52 @@
     "es": "Comienza aquí:"
   },
   "insights.choose.start.text": {
-    "en": "XGBoost + IF on engineered features.",
-    "es": "XGBoost + IF en características ingenierizadas."
+    "en": "XGBoost + Isolation Forest on engineered features.",
+    "es": "XGBoost + Isolation Forest sobre variables construidas."
   },
   "insights.choose.novel": {
     "en": "Need novel detection:",
-    "es": "Necesitas detección novedosa:"
+    "es": "Para fraude nuevo:"
   },
   "insights.choose.novel.text": {
-    "en": "VAE or Isolation Forest hybrids.",
-    "es": "Híbridos VAE o Isolation Forest."
+    "en": "VAE, Isolation Forest, or anomaly-score hybrids.",
+    "es": "VAE, Isolation Forest o híbridos con scores de anomalía."
   },
   "insights.choose.rich": {
     "en": "Rich categorical / KYA:",
-    "es": "Categórico rico / KYA:"
+    "es": "Categóricos ricos / KYA:"
   },
   "insights.choose.rich.text": {
-    "en": "TabTransformer embeddings.",
-    "es": "Embeddings TabTransformer."
+    "en": "TabTransformer-style embeddings.",
+    "es": "Embeddings estilo TabTransformer."
   },
   "insights.choose.behavioral": {
     "en": "Behavioral / temporal:",
     "es": "Conductual / temporal:"
   },
   "insights.choose.behavioral.text": {
-    "en": "LSTM-style or sequence models.",
-    "es": "Modelos estilo LSTM o de secuencia."
+    "en": "LSTM-style features or sequence models.",
+    "es": "Variables estilo LSTM o modelos de secuencia."
   },
   "insights.choose.collusion": {
     "en": "Collusion / rings:",
     "es": "Colusión / anillos:"
   },
   "insights.choose.collusion.text": {
-    "en": "GraphSAGE or TGN family.",
-    "es": "Familia GraphSAGE o TGN."
+    "en": "GraphSAGE, community detection, or TGN family.",
+    "es": "GraphSAGE, detección de comunidades o familia TGN."
   },
   "insights.choose.complex": {
     "en": "Complex mixed fraud:",
     "es": "Fraude mixto complejo:"
   },
   "insights.choose.complex.text": {
-    "en": "MoE or cascaded ensembles.",
-    "es": "MoE o ensembles en cascada."
+    "en": "MoE, stacking, or cascaded ensembles.",
+    "es": "MoE, stacking o ensambles en cascada."
   },
   "footer.text1": {
-    "en": "Built with rigor for practitioners, students, and research teams.<br>\n                    All implementations pass regression gate. All model cards include references to Chen (2025), Vallarino (2025), An &amp; Cho (2015), Hamilton et al. (2017) and the broader literature.",
-    "es": "Construido con rigor para profesionales, estudiantes y equipos de investigación.<br>\n                    Todas las implementaciones pasan el gate de regresión. Todas las tarjetas de modelos incluyen referencias a Chen (2025), Vallarino (2025), An &amp; Cho (2015), Hamilton et al. (2017) y la literatura más amplia."
+    "en": "Built with rigor for practitioners, students, and research teams.<br>All implementations pass the regression gate. Model cards cite foundational and recent work, including An &amp; Cho, Hamilton et al., Vallarino, Chen, and broader graph/fraud literature.",
+    "es": "Construido con rigor para profesionales, estudiantes y equipos de investigación.<br>Todas las implementaciones pasan la puerta de regresión. Las tarjetas de modelo citan trabajos fundacionales y recientes, incluidos An &amp; Cho, Hamilton et al., Vallarino, Chen y literatura amplia de grafos/fraude."
   },
   "footer.pillb": {
     "en": "PillB • Educational &amp; research use",
@@ -824,8 +896,8 @@
     "es": "Clona → <span class=\"font-mono\">pip install -r requirements.txt</span> → ejecuta experimentos y pipeline"
   },
   "footer.complete": {
-    "en": "Self-contained (Tailwind CDN + local CSS/JS assets). 100% complete — no placeholders. Synthesized from model cards, roadmap, pipeline runs, and sub-agent research. Production-ready for GitHub Pages and client delivery. PillB 2026.",
-    "es": "Autocontenido (Tailwind CDN + activos CSS/JS locales). 100% completo — sin marcadores. Sintetizado de tarjetas de modelos, hoja de ruta, ejecuciones de pipeline e investigación de sub-agentes. Listo para producción para GitHub Pages y entrega al cliente. PillB 2026."
+    "en": "Self-contained static site (Tailwind CDN + local CSS/JS). Synthesized from model cards, roadmap, pipeline runs, tests, and sub-agent research. Ready for GitHub Pages and professional review. PillB 2026.",
+    "es": "Sitio estático autocontenido (Tailwind CDN + CSS/JS local). Sintetizado a partir de tarjetas de modelo, hoja de ruta, ejecuciones del pipeline, pruebas e investigación de sub-agentes. Listo para GitHub Pages y revisión profesional. PillB 2026."
   },
   "lang.toggle.en": {
     "en": "EN",
@@ -841,7 +913,7 @@
   },
   "exp.row.xgb.best": {
     "en": "Known patterns with rich feature engineering",
-    "es": "Patrones conocidos con ingeniería de características rica"
+    "es": "Patrones conocidos con buena ingeniería de variables"
   },
   "exp.row.xgb.complex": {
     "en": "Low",
@@ -889,7 +961,7 @@
   },
   "exp.row.tab.best": {
     "en": "Categorical KYA signals and feature interactions",
-    "es": "Señales categóricas KYA e interacciones de características"
+    "es": "Señales categóricas KYA e interacciones entre variables"
   },
   "exp.row.tab.complex": {
     "en": "Medium",
@@ -901,146 +973,734 @@
   },
   "exp.row.lstm.best": {
     "en": "Behavioral velocity and temporal drift",
-    "es": "Velocidad conductual y deriva temporal"
+    "es": "Velocidad de comportamiento y deriva temporal"
   },
   "exp.row.lstm.complex": {
     "en": "Medium",
     "es": "Medio"
   },
   "tradeoffs.intro": {
-    "en": "Key dimensions for real deployments (drawn from sub-agent research and practitioner reviews). Latency/scale on representative hardware; always validate on your data and stack.",
-    "es": "Dimensiones clave para despliegues reales (tomadas de revisiones de sub-agentes y profesionales). Latencia/escala en hardware representativo; siempre valida en tus datos e infraestructura."
+    "en": "Key dimensions for real deployments, drawn from research and practitioner review. Latency and scale depend on hardware, feature stores, graph stores, and review workflows; always validate on your own stack.",
+    "es": "Dimensiones clave para despliegues reales, derivadas de investigación y revisión práctica. Latencia y escala dependen del hardware, feature stores, graph stores y flujos de revisión; valida siempre en tu propio stack."
   },
   "tradeoffs.note": {
-    "en": "Full details and caveats in data/subagents/*/limitations_*.md. Always measure on your volume and infra. FP cost context: review queue volume and customer friction.",
-    "es": "Detalles completos y advertencias en data/subagents/*/limitations_*.md. Siempre mide en tu volumen e infraestructura. Contexto de costo FP: volumen de cola de revisión y fricción con el cliente."
+    "en": "Full caveats live in the sub-agent research notes. Always measure on your volume and infrastructure. False-positive cost depends on review queue size, analyst time, and customer friction.",
+    "es": "Las advertencias completas están en las notas de investigación de sub-agentes. Mide siempre en tu volumen e infraestructura. El costo de falsos positivos depende del tamaño de la cola, tiempo de analistas y fricción con clientes."
   },
-  "trade.row.if.family": {"en": "Rules + IF", "es": "Reglas + IF"},
-  "trade.row.if.lat": {"en": "<1ms", "es": "<1ms"},
-  "trade.row.if.cov": {"en": "High novel", "es": "Alto novedoso"},
-  "trade.row.if.scal": {"en": "Excellent", "es": "Excelente"},
-  "trade.row.if.int": {"en": "Low", "es": "Bajo"},
-  "trade.row.if.when": {"en": "Always first gate", "es": "Siempre gate primero"},
-  "trade.row.xgb.family": {"en": "XGBoost", "es": "XGBoost"},
-  "trade.row.xgb.lat": {"en": "<5ms", "es": "<5ms"},
-  "trade.row.xgb.cov": {"en": "High known", "es": "Alto conocido"},
-  "trade.row.xgb.scal": {"en": "High", "es": "Alto"},
-  "trade.row.xgb.int": {"en": "Low", "es": "Bajo"},
-  "trade.row.xgb.when": {"en": "After gate; primary known", "es": "Después de gate; conocido primario"},
-  "trade.row.vae.family": {"en": "VAE (hybrid)", "es": "VAE (híbrido)"},
-  "trade.row.vae.lat": {"en": "5-20ms", "es": "5-20ms"},
-  "trade.row.vae.cov": {"en": "High novel", "es": "Alto novedoso"},
-  "trade.row.vae.scal": {"en": "Med", "es": "Med"},
-  "trade.row.vae.int": {"en": "Med", "es": "Med"},
-  "trade.row.vae.when": {"en": "Gate-flagged only", "es": "Solo gate-flagged"},
-  "trade.row.graph.family": {"en": "GraphSAGE", "es": "GraphSAGE"},
-  "trade.row.graph.lat": {"en": "10-50ms+", "es": "10-50ms+"},
-  "trade.row.graph.cov": {"en": "High relational", "es": "Alto relacional"},
-  "trade.row.graph.scal": {"en": "High (with sampling)", "es": "Alto (con muestreo)"},
-  "trade.row.graph.int": {"en": "High (graph store)", "es": "Alto (graph store)"},
-  "trade.row.graph.when": {"en": "Relational subset", "es": "Subconjunto relacional"},
-  "trade.row.moe.family": {"en": "MoE / Hybrids", "es": "MoE / Híbridos"},
-  "trade.row.moe.lat": {"en": "10-100ms", "es": "10-100ms"},
-  "trade.row.moe.cov": {"en": "High across", "es": "Alto en general"},
-  "trade.row.moe.scal": {"en": "Med-High", "es": "Med-Alto"},
-  "trade.row.moe.int": {"en": "High", "es": "Alto"},
-  "trade.row.moe.when": {"en": "High-uncertainty", "es": "Alta incertidumbre"},
-  "trade.row.lstm.family": {"en": "LSTM/Seq", "es": "LSTM/Seq"},
-  "trade.row.lstm.lat": {"en": "5-30ms", "es": "5-30ms"},
-  "trade.row.lstm.cov": {"en": "Med-high behavioral", "es": "Med-alto conductual"},
-  "trade.row.lstm.scal": {"en": "Med", "es": "Med"},
-  "trade.row.lstm.int": {"en": "Med-High", "es": "Med-Alto"},
-  "trade.row.lstm.when": {"en": "Behavioral after gate", "es": "Conductual después de gate"},
-  "cards.xgboost.badge": {"en": "SUPERVISED BASELINE", "es": "BASELINE SUPERVISADO"},
-  "cards.xgboost.tier": {"en": "Tier 1", "es": "Nivel 1"},
-  "cards.xgboost.full": {"en": "Full Card", "es": "Tarjeta Completa"},
-  "cards.xgboost.run": {"en": "Run Script", "es": "Ejecutar Script"},
-  "cards.vae.badge": {"en": "GENERATIVE ANOMALY", "es": "ANOMALÍA GENERATIVA"},
-  "cards.vae.tier": {"en": "Tier 3", "es": "Nivel 3"},
-  "cards.vae.full": {"en": "Full Card", "es": "Tarjeta Completa"},
-  "cards.vae.run": {"en": "Run Script (PyTorch)", "es": "Ejecutar Script (PyTorch)"},
-  "cards.moe.badge": {"en": "ADVANCED HYBRID", "es": "HÍBRIDO AVANZADO"},
-  "cards.moe.tier": {"en": "Tier 5–6", "es": "Nivel 5–6"},
-  "cards.moe.full": {"en": "Full Card", "es": "Tarjeta Completa"},
-  "cards.moe.run": {"en": "Run Script", "es": "Ejecutar Script"},
-  "cards.lstm.badge": {"en": "BEHAVIORAL", "es": "CONDUCTUAL"},
-  "cards.lstm.tier": {"en": "Tier 5", "es": "Nivel 5"},
-  "cards.lstm.full": {"en": "Full Card", "es": "Tarjeta Completa"},
-  "cards.lstm.run": {"en": "Run Script", "es": "Ejecutar Script"},
-  "cards.tab.badge": {"en": "TABULAR DL", "es": "DL TABULAR"},
-  "cards.tab.tier": {"en": "Tier 4", "es": "Nivel 4"},
-  "cards.tab.full": {"en": "Full Card", "es": "Tarjeta Completa"},
-  "cards.tab.run": {"en": "Run Script", "es": "Ejecutar Script"},
-  "cards.graph.badge": {"en": "GRAPH / RELATIONAL", "es": "GRÁFICO / RELACIONAL"},
-  "cards.graph.tier": {"en": "Tier 4", "es": "Nivel 4"},
-  "cards.graph.full": {"en": "Full Card", "es": "Tarjeta Completa"},
-  "cards.graph.run": {"en": "Run Script", "es": "Ejecutar Script"},
-  "glossary.content": {
-    "en": "Glossary content container",
-    "es": "Contenedor de contenido del glosario"
+  "trade.row.if.family": {
+    "en": "Rules + IF",
+    "es": "Reglas + IF"
+  },
+  "trade.row.if.lat": {
+    "en": "<1ms",
+    "es": "<1ms"
+  },
+  "trade.row.if.cov": {
+    "en": "High novel-anomaly coverage",
+    "es": "Alta cobertura de anomalías nuevas"
+  },
+  "trade.row.if.scal": {
+    "en": "Excellent",
+    "es": "Excelente"
+  },
+  "trade.row.if.int": {
+    "en": "Low",
+    "es": "Bajo"
+  },
+  "trade.row.if.when": {
+    "en": "First gate",
+    "es": "Primer filtro"
+  },
+  "trade.row.xgb.family": {
+    "en": "XGBoost",
+    "es": "XGBoost"
+  },
+  "trade.row.xgb.lat": {
+    "en": "<5ms",
+    "es": "<5ms"
+  },
+  "trade.row.xgb.cov": {
+    "en": "High known-pattern coverage",
+    "es": "Alta cobertura de patrones conocidos"
+  },
+  "trade.row.xgb.scal": {
+    "en": "High",
+    "es": "Alto"
+  },
+  "trade.row.xgb.int": {
+    "en": "Low",
+    "es": "Bajo"
+  },
+  "trade.row.xgb.when": {
+    "en": "After gate; primary known-fraud model",
+    "es": "Después del filtro; modelo principal para fraude conocido"
+  },
+  "trade.row.vae.family": {
+    "en": "VAE (hybrid)",
+    "es": "VAE (híbrido)"
+  },
+  "trade.row.vae.lat": {
+    "en": "5-20ms",
+    "es": "5-20ms"
+  },
+  "trade.row.vae.cov": {
+    "en": "High novel-pattern coverage",
+    "es": "Alta cobertura de patrones nuevos"
+  },
+  "trade.row.vae.scal": {
+    "en": "Med",
+    "es": "Med"
+  },
+  "trade.row.vae.int": {
+    "en": "Med",
+    "es": "Med"
+  },
+  "trade.row.vae.when": {
+    "en": "Gate-flagged cases",
+    "es": "Casos marcados por el filtro"
+  },
+  "trade.row.graph.family": {
+    "en": "GraphSAGE",
+    "es": "GraphSAGE"
+  },
+  "trade.row.graph.lat": {
+    "en": "10-50ms+",
+    "es": "10-50ms+"
+  },
+  "trade.row.graph.cov": {
+    "en": "High relational",
+    "es": "Alto relacional"
+  },
+  "trade.row.graph.scal": {
+    "en": "High (with sampling)",
+    "es": "Alto (con muestreo)"
+  },
+  "trade.row.graph.int": {
+    "en": "High (graph store)",
+    "es": "Alta (graph store)"
+  },
+  "trade.row.graph.when": {
+    "en": "Relational subset",
+    "es": "Subconjunto relacional"
+  },
+  "trade.row.moe.family": {
+    "en": "MoE / Hybrids",
+    "es": "MoE / Híbridos"
+  },
+  "trade.row.moe.lat": {
+    "en": "10-100ms",
+    "es": "10-100ms"
+  },
+  "trade.row.moe.cov": {
+    "en": "Broad mixed-pattern coverage",
+    "es": "Cobertura amplia de patrones mixtos"
+  },
+  "trade.row.moe.scal": {
+    "en": "Med-High",
+    "es": "Med-Alto"
+  },
+  "trade.row.moe.int": {
+    "en": "High",
+    "es": "Alto"
+  },
+  "trade.row.moe.when": {
+    "en": "High-uncertainty cases",
+    "es": "Casos de alta incertidumbre"
+  },
+  "trade.row.lstm.family": {
+    "en": "LSTM/Seq",
+    "es": "LSTM/Seq"
+  },
+  "trade.row.lstm.lat": {
+    "en": "5-30ms",
+    "es": "5-30ms"
+  },
+  "trade.row.lstm.cov": {
+    "en": "Medium-high behavioral coverage",
+    "es": "Cobertura conductual media-alta"
+  },
+  "trade.row.lstm.scal": {
+    "en": "Med",
+    "es": "Med"
+  },
+  "trade.row.lstm.int": {
+    "en": "Med-High",
+    "es": "Med-Alto"
+  },
+  "trade.row.lstm.when": {
+    "en": "Behavioral layer after gate",
+    "es": "Capa conductual después del filtro"
+  },
+  "cards.vae.full": {
+    "en": "Full Card",
+    "es": "Tarjeta Completa"
+  },
+  "cards.moe.full": {
+    "en": "Full Card",
+    "es": "Tarjeta Completa"
+  },
+  "cards.lstm.full": {
+    "en": "Full Card",
+    "es": "Tarjeta Completa"
+  },
+  "cards.tab.full": {
+    "en": "Full Card",
+    "es": "Tarjeta Completa"
+  },
+  "cards.graph.full": {
+    "en": "Full Card",
+    "es": "Tarjeta Completa"
   },
   "a11y.skip": {
     "en": "Skip to main content",
     "es": "Saltar al contenido principal"
   },
-  "svg.raw": {"en": "RAW DATA", "es": "DATOS CRUDOS"},
-  "svg.txns": {"en": "Txns • KYA/KYE", "es": "Trans • KYA/KYE"},
-  "svg.graph": {"en": "Graph edges • Logs", "es": "Bordes gráfico • Logs"},
-  "svg.fe": {"en": "FEATURE ENGINEERING", "es": "INGENIERÍA DE CARACTERÍSTICAS"},
-  "svg.fe1": {"en": "Velocity • Amount stats", "es": "Velocidad • Estadísticas de monto"},
-  "svg.fe2": {"en": "KYA aggregates • Time", "es": "Agregados KYA • Tiempo"},
-  "svg.fe3": {"en": "+ Graph construction", "es": "+ Construcción de gráfico"},
-  "svg.gate": {"en": "FAST GATE", "es": "GATE RÁPIDO"},
-  "svg.gate1": {"en": "Rules + IForest", "es": "Reglas + IForest"},
-  "svg.xgb": {"en": "XGBoost (Supervised)", "es": "XGBoost (Supervisado)"},
-  "svg.xgb1": {"en": "Known patterns", "es": "Patrones conocidos"},
-  "svg.vae": {"en": "VAE (Generative AD)", "es": "VAE (AD Generativo)"},
-  "svg.vae1": {"en": "Novel + recon prob", "es": "Novedoso + prob recon"},
-  "svg.moe": {"en": "MoE Hybrid", "es": "Híbrido MoE"},
-  "svg.moe1": {"en": "RNN + Trans + AE", "es": "RNN + Trans + AE"},
-  "svg.lstm": {"en": "LSTM Sequence", "es": "Secuencia LSTM"},
-  "svg.lstm1": {"en": "Behavioral dynamics", "es": "Dinámicas conductuales"},
-  "svg.graphsage": {"en": "GraphSAGE", "es": "GraphSAGE"},
-  "svg.graphsage1": {"en": "Relational / rings", "es": "Relacional / anillos"},
-  "svg.ensemble": {"en": "ENSEMBLE / GATE", "es": "ENSEMBLE / GATE"},
-  "svg.ensemble1": {"en": "Weighted fusion", "es": "Fusión ponderada"},
-  "svg.ensemble2": {"en": "+ late MoE routing", "es": "+ enrutamiento MoE tardío"},
-  "svg.risk": {"en": "RISK SCORE", "es": "SCORE DE RIESGO"},
-  "svg.risk1": {"en": "+ Explanations", "es": "+ Explicaciones"},
-  "svg.risk2": {"en": "(SHAP • Recon • Attn)", "es": "(SHAP • Recon • Attn)"},
-  "svg.risk3": {"en": "Review queue", "es": "Cola de revisión"},
-  "bar.if": {"en": "IF", "es": "IF"},
-  "bar.xgb": {"en": "XGB", "es": "XGB"},
-  "bar.graph": {"en": "Graph", "es": "Gráfico"},
-  "bar.vae": {"en": "VAE", "es": "VAE"},
-  "bar.moe": {"en": "MoE", "es": "MoE"},
-  "bar.tab": {"en": "TabT", "es": "TabT"},
-  "bar.lstm": {"en": "LSTM", "es": "LSTM"},
-  "exp.row.if.model": {"en": "Isolation Forest", "es": "Bosque de Aislamiento"},
-  "exp.row.if.best": {"en": "Novel anomalies; fast gate", "es": "Anomalías novedosas; gate rápido"},
-  "exp.row.if.complex": {"en": "Low", "es": "Bajo"},
-  "exp.row.xgb.model": {"en": "XGBoost", "es": "XGBoost"},
-  "exp.row.xgb.best": {"en": "Known patterns with rich feature engineering", "es": "Patrones conocidos con ingeniería de características rica"},
-  "exp.row.xgb.complex": {"en": "Low", "es": "Bajo"},
-  "exp.row.graph.model": {"en": "GraphSAGE", "es": "GraphSAGE"},
-  "exp.row.graph.best": {"en": "KYA/KYE collusion rings and relational signals", "es": "Anillos de colusión KYA/KYE y señales relacionales"},
-  "exp.row.graph.complex": {"en": "Medium-High", "es": "Medio-Alto"},
-  "exp.row.vae.model": {"en": "VAE + IF Hybrid", "es": "Híbrido VAE + IF"},
-  "exp.row.vae.best": {"en": "Novel and zero-day fraud patterns", "es": "Patrones de fraude novedosos y de día cero"},
-  "exp.row.vae.complex": {"en": "Medium", "es": "Medio"},
-  "exp.row.moe.model": {"en": "MoE Hybrid", "es": "Híbrido MoE"},
-  "exp.row.moe.best": {"en": "Mixed fraud archetypes (adaptive routing)", "es": "Arquetipos de fraude mixtos (enrutamiento adaptativo)"},
-  "exp.row.moe.complex": {"en": "High", "es": "Alto"},
-  "exp.row.tab.model": {"en": "TabTransformer", "es": "TabTransformer"},
-  "exp.row.tab.best": {"en": "Categorical KYA signals and feature interactions", "es": "Señales categóricas KYA e interacciones de características"},
-  "exp.row.tab.complex": {"en": "Medium", "es": "Medio"},
-  "exp.row.lstm.model": {"en": "LSTM Sequence", "es": "Secuencia LSTM"},
-  "exp.row.lstm.best": {"en": "Behavioral velocity and temporal drift", "es": "Velocidad conductual y deriva temporal"},
-  "exp.row.lstm.complex": {"en": "Medium", "es": "Medio"},
-  "trade.header.family": {"en": "Family", "es": "Familia"},
-  "trade.header.lat": {"en": "Latency (est.)", "es": "Latencia (est.)"},
-  "trade.header.cov": {"en": "Coverage", "es": "Cobertura"},
-  "trade.header.scal": {"en": "Scalability", "es": "Escalabilidad"},
-  "trade.header.int": {"en": "Integration", "es": "Integración"},
-  "trade.header.when": {"en": "When in Cascade", "es": "Cuándo en Cascada"}
+  "svg.raw": {
+    "en": "RAW DATA",
+    "es": "DATOS CRUDOS"
+  },
+  "svg.txns": {
+    "en": "Txns • KYA/KYE",
+    "es": "Trans • KYA/KYE"
+  },
+  "svg.graph": {
+    "en": "Graph edges • Logs",
+    "es": "Aristas de grafo • Logs"
+  },
+  "svg.fe": {
+    "en": "FEATURE ENGINEERING",
+    "es": "INGENIERÍA DE VARIABLES"
+  },
+  "svg.fe1": {
+    "en": "Velocity • Amount stats",
+    "es": "Velocidad • Estadísticas de monto"
+  },
+  "svg.fe2": {
+    "en": "KYA aggregates • Time",
+    "es": "Agregados KYA • Tiempo"
+  },
+  "svg.fe3": {
+    "en": "+ Graph construction",
+    "es": "+ Construcción de grafo"
+  },
+  "svg.gate": {
+    "en": "FAST GATE",
+    "es": "FILTRO RÁPIDO"
+  },
+  "svg.gate1": {
+    "en": "Rules + IForest",
+    "es": "Reglas + IForest"
+  },
+  "svg.xgb": {
+    "en": "XGBoost (Supervised)",
+    "es": "XGBoost (Supervisado)"
+  },
+  "svg.xgb1": {
+    "en": "Known patterns",
+    "es": "Patrones conocidos"
+  },
+  "svg.vae": {
+    "en": "VAE (Generative AD)",
+    "es": "VAE (AD Generativo)"
+  },
+  "svg.vae1": {
+    "en": "Novel + recon prob",
+    "es": "Nuevo + prob. recon."
+  },
+  "svg.moe": {
+    "en": "MoE Hybrid",
+    "es": "Híbrido MoE"
+  },
+  "svg.moe1": {
+    "en": "RNN + Trans + AE",
+    "es": "RNN + Trans + AE"
+  },
+  "svg.lstm": {
+    "en": "LSTM Sequence",
+    "es": "Secuencia LSTM"
+  },
+  "svg.lstm1": {
+    "en": "Behavioral dynamics",
+    "es": "Dinámicas conductuales"
+  },
+  "svg.graphsage": {
+    "en": "GraphSAGE",
+    "es": "GraphSAGE"
+  },
+  "svg.graphsage1": {
+    "en": "Relational / rings",
+    "es": "Relacional / anillos"
+  },
+  "svg.ensemble": {
+    "en": "ENSEMBLE / GATE",
+    "es": "ENSAMBLE / FILTRO"
+  },
+  "svg.ensemble1": {
+    "en": "Weighted fusion",
+    "es": "Fusión ponderada"
+  },
+  "svg.ensemble2": {
+    "en": "+ late MoE routing",
+    "es": "+ enrutamiento MoE tardío"
+  },
+  "svg.risk": {
+    "en": "RISK SCORE",
+    "es": "SCORE DE RIESGO"
+  },
+  "svg.risk1": {
+    "en": "+ Explanations",
+    "es": "+ Explicaciones"
+  },
+  "svg.risk2": {
+    "en": "(SHAP • Recon • Attn)",
+    "es": "(SHAP • Recon • Attn)"
+  },
+  "svg.risk3": {
+    "en": "Review queue",
+    "es": "Cola de revisión"
+  },
+  "bar.if": {
+    "en": "IF",
+    "es": "IF"
+  },
+  "bar.xgb": {
+    "en": "XGB",
+    "es": "XGB"
+  },
+  "bar.graph": {
+    "en": "Graph",
+    "es": "Grafo"
+  },
+  "bar.vae": {
+    "en": "VAE",
+    "es": "VAE"
+  },
+  "bar.moe": {
+    "en": "MoE",
+    "es": "MoE"
+  },
+  "bar.tab": {
+    "en": "TabT",
+    "es": "TabT"
+  },
+  "bar.lstm": {
+    "en": "LSTM",
+    "es": "LSTM"
+  },
+  "exp.row.if.model": {
+    "en": "Isolation Forest",
+    "es": "Bosque de Aislamiento"
+  },
+  "exp.row.if.best": {
+    "en": "Novel anomalies; fast gate",
+    "es": "Anomalías nuevas; filtro rápido"
+  },
+  "exp.row.if.complex": {
+    "en": "Low",
+    "es": "Bajo"
+  },
+  "trade.header.family": {
+    "en": "Family",
+    "es": "Familia"
+  },
+  "trade.header.lat": {
+    "en": "Latency (est.)",
+    "es": "Latencia (est.)"
+  },
+  "trade.header.cov": {
+    "en": "Coverage",
+    "es": "Cobertura"
+  },
+  "trade.header.scal": {
+    "en": "Scalability",
+    "es": "Escalabilidad"
+  },
+  "trade.header.int": {
+    "en": "Integration",
+    "es": "Integración"
+  },
+  "trade.header.when": {
+    "en": "When in Cascade",
+    "es": "Cuándo en Cascada"
+  },
+  "nav.catalog": {
+    "en": "Catalog",
+    "es": "Catálogo"
+  },
+  "nav.workbench": {
+    "en": "Analyst Workbench",
+    "es": "Mesa de análisis"
+  },
+  "paths.badge": {
+    "en": "START WITH YOUR JOB TO BE DONE",
+    "es": "EMPIEZA SEGÚN TU OBJETIVO"
+  },
+  "paths.title": {
+    "en": "Choose a Tour Path",
+    "es": "Elige una ruta de aprendizaje"
+  },
+  "paths.desc": {
+    "en": "The site is structured as a professional workflow, not a glossary: understand the fraud problem, choose the right model family, inspect runnable evidence, then map it to an analyst or production pipeline.",
+    "es": "El sitio está estructurado como un flujo profesional, no como un glosario: entiende el problema de fraude, elige la familia de modelos adecuada, revisa evidencia ejecutable y llévala a una mesa de análisis o a un pipeline de producción."
+  },
+  "paths.beginner.badge": {
+    "en": "BEGINNER",
+    "es": "PRINCIPIANTE"
+  },
+  "paths.beginner.title": {
+    "en": "Learn the concepts",
+    "es": "Aprende los conceptos"
+  },
+  "paths.beginner.desc": {
+    "en": "Start with the plain-English scenario, glossary, guided tour, and first runnable scripts.",
+    "es": "Empieza con el escenario explicado en lenguaje claro, el glosario, la ruta guiada y los primeros scripts ejecutables."
+  },
+  "paths.beginner.cta": {
+    "en": "Go to guided tour ->",
+    "es": "Ir a la ruta guiada ->"
+  },
+  "paths.practitioner.badge": {
+    "en": "PRACTITIONER",
+    "es": "PROFESIONAL"
+  },
+  "paths.practitioner.title": {
+    "en": "Compare working models",
+    "es": "Compara modelos ejecutables"
+  },
+  "paths.practitioner.desc": {
+    "en": "Jump to PR-AUC, Recall@K, scripts, trade-offs, and production cascade guidance.",
+    "es": "Ve directo a PR-AUC, Recall@K, scripts, trade-offs y guía para cascadas de producción."
+  },
+  "paths.practitioner.cta": {
+    "en": "Review experiments ->",
+    "es": "Revisar experimentos ->"
+  },
+  "paths.analyst.badge": {
+    "en": "RESEARCHER / ANALYST",
+    "es": "INVESTIGADOR / ANALISTA"
+  },
+  "paths.analyst.title": {
+    "en": "Trace evidence and networks",
+    "es": "Rastrea evidencia y redes"
+  },
+  "paths.analyst.desc": {
+    "en": "Use the catalog, temporal graph view, and GraphRAG-style case workflow to reason about criminal networks.",
+    "es": "Usa el catálogo, la vista de grafos temporales y el flujo de casos estilo GraphRAG para razonar sobre redes criminales."
+  },
+  "paths.analyst.cta": {
+    "en": "Open workbench view ->",
+    "es": "Abrir mesa de análisis ->"
+  },
+  "synthetic.stat.entities": {
+    "en": "entities",
+    "es": "entidades"
+  },
+  "synthetic.stat.fraud": {
+    "en": "fraud",
+    "es": "fraude"
+  },
+  "synthetic.stat.views": {
+    "en": "signal views",
+    "es": "vistas de señal"
+  },
+  "catalog.badge": {
+    "en": "EXPANDED RESEARCH COVERAGE",
+    "es": "COBERTURA AMPLIADA DE INVESTIGACIÓN"
+  },
+  "catalog.title": {
+    "en": "Model Catalog: Broad Coverage Map",
+    "es": "Catálogo de modelos: mapa amplio de cobertura"
+  },
+  "catalog.desc": {
+    "en": "The flagship cards teach the main path. The catalog captures the wider professional toolkit: statistical gates, density methods, balanced ensembles, graph mining, temporal graph learning, self-supervised representation learning, and GraphRAG analyst workflows.",
+    "es": "Las tarjetas principales enseñan la ruta central. El catálogo cubre la caja de herramientas profesional más amplia: filtros estadísticos, métodos de densidad, ensambles balanceados, minería de grafos, aprendizaje en grafos temporales, representaciones autosupervisadas y flujos GraphRAG para analistas."
+  },
+  "catalog.full": {
+    "en": "Full catalog ->",
+    "es": "Catálogo completo ->"
+  },
+  "catalog.classical.title": {
+    "en": "Classical Foundations",
+    "es": "Fundamentos clásicos"
+  },
+  "catalog.classical.desc": {
+    "en": "Rules, robust z-score/MAD, IQR, Isolation Forest, LOF, One-Class SVM, robust covariance, PCA reconstruction, and HBOS/ECOD/COPOD-style density scoring.",
+    "es": "Reglas, z-score robusto/MAD, IQR, Isolation Forest, LOF, One-Class SVM, covarianza robusta, reconstrucción PCA y scoring de densidad estilo HBOS/ECOD/COPOD."
+  },
+  "catalog.ensembles.title": {
+    "en": "Cost-Sensitive Ensembles",
+    "es": "Ensambles sensibles al costo"
+  },
+  "catalog.ensembles.desc": {
+    "en": "Logistic scorecards, Random Forest, ExtraTrees, GBDT/XGBoost/LightGBM/CatBoost, Balanced RF, EasyEnsemble, RUSBoost, stacking, and calibrated top-K thresholds.",
+    "es": "Scorecards logísticos, Random Forest, ExtraTrees, GBDT/XGBoost/LightGBM/CatBoost, Balanced RF, EasyEnsemble, RUSBoost, stacking y umbrales top-K calibrados."
+  },
+  "catalog.graph.title": {
+    "en": "Criminal Network Graphs",
+    "es": "Grafos de redes criminales"
+  },
+  "catalog.graph.desc": {
+    "en": "Centrality, k-core, community detection, role discovery, dense subgraph search, graph anomaly features, GraphSAGE/GAT/R-GCN/HGT, and community-aware GNNs.",
+    "es": "Centralidad, k-core, detección de comunidades, descubrimiento de roles, búsqueda de subgrafos densos, variables de anomalía en grafos, GraphSAGE/GAT/R-GCN/HGT y GNNs conscientes de comunidades."
+  },
+  "catalog.temporal.title": {
+    "en": "Temporal Graphs + GraphRAG",
+    "es": "Grafos temporales + GraphRAG"
+  },
+  "catalog.temporal.desc": {
+    "en": "TGAT/TGN/JODIE/DyRep/EvolveGCN-style event memory, temporal validation, and offline GraphRAG case packets for evidence-grounded analyst review.",
+    "es": "Memoria de eventos estilo TGAT/TGN/JODIE/DyRep/EvolveGCN, validación temporal y paquetes de caso GraphRAG offline para revisión de analistas basada en evidencia."
+  },
+  "catalog.cards.title": {
+    "en": "Production Model Library",
+    "es": "Biblioteca de modelos de producción"
+  },
+  "catalog.cards.iforest": {
+    "en": "Isolation Forest",
+    "es": "Isolation Forest"
+  },
+  "catalog.cards.supervised": {
+    "en": "Logistic + RF Baselines",
+    "es": "Baselines logísticos + RF"
+  },
+  "catalog.cards.lof": {
+    "en": "LOF + OCSVM + PCA",
+    "es": "LOF + OCSVM + PCA"
+  },
+  "catalog.cards.density": {
+    "en": "Density Outlier Models",
+    "es": "Modelos de densidad para outliers"
+  },
+  "catalog.cards.community": {
+    "en": "Community + Role Detection",
+    "es": "Detección de comunidades + roles"
+  },
+  "catalog.cards.temporal": {
+    "en": "Temporal GNNs",
+    "es": "GNNs temporales"
+  },
+  "catalog.cards.ensembles": {
+    "en": "Cost-Sensitive Ensembles",
+    "es": "Ensambles sensibles al costo"
+  },
+  "catalog.cards.deep": {
+    "en": "Deep SVDD + DAGMM",
+    "es": "Deep SVDD + DAGMM"
+  },
+  "catalog.cards.rgcn": {
+    "en": "R-GCN + Heterogeneous GNN",
+    "es": "R-GCN + GNN heterogénea"
+  },
+  "catalog.cards.gat": {
+    "en": "GAT Attention Evidence",
+    "es": "Evidencia con atención GAT"
+  },
+  "catalog.cards.link": {
+    "en": "Graph Link Prediction",
+    "es": "Predicción de enlaces en grafos"
+  },
+  "catalog.cards.er": {
+    "en": "Entity Resolution + KG",
+    "es": "Resolución de entidades + KG"
+  },
+  "catalog.cards.graphrag": {
+    "en": "GraphRAG Analyst",
+    "es": "Analista GraphRAG"
+  },
+  "catalog.cards.federated": {
+    "en": "Federated Fraud Learning",
+    "es": "Aprendizaje federado antifraude"
+  },
+  "catalog.cards.checklist": {
+    "en": "Completion Checklist",
+    "es": "Checklist de completitud"
+  },
+  "catalog.success": {
+    "en": "Success condition for this layer: every model named in experiments, cascades, or tradeoffs has a visible model card, runnable local example or dependency-light proxy, and production upgrade guidance.",
+    "es": "Condición de éxito de esta capa: cada modelo nombrado en experimentos, cascadas o trade-offs tiene una tarjeta visible, un ejemplo local ejecutable o proxy ligero, y guía para llevarlo a producción."
+  },
+  "catalog.coverage.title": {
+    "en": "Required Model Coverage Matrix",
+    "es": "Matriz de cobertura de modelos requeridos"
+  },
+  "catalog.coverage.desc": {
+    "en": "Discrete model and technique entries counted from the requested fraud, anomaly, graph, temporal, and criminal-network inventory.",
+    "es": "Entradas discretas de modelos y técnicas contadas desde el inventario solicitado de fraude, anomalías, grafos, temporalidad y redes criminales."
+  },
+  "catalog.coverage.count": {
+    "en": "73 required • 73 visible",
+    "es": "73 requeridos • 73 visibles"
+  },
+  "workbench.badge": {
+    "en": "CASE INVESTIGATION FLOW",
+    "es": "FLUJO DE INVESTIGACIÓN DE CASOS"
+  },
+  "workbench.title": {
+    "en": "Analyst Workbench: From Score to Evidence",
+    "es": "Mesa de análisis: del score a la evidencia"
+  },
+  "workbench.desc": {
+    "en": "A useful fraud product does not stop at a score. It helps an analyst understand why the alert exists, what graph context matters, what evidence is missing, and which action is defensible.",
+    "es": "Un producto antifraude útil no se detiene en un score. Ayuda al analista a entender por qué existe la alerta, qué contexto de grafo importa, qué evidencia falta y qué acción es defendible."
+  },
+  "workbench.alert.title": {
+    "en": "1. ALERT SUMMARY",
+    "es": "1. RESUMEN DE ALERTA"
+  },
+  "workbench.alert.subtitle": {
+    "en": "High amount + night flag + velocity context",
+    "es": "Monto alto + actividad nocturna + contexto de velocidad"
+  },
+  "workbench.alert.risk": {
+    "en": "hybrid risk",
+    "es": "riesgo híbrido"
+  },
+  "workbench.alert.gate": {
+    "en": "Rules / IF gate",
+    "es": "Reglas / filtro IF"
+  },
+  "workbench.alert.triggered": {
+    "en": "triggered",
+    "es": "activado"
+  },
+  "workbench.alert.tree": {
+    "en": "Tree classifier",
+    "es": "Clasificador de árboles"
+  },
+  "workbench.alert.graph": {
+    "en": "Graph context",
+    "es": "Contexto de grafo"
+  },
+  "workbench.alert.cluster": {
+    "en": "shared merchant cluster",
+    "es": "clúster de comercio compartido"
+  },
+  "workbench.alert.action": {
+    "en": "Review action",
+    "es": "Acción de revisión"
+  },
+  "workbench.alert.manual": {
+    "en": "manual review",
+    "es": "revisión manual"
+  },
+  "workbench.graph.title": {
+    "en": "2. EVIDENCE GRAPH",
+    "es": "2. GRAFO DE EVIDENCIA"
+  },
+  "workbench.graph.caption": {
+    "en": "GraphRAG input: user, merchant, device, worker access, and nearest suspicious neighbors.",
+    "es": "Entrada para GraphRAG: usuario, comercio, dispositivo, acceso de empleado y vecinos sospechosos más cercanos."
+  },
+  "workbench.memo.title": {
+    "en": "3. CASE MEMO",
+    "es": "3. MEMO DEL CASO"
+  },
+  "workbench.memo.summary": {
+    "en": "Evidence-grounded summary",
+    "es": "Resumen basado en evidencia"
+  },
+  "workbench.memo.body": {
+    "en": "Prioritize review. Retrieved evidence shows amount anomaly, unusual timing, repeated merchant-neighborhood exposure, and KYE adjacency. Missing data: device history and recent KYA change log.",
+    "es": "Priorizar revisión. La evidencia recuperada muestra anomalía de monto, horario inusual, exposición repetida al vecindario del comercio y adyacencia KYE. Datos faltantes: historial del dispositivo y cambios KYA recientes."
+  },
+  "metrics.title": {
+    "en": "Metrics that matter",
+    "es": "Métricas que importan"
+  },
+  "metrics.subtitle": {
+    "en": "PR-AUC + operational context",
+    "es": "PR-AUC + contexto operativo"
+  },
+  "metrics.p1": {
+    "en": "<strong>PR-AUC</strong> is primary because it focuses on the rare positive class. On 1.2% fraud data, random guessing scores about 0.012; a model around 0.28-0.37 is meaningfully better at surfacing fraud near the top of a review queue.",
+    "es": "<strong>PR-AUC</strong> es la métrica principal porque se enfoca en la clase positiva rara. Con 1.2% de fraude, el azar puntúa cerca de 0.012; un modelo alrededor de 0.28-0.37 es mucho mejor para llevar fraude real a la parte alta de la cola de revisión."
+  },
+  "metrics.p2": {
+    "en": "Production framing: review budget is limited, for example the top 50-200 alerts. <strong>Recall@K</strong> tells you what fraction of actual fraud you catch within that budget. <strong>Cost</strong> framing weighs false negatives, review effort, and customer friction.",
+    "es": "En producción, el presupuesto de revisión es limitado, por ejemplo las 50-200 alertas principales. <strong>Recall@K</strong> indica qué fracción del fraude real capturas dentro de ese presupuesto. El encuadre de <strong>costo</strong> pondera falsos negativos, esfuerzo de revisión y fricción con clientes."
+  },
+  "metrics.p3": {
+    "en": "Always compare against random ranking and simple rules. Use temporal validation, because random splits can leak future behavior and overstate fraud performance.",
+    "es": "Compara siempre contra ranking aleatorio y reglas simples. Usa validación temporal, porque los cortes aleatorios pueden filtrar comportamiento futuro y exagerar el desempeño antifraude."
+  },
+  "glossary.title": {
+    "en": "Key Terms Glossary",
+    "es": "Glosario de términos clave"
+  },
+  "glossary.pr-auc": {
+    "en": "<strong>PR-AUC</strong>: Precision-Recall Area Under Curve. Primary metric for imbalanced fraud detection because it focuses on ranking the rare fraud cases. Random baseline is roughly the fraud rate.",
+    "es": "<strong>PR-AUC</strong>: área bajo la curva precisión-recall. Métrica principal para fraude desbalanceado porque se enfoca en ordenar los casos raros de fraude. El baseline aleatorio se aproxima a la tasa de fraude."
+  },
+  "glossary.velocity": {
+    "en": "<strong>Velocity</strong>: rate of activity, such as transactions in the last 1h or 24h. Sudden spikes are strong fraud signals.",
+    "es": "<strong>Velocidad</strong>: tasa de actividad, por ejemplo transacciones en la última hora o 24 horas. Los picos repentinos son señales fuertes de fraude."
+  },
+  "glossary.kya": {
+    "en": "<strong>KYA / KYE</strong>: Know Your Account / Know Your Entity. Relational context about users, merchants, workers, devices, and linked entities.",
+    "es": "<strong>KYA / KYE</strong>: Know Your Account / Know Your Entity. Contexto relacional sobre usuarios, comercios, empleados, dispositivos y entidades vinculadas."
+  },
+  "glossary.recall": {
+    "en": "<strong>Recall@K</strong>: fraction of all fraud caught when analysts review only the top K highest-risk cases. Critical for limited review teams.",
+    "es": "<strong>Recall@K</strong>: fracción de todo el fraude capturado cuando los analistas revisan solo los K casos de mayor riesgo. Es crítico para equipos de revisión limitados."
+  },
+  "glossary.cascades": {
+    "en": "<strong>Layered Cascades</strong>: fast cheap gate first, then heavier models only for uncertain or high-risk cases. This is the standard latency/coverage trade-off in production.",
+    "es": "<strong>Cascadas por capas</strong>: primero un filtro rápido y barato, luego modelos más pesados solo para casos inciertos o de alto riesgo. Es el trade-off estándar entre latencia y cobertura en producción."
+  },
+  "glossary.hybrid": {
+    "en": "<strong>Hybrid / MoE</strong>: combines model families, such as trees, anomaly detectors, sequence models, and graph models, with routing or score fusion.",
+    "es": "<strong>Híbrido / MoE</strong>: combina familias de modelos, como árboles, detectores de anomalías, modelos de secuencia y modelos de grafos, mediante enrutamiento o fusión de scores."
+  },
+  "filter.supervised": {
+    "en": "Supervised",
+    "es": "Supervisado"
+  },
+  "filter.label": {
+    "en": "Filter:",
+    "es": "Filtrar:"
+  },
+  "filter.all": {
+    "en": "All",
+    "es": "Todos"
+  },
+  "filter.generative": {
+    "en": "Generative / AD",
+    "es": "Generativo / AD"
+  },
+  "filter.hybrid": {
+    "en": "Hybrid / MoE",
+    "es": "Híbrido / MoE"
+  },
+  "filter.sequence": {
+    "en": "Sequence / Behavioral",
+    "es": "Secuencia / Conductual"
+  },
+  "filter.graph": {
+    "en": "Graph / Network",
+    "es": "Grafo / Red"
+  },
+  "filter.tabular": {
+    "en": "Tabular",
+    "es": "Tabular"
+  },
+  "mobile.jump.label": {
+    "en": "Jump to section",
+    "es": "Ir a sección"
+  },
+  "mobile.jump.placeholder": {
+    "en": "Jump to section",
+    "es": "Ir a sección"
+  },
+  "svg.device": {
+    "en": "Device",
+    "es": "Disp."
+  },
+  "svg.peer": {
+    "en": "Peer",
+    "es": "Par"
+  },
+  "svg.worker": {
+    "en": "Worker",
+    "es": "Empleado"
+  }
 }
