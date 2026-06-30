@@ -15,6 +15,7 @@
         initTooltips();
         initSmoothAnchors();
         initMobileJumpNav();
+        initCardsCoverageMatrix();
         initBrowserModelLab();
         
         // Mark animations
@@ -253,6 +254,22 @@
             history.pushState(null, '', select.value);
             select.value = '';
         });
+    }
+
+    function initCardsCoverageMatrix() {
+        const target = document.getElementById('cards-coverage-matrix');
+        if (!target || target.dataset.initialized) return;
+        const source = Array.from(document.querySelectorAll('#catalog [data-model-covered]'));
+        if (!source.length) return;
+        target.dataset.initialized = 'true';
+        target.replaceChildren(...source.map((item) => {
+            const name = item.getAttribute('data-model-covered');
+            const badge = document.createElement('span');
+            badge.className = 'px-2.5 py-1.5 rounded-full bg-slate-100 text-slate-700';
+            badge.dataset.cardModelVisible = name;
+            badge.textContent = name;
+            return badge;
+        }));
     }
 
     function initBrowserModelLab() {
