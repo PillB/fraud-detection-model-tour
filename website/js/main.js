@@ -749,7 +749,7 @@
 
     async function loadTranslations() {
         try {
-            const res = await fetch('translations.json?v=20260630-bilingual', { cache: 'no-store' });
+            const res = await fetch('translations.json?v=20260630-bilingual2', { cache: 'no-store' });
             translations = await res.json();
         } catch (e) {
             console.warn('Could not load translations.json, using fallback English');
@@ -868,10 +868,12 @@
         const browserLang = navigator.language || navigator.userLanguage || 'en';
         
         let lang = 'en';
-        if (urlLang === 'es' || storedLang === 'es' || browserLang.startsWith('es')) {
+        if (urlLang === 'es' || urlLang === 'en') {
+            lang = urlLang;
+        } else if (storedLang === 'es' || storedLang === 'en') {
+            lang = storedLang;
+        } else if (browserLang.startsWith('es')) {
             lang = 'es';
-        } else if (urlLang === 'en' || storedLang === 'en') {
-            lang = 'en';
         }
 
         // Initialize toggle UI

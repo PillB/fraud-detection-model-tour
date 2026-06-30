@@ -94,6 +94,11 @@ def test_primary_website_flows_with_playwright():
         assert page.locator(".comparison-table tbody tr").filter(has_text="Anomalías nuevas").count() > 0
         assert page.locator("#lab-status").get_by_text("Completadas").is_visible()
 
+        english_page = browser.new_page(viewport={"width": 1200, "height": 900})
+        english_page.goto(f"{url}?lang=en#cards", wait_until="networkidle")
+        assert english_page.locator("html").get_attribute("lang") == "en"
+        assert english_page.locator('#cards [data-generated-model-card="true"]').filter(has_text="Implemented").count() > 0
+
         mobile = browser.new_page(viewport={"width": 390, "height": 900}, is_mobile=True)
         mobile.goto(url, wait_until="networkidle")
         mobile.locator("#mobile-section-jump").select_option("#workbench")
