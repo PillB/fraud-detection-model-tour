@@ -37,10 +37,10 @@ LSTM processes transaction sequences per user/account:
 
 **Fraud-Specific Fit**: Excellent for user behavior sequences + KYA events. Combine with graph for rings. Used in Chen-reported hybrids.
 
-## Toy Example
-See experiments/toy_lstm_seq.py (sklearn on lagged seq features for simplicity + functionality).
+## Runnable Example (Production Note)
+See experiments/toy_lstm_seq.py. For production use real PyTorch/TF LSTM or Transformer with proper sequence padding, online state management, and drift detection on hidden states.
 
-## Visualization
+## Conceptual Visualization
 - Hidden state trajectory plot over time for a user.
 - Attention weights on tx in seq.
 
@@ -48,5 +48,3 @@ See experiments/toy_lstm_seq.py (sklearn on lagged seq features for simplicity +
 - Chen 2025 (LSTM growth).
 - Ghrib 2024 BiLSTM examples.
 - Full in sub-agent outputs (sequence-hybrid-dl).
-
-**Status**: Tested runnable.

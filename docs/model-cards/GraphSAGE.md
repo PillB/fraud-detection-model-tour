@@ -36,8 +36,8 @@ Inductive graph embedding via neighbor sampling and aggregation:
 
 **Fraud-Specific Fit**: Ideal for KYA/KYE relational fraud (mules, rings). Combine with seq for behavior + tabular for amounts. Common in production graph layers.
 
-## Toy Example (Functional Python)
-See experiments/toy_graphsage.py (uses networkx to build simple graph from synthetic data, computes basic embeddings via neighbor agg, then sklearn classifier. PR-AUC reported).
+## Runnable Example (Production Note)
+See experiments/toy_graphsage.py. For production, use PyG or DGL with proper sampling (fanouts), entity resolution for KYA, and temporal extensions (TGN).
 
 ## Conceptual Visualization
 - Graph with colored nodes (fraud vs normal) + highlighted suspicious communities.
@@ -48,4 +48,4 @@ See experiments/toy_graphsage.py (uses networkx to build simple graph from synth
 - Fraud GNN surveys (Motie 2024, safe-graph repo).
 - Full in data/subagents/graph-temporal-gnn/.
 
-**Status**: Educational card with runnable toy. Tested.
+**Production Note**: Educational card with runnable script. Tested. Use real GNN libs in production.

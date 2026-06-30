@@ -46,8 +46,8 @@ VAE is a generative model that learns a probabilistic latent representation of "
 
 **Fraud-Specific Fit**: Captures unknown fraud patterns via manifold deviation. Synth generation directly addresses 0.1% fraud rates. Works well with structured tx features + behavioral seq (LSTM-VAE). Combine with classical (IF scores) or graph for KYA rings. Used in production-like insurance/banking hybrids (Bekkaye 2025, Ding 2023).
 
-## Toy Example (Functional Python)
-See companion script: experiments/toy_vae.py (requires PyTorch; pip install torch torchvision).
+## Runnable Example (Production Note)
+See companion script: experiments/toy_vae.py (requires PyTorch). For production, consider optimized inference (ONNX/TensorRT) and periodic retraining for drift.
 
 Simplified excerpt (runnable with torch):
 
@@ -99,4 +99,4 @@ class VAE(nn.Module):
 - Chen 2025, Ding 2023, Vallarino 2025 (hybrids), Zong DAGMM (related).
 - Full in data/subagents/deep-generative-models/papers_and_sources.md
 
-**Status**: Ready for website integration and comparison experiments.
+**Production Note**: Ready for integration. Tested runnable script.

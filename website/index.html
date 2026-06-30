@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Professional guide to fraud detection ML techniques: classical baselines to SOTA hybrids (VAE, MoE, GraphSAGE, LSTM, TabTransformer, XGBoost). Research-backed model cards, experiments, pipeline, and guided learning. PillB.">
-    <title>Fraud Detection ML Techniques | Model Tour — PillB</title>
+    <meta name="description" data-i18n="meta.description" content="Professional guide to fraud detection ML techniques: classical baselines to SOTA hybrids (VAE, MoE, GraphSAGE, LSTM, TabTransformer, XGBoost). Research-backed model cards, experiments, pipeline, and guided learning. PillB.">
+    <title data-i18n="title">Fraud Detection ML Techniques | Model Tour — PillB</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap">
     <!-- Professional BCG/McKinsey extensions (complements Tailwind) -->
@@ -69,6 +69,16 @@
             background: linear-gradient(145deg, #0f172a 0%, #1e3a8a 100%);
         }
 
+        @media (max-width: 480px) {
+            .bcg-gradient h1 {
+                font-size: 2.1rem;
+                line-height: 1.05;
+            }
+            .bcg-gradient p {
+                font-size: 0.95rem;
+            }
+        }
+
         .prose-tight p {
             margin-bottom: 0.75rem;
         }
@@ -115,8 +125,9 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800">
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-white px-4 py-2 rounded border border-slate-300 text-sm" data-i18n="a11y.skip">Skip to main content</a>
     <!-- Top Navigation -->
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50" aria-label="Main navigation">
         <div class="max-w-7xl mx-auto px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex items-center gap-x-3">
@@ -131,26 +142,33 @@
                 </div>
 
                 <div class="hidden md:flex items-center gap-x-7 text-sm">
-                    <a href="#overview" class="nav-link text-slate-600 hover:text-slate-900 font-medium">Overview</a>
-                    <a href="#roadmap" class="nav-link text-slate-600 hover:text-slate-900 font-medium">Roadmap</a>
-                    <a href="#cards" class="nav-link text-slate-600 hover:text-slate-900 font-medium">Model Cards</a>
-                    <a href="#experiments" class="nav-link text-slate-600 hover:text-slate-900 font-medium">Experiments</a>
-                    <a href="#pipeline" class="nav-link text-slate-600 hover:text-slate-900 font-medium">Pipeline</a>
-                    <a href="#tour" class="nav-link text-slate-600 hover:text-slate-900 font-medium">Guided Tour</a>
+                    <a href="#overview" class="nav-link text-slate-600 hover:text-slate-900 font-medium" data-i18n="nav.overview">Overview</a>
+                    <a href="#roadmap" class="nav-link text-slate-600 hover:text-slate-900 font-medium" data-i18n="nav.roadmap">Roadmap</a>
+                    <a href="#catalog" class="nav-link text-slate-600 hover:text-slate-900 font-medium">Catalog</a>
+                    <a href="#cards" class="nav-link text-slate-600 hover:text-slate-900 font-medium" data-i18n="nav.cards">Model Cards</a>
+                    <a href="#experiments" class="nav-link text-slate-600 hover:text-slate-900 font-medium" data-i18n="nav.experiments">Experiments</a>
+                    <a href="#pipeline" class="nav-link text-slate-600 hover:text-slate-900 font-medium" data-i18n="nav.pipeline">Pipeline</a>
+                    <a href="#tour" class="nav-link text-slate-600 hover:text-slate-900 font-medium" data-i18n="nav.tour">Guided Tour</a>
                 </div>
 
                 <div class="flex items-center gap-x-3">
-                    <a href="https://github.com/PillB" target="_blank" 
+                    <a href="https://github.com/PillB/fraud-detection-model-tour" target="_blank" 
                        class="text-sm font-medium px-4 py-2 rounded-2xl border border-slate-200 hover:bg-slate-50 transition flex items-center gap-x-1.5">
-                        <span>GitHub</span>
+                        <span data-i18n="nav.github">GitHub</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
                     </a>
                     <a href="#experiments" 
                        class="hidden sm:block text-sm font-semibold px-5 py-2 bg-[#0f172a] hover:bg-slate-800 text-white rounded-2xl transition">
-                        Run Experiments
+                        <span data-i18n="nav.runExperiments">Run Experiments</span>
                     </a>
+
+                    <!-- Language Toggle for Latin America expansion -->
+                    <div class="flex items-center gap-1 text-xs border border-slate-200 rounded-full p-0.5 bg-white" role="group" aria-label="Language selector">
+                        <button id="lang-en" class="px-2 py-0.5 rounded-full font-medium transition lang-btn active bg-[#0f172a] text-white" data-lang="en" aria-pressed="true">EN</button>
+                        <button id="lang-es" class="px-2 py-0.5 rounded-full font-medium transition lang-btn hover:bg-slate-100" data-lang="es" aria-pressed="false">ES</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -161,28 +179,28 @@
         <div class="max-w-7xl mx-auto px-8 pt-14 pb-16">
             <div class="max-w-3xl">
                 <div class="inline-flex items-center gap-x-2 text-xs tracking-[0.08em] font-semibold text-blue-200 bg-white/10 px-3.5 py-1 rounded-full mb-5">
-                    RESEARCH-BACKED • ALL SCRIPTS GATE-VALIDATED • 2024–2026 SURVEYS
+                    <span data-i18n="hero.badge">RESEARCH-BACKED • ALL SCRIPTS GATE-VALIDATED • 2024–2026 SURVEYS</span>
                 </div>
                 
-                <h1 class="text-6xl leading-[0.96] font-semibold heading-font tracking-[-3.2px] mb-4">
+                <h1 class="text-6xl leading-[0.96] font-semibold heading-font tracking-[-3.2px] mb-4" data-i18n="hero.title">
                     Fraud Detection<br>ML Techniques
                 </h1>
-                <p class="text-2xl text-slate-200 max-w-xl tracking-tight">
+                <p class="text-2xl text-slate-200 max-w-xl tracking-tight" data-i18n="hero.subtitle">
                     Classical baselines to state-of-the-art hybrids.<br>
                     A practitioner reference for structured financial data and relational fraud signals.
                 </p>
 
                 <div class="flex flex-wrap items-center gap-3 mt-8">
-                    <a href="#cards" 
-                       class="inline-flex items-center justify-center px-7 py-3.5 bg-white text-[#0f172a] font-semibold rounded-3xl text-sm hover:bg-blue-50 transition shadow-sm">
-                        Explore the 6 Model Cards
+                    <a href="#catalog" 
+                       class="inline-flex items-center justify-center px-7 py-3.5 bg-white text-[#0f172a] font-semibold rounded-3xl text-sm hover:bg-blue-50 transition shadow-sm" data-i18n="hero.exploreCards">
+                        Explore Cards + Catalog
                     </a>
                     <a href="#pipeline" 
-                       class="inline-flex items-center justify-center px-7 py-3.5 border border-white/30 hover:bg-white/10 text-white rounded-3xl text-sm font-semibold transition">
+                       class="inline-flex items-center justify-center px-7 py-3.5 border border-white/30 hover:bg-white/10 text-white rounded-3xl text-sm font-semibold transition" data-i18n="hero.viewPipeline">
                         View Full Pipeline
                     </a>
                     <a href="https://github.com/PillB" target="_blank" 
-                       class="inline-flex items-center px-5 py-3.5 text-sm font-medium text-blue-100 hover:text-white">
+                       class="inline-flex items-center px-5 py-3.5 text-sm font-medium text-blue-100 hover:text-white" data-i18n="hero.viewSource">
                         View source on GitHub →
                     </a>
                 </div>
@@ -190,54 +208,97 @@
                 <div class="mt-8 flex items-center gap-x-5 text-xs text-blue-200/90">
                     <div class="flex items-center gap-x-1.5">
                         <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                        <span class="font-medium">Regression gate enforced</span>
+                        <span class="font-medium" data-i18n="hero.badge1">Regression gate enforced</span>
                     </div>
-                    <div>PR-AUC primary metric</div>
-                    <div>Synthetic + relational data</div>
+                    <div data-i18n="hero.badge2">PR-AUC primary metric</div>
+                    <div data-i18n="hero.badge3">Synthetic + relational data</div>
                 </div>
             </div>
         </div>
+        <div class="md:hidden border-t border-white/10 px-8 pb-5">
+            <label for="mobile-section-jump" class="sr-only">Jump to section</label>
+            <select id="mobile-section-jump" class="w-full rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-sm text-white">
+                <option value="">Jump to section</option>
+                <option value="#overview">Overview</option>
+                <option value="#roadmap">Roadmap</option>
+                <option value="#catalog">Catalog</option>
+                <option value="#workbench">Analyst Workbench</option>
+                <option value="#cards">Model Cards</option>
+                <option value="#experiments">Experiments</option>
+                <option value="#pipeline">Pipeline</option>
+                <option value="#tour">Guided Tour</option>
+            </select>
+        </div>
     </header>
 
-    <div class="max-w-7xl mx-auto px-8">
+    <main id="main-content" class="max-w-7xl mx-auto px-8">
+
+        <!-- Role-based user paths -->
+        <section class="py-10">
+            <div class="mb-5">
+                <div class="uppercase text-xs tracking-[1.5px] text-blue-700 font-semibold">START WITH YOUR JOB TO BE DONE</div>
+                <h2 class="section-title text-slate-900">Choose a Tour Path</h2>
+                <p class="text-sm text-slate-500 mt-1 max-w-3xl">The site is structured as a professional workflow, not a glossary: understand the fraud problem, choose the right model family, inspect runnable evidence, then map it to an analyst or production pipeline.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4">
+                <a href="#tour" class="consulting-card bg-white rounded-3xl p-6 block">
+                    <div class="text-xs font-semibold text-emerald-700 tracking-wider">BEGINNER</div>
+                    <div class="font-semibold text-lg mt-1">Learn the concepts</div>
+                    <p class="text-sm text-slate-600 mt-2">Start with the plain-English scenario, glossary, guided tour, and first runnable scripts.</p>
+                    <div class="mt-4 text-xs font-semibold text-blue-700">Go to guided tour -></div>
+                </a>
+                <a href="#experiments" class="consulting-card bg-white rounded-3xl p-6 block">
+                    <div class="text-xs font-semibold text-blue-700 tracking-wider">PRACTITIONER</div>
+                    <div class="font-semibold text-lg mt-1">Compare working models</div>
+                    <p class="text-sm text-slate-600 mt-2">Jump to PR-AUC, Recall@K, scripts, trade-offs, and production cascade guidance.</p>
+                    <div class="mt-4 text-xs font-semibold text-blue-700">Review experiments -></div>
+                </a>
+                <a href="#workbench" class="consulting-card bg-white rounded-3xl p-6 block">
+                    <div class="text-xs font-semibold text-violet-700 tracking-wider">RESEARCHER / ANALYST</div>
+                    <div class="font-semibold text-lg mt-1">Trace evidence and networks</div>
+                    <p class="text-sm text-slate-600 mt-2">Use the catalog, temporal graph view, and GraphRAG-style case workflow to reason about criminal networks.</p>
+                    <div class="mt-4 text-xs font-semibold text-blue-700">Open workbench view -></div>
+                </a>
+            </div>
+        </section>
         
         <!-- Overview + Challenge -->
         <div id="overview" class="pt-12 pb-10">
             <div class="grid md:grid-cols-12 gap-x-8 gap-y-8">
                 <div class="md:col-span-7">
-                    <div class="uppercase text-xs tracking-[2px] text-blue-600 font-semibold mb-2">THE CHALLENGE</div>
-                    <h2 class="section-title text-slate-900 mb-4">Why standard ML fails at fraud</h2>
+                    <div class="uppercase text-xs tracking-[2px] text-blue-600 font-semibold mb-2" data-i18n="overview.challenge">THE CHALLENGE</div>
+                    <h2 class="section-title text-slate-900 mb-4" data-i18n="overview.title">Why standard ML fails at fraud</h2>
                     
                     <div class="prose-tight text-[15px] text-slate-600 leading-relaxed max-w-2xl">
-                        <p>Fraud incidence in financial transactions typically ranges from <strong>0.01% to 2%</strong>. A trivial “all legitimate” classifier attains >99% accuracy while detecting zero fraud events.</p>
-                        <p class="mt-3">Production-grade systems must detect <strong>known patterns</strong> (velocity bursts, mule accounts) alongside <strong>novel attacks</strong> (zero-day schemes), operate under extreme class imbalance, accommodate concept drift, and produce auditable, explainable scores for regulatory scrutiny.</p>
+                        <p data-i18n="overview.p1">Fraud incidence in financial transactions typically ranges from <strong>0.01% to 2%</strong>. A trivial “all legitimate” classifier attains >99% accuracy while detecting zero fraud events.</p>
+                        <p class="mt-3" data-i18n="overview.p2">Production-grade systems must detect <strong>known patterns</strong> (velocity bursts, mule accounts) alongside <strong>novel attacks</strong> (zero-day schemes), operate under extreme class imbalance, accommodate concept drift, and produce auditable, explainable scores for regulatory scrutiny.</p>
                     </div>
                     
-                    <div class="mt-6 grid grid-cols-3 gap-3 text-sm">
+                    <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
                         <div class="insight-box border rounded-2xl p-4">
-                            <div class="font-semibold text-emerald-700 text-xs tracking-wider">METRIC OF CHOICE</div>
-                            <div class="mt-1 text-xl font-semibold text-slate-800">PR-AUC</div>
-                            <div class="text-xs text-slate-500 mt-1 leading-snug">Focuses on the rare positive class. ROC-AUC is misleading on imbalanced data.</div>
+                            <div class="font-semibold text-emerald-700 text-xs tracking-wider" data-i18n="insight.metric.title">METRIC OF CHOICE</div>
+                            <div class="mt-1 text-xl font-semibold text-slate-800" data-i18n="insight.metric.value">PR-AUC</div>
+                            <div class="text-xs text-slate-500 mt-1 leading-snug" data-i18n="insight.metric.desc">Focuses on the rare positive class. ROC-AUC is misleading on imbalanced data.</div>
                         </div>
                         <div class="insight-box border rounded-2xl p-4">
-                            <div class="font-semibold text-emerald-700 text-xs tracking-wider">PRODUCTION PATTERN</div>
-                            <div class="mt-1 text-xl font-semibold text-slate-800">Layered Cascades</div>
-                            <div class="text-xs text-slate-500 mt-1 leading-snug">Fast high-recall gate (rules + IF) → strong classifier → graph / generative → selective review.</div>
+                            <div class="font-semibold text-emerald-700 text-xs tracking-wider" data-i18n="insight.cascades.title">PRODUCTION PATTERN</div>
+                            <div class="mt-1 text-xl font-semibold text-slate-800" data-i18n="insight.cascades.value">Layered Cascades</div>
+                            <div class="text-xs text-slate-500 mt-1 leading-snug" data-i18n="insight.cascades.desc">Fast high-recall gate (rules + IF) → strong classifier → graph / generative → selective review.</div>
                         </div>
                         <div class="insight-box border rounded-2xl p-4">
-                            <div class="font-semibold text-emerald-700 text-xs tracking-wider">KEY SIGNALS</div>
-                            <div class="mt-1 font-semibold text-slate-800">Velocity + KYA/KYE + Behavior</div>
-                            <div class="text-xs text-slate-500 mt-1 leading-snug">Feature engineering frequently outperforms model complexity.</div>
+                            <div class="font-semibold text-emerald-700 text-xs tracking-wider" data-i18n="insight.signals.title">KEY SIGNALS</div>
+                            <div class="mt-1 font-semibold text-slate-800" data-i18n="insight.signals.value">Velocity + KYA/KYE + Behavior</div>
+                            <div class="text-xs text-slate-500 mt-1 leading-snug" data-i18n="insight.signals.desc">Feature engineering frequently outperforms model complexity.</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="md:col-span-5 bg-white border rounded-3xl p-7 consulting-shadow">
                     <div class="font-semibold mb-3 flex items-center gap-x-2">
-                        <span>Synthetic Data Generator</span>
+                        <span data-i18n="synthetic.title">Synthetic Data Generator</span>
                     </div>
                     <div class="text-sm text-slate-600 space-y-2.5">
-                        <p>Realistic transactional + relational benchmark data (engineered to mirror production fraud signals) that includes:</p>
+                        <p data-i18n="synthetic.desc">Realistic transactional + relational benchmark data (engineered to mirror production fraud signals) that includes:</p>
                         <ul class="text-xs grid grid-cols-1 gap-y-[3px] pl-1 text-slate-500">
                             <li>• 200 users + 80 merchants + 30 workers (KYE)</li>
                             <li>• Timestamped txns with amount, category, hour</li>
@@ -248,6 +309,20 @@
                         <div class="pt-3 text-[10px] font-mono text-emerald-600 border-t mt-3">
                             python experiments/synthetic_fraud_data.py
                         </div>
+                        <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
+                            <div class="rounded-2xl bg-slate-50 p-3">
+                                <div class="text-lg font-semibold text-slate-900">310</div>
+                                <div class="text-[10px] text-slate-500">entities</div>
+                            </div>
+                            <div class="rounded-2xl bg-slate-50 p-3">
+                                <div class="text-lg font-semibold text-slate-900">1.2%</div>
+                                <div class="text-[10px] text-slate-500">fraud</div>
+                            </div>
+                            <div class="rounded-2xl bg-slate-50 p-3">
+                                <div class="text-lg font-semibold text-slate-900">4</div>
+                                <div class="text-[10px] text-slate-500">signal views</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -255,24 +330,24 @@
 
         <!-- New-to-this on-ramp (plain English entry per multi-audience review) -->
         <div class="mb-12 bg-white border border-slate-200 rounded-3xl p-7">
-            <div class="uppercase text-xs tracking-[1.5px] text-blue-700 font-semibold mb-2">NEW TO FRAUD DETECTION ML?</div>
-            <h4 class="font-semibold text-lg tracking-tight mb-3">The 90-second plain English version</h4>
+            <div class="uppercase text-xs tracking-[1.5px] text-blue-700 font-semibold mb-2" data-i18n="newto.badge">NEW TO FRAUD DETECTION ML?</div>
+            <h4 class="font-semibold text-lg tracking-tight mb-3" data-i18n="newto.title">The 90-second plain English version</h4>
             <div class="prose-tight text-[14.5px] text-slate-700 leading-relaxed max-w-3xl">
-                <p>Imagine Alice buys a $5 coffee every weekday at 8am using her usual card and phone. One night at 3:17am a $4,800 charge appears at a new merchant in another country from a device she has never used, right after a new linked account was added.</p>
-                <p class="mt-2">Most transactions are normal. Fraud is rare (often &lt;1-2%). A model that always says “legit” would be 98-99% accurate yet useless. The goal is to rank the truly suspicious cases high enough that investigators can review the top 50–200 alerts and catch the real fraud without drowning in false alarms.</p>
-                <p class="mt-2">This site walks through the main techniques banks and fintechs actually use — from simple velocity rules and trees to representation learning, graphs for collusion rings, and hybrids — with real runnable code and the metrics that matter on imbalanced data (PR-AUC first).</p>
+                <p data-i18n="newto.p1">Imagine Alice buys a $5 coffee every weekday at 8am using her usual card and phone. One night at 3:17am a $4,800 charge appears at a new merchant in another country from a device she has never used, right after a new linked account was added.</p>
+                <p class="mt-2" data-i18n="newto.p2">Most transactions are normal. Fraud is rare (often &lt;1-2%). A model that always says “legit” would be 98-99% accurate yet useless. The goal is to rank the truly suspicious cases high enough that investigators can review the top 50–200 alerts and catch the real fraud without drowning in false alarms.</p>
+                <p class="mt-2" data-i18n="newto.p3">This site walks through the main techniques banks and fintechs actually use — from simple velocity rules and trees to representation learning, graphs for collusion rings, and hybrids — with real runnable code and the metrics that matter on imbalanced data (PR-AUC first).</p>
             </div>
-            <div class="mt-3 text-xs text-slate-500">Key terms you will see: <strong>PR-AUC</strong> (how well the model ranks the rare bad cases — random guessing scores roughly the fraud rate), <strong>velocity</strong> (how fast activity is happening), <strong>KYA/KYE</strong> (know-your-account / know-your-entity signals about the people and businesses involved).</div>
+            <div class="mt-3 text-xs text-slate-500" data-i18n="newto.terms">Key terms you will see: <strong>PR-AUC</strong> (how well the model ranks the rare bad cases — random guessing scores roughly the fraud rate), <strong>velocity</strong> (how fast activity is happening), <strong>KYA/KYE</strong> (know-your-account / know-your-entity signals about the people and businesses involved).</div>
         </div>
 
         <!-- Roadmap Summary -->
         <div id="roadmap" class="mb-16">
             <div class="flex items-end justify-between mb-5">
                 <div>
-                    <div class="uppercase text-xs font-semibold tracking-[1.5px] text-blue-600">STRUCTURED LEARNING PATH</div>
-                    <h3 class="section-title">Roadmap: Classical to SOTA</h3>
+                    <div class="uppercase text-xs font-semibold tracking-[1.5px] text-blue-600" data-i18n="roadmap.badge">STRUCTURED LEARNING PATH</div>
+                    <h3 class="section-title" data-i18n="roadmap.title">Roadmap: Classical to SOTA</h3>
                 </div>
-                <a href="docs/roadmap/roadmap.md" target="_blank"
+                <a href="../docs/roadmap/roadmap.md" target="_blank"
                    class="text-sm font-semibold flex items-center gap-x-1 text-blue-700 hover:text-blue-800">
                     Full roadmap document <span class="text-xl leading-none">→</span>
                 </a>
@@ -280,40 +355,91 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div class="bg-white border rounded-3xl p-5">
-                    <div class="tier-pill font-semibold text-emerald-700 mb-1">TIERS 0–2</div>
-                    <div class="font-semibold text-base">Rules • Classical ML • Anomaly Detection</div>
-                    <div class="text-xs text-slate-500 mt-2.5 leading-relaxed">Velocity thresholds, blacklists, XGBoost/LightGBM on engineered features, Isolation Forest and LOF. Mandatory first production layer for latency and regulatory compliance.</div>
-                    <div class="mt-4 text-[10px] text-emerald-600">Feature engineering frequently exceeds model choice</div>
+                    <div class="tier-pill font-semibold text-emerald-700 mb-1" data-i18n="roadmap.tier0.title">TIERS 0–2</div>
+                    <div class="font-semibold text-base" data-i18n="roadmap.tier0.subtitle">Rules • Classical ML • Anomaly Detection</div>
+                    <div class="text-xs text-slate-500 mt-2.5 leading-relaxed" data-i18n="roadmap.tier0.detail">Velocity thresholds, blacklists, XGBoost/LightGBM on engineered features, Isolation Forest and LOF. Mandatory first production layer for latency and regulatory compliance.</div>
+                    <div class="mt-4 text-[10px] text-emerald-600" data-i18n="roadmap.tier0.note">Feature engineering frequently exceeds model choice</div>
                 </div>
                 <div class="bg-white border rounded-3xl p-5">
-                    <div class="tier-pill font-semibold text-blue-700 mb-1">TIERS 3–4</div>
-                    <div class="font-semibold text-base">Representation Learning • Tabular DL • Graphs</div>
-                    <div class="text-xs text-slate-500 mt-2.5 leading-relaxed">VAE/AE for reconstruction-based novel fraud, TabTransformer for contextual KYA categorical embeddings, GraphSAGE for mule networks and collusion detection.</div>
-                    <div class="mt-4 text-[10px] text-blue-600">Captures signals invisible to flat tabular models</div>
+                    <div class="tier-pill font-semibold text-blue-700 mb-1" data-i18n="roadmap.tier3.title">TIERS 3–4</div>
+                    <div class="font-semibold text-base" data-i18n="roadmap.tier3.subtitle">Representation Learning • Tabular DL • Graphs</div>
+                    <div class="text-xs text-slate-500 mt-2.5 leading-relaxed" data-i18n="roadmap.tier3.detail">VAE/AE for reconstruction-based novel fraud, TabTransformer for contextual KYA categorical embeddings, GraphSAGE for mule networks and collusion detection.</div>
+                    <div class="mt-4 text-[10px] text-blue-600" data-i18n="roadmap.tier3.note">Captures signals invisible to flat tabular models</div>
                 </div>
                 <div class="bg-white border rounded-3xl p-5">
-                    <div class="tier-pill font-semibold text-amber-700 mb-1">TIERS 5–6</div>
-                    <div class="font-semibold text-base">Sequence • Temporal Graphs • Hybrids</div>
-                    <div class="text-xs text-slate-500 mt-2.5 leading-relaxed">LSTM for per-entity behavioral trajectories. MoE hybrids routing across RNN, Transformer, and AE experts. TGN/HTGNN for evolving transaction graphs.</div>
-                    <div class="mt-4 text-[10px] text-amber-600">Adaptive specialization across fraud archetypes</div>
+                    <div class="tier-pill font-semibold text-amber-700 mb-1" data-i18n="roadmap.tier5.title">TIERS 5–6</div>
+                    <div class="font-semibold text-base" data-i18n="roadmap.tier5.subtitle">Sequence • Temporal Graphs • Hybrids</div>
+                    <div class="text-xs text-slate-500 mt-2.5 leading-relaxed" data-i18n="roadmap.tier5.detail">LSTM for per-entity behavioral trajectories. MoE hybrids routing across RNN, Transformer, and AE experts. TGN/HTGNN for evolving transaction graphs.</div>
+                    <div class="mt-4 text-[10px] text-amber-600" data-i18n="roadmap.tier5.note">Adaptive specialization across fraud archetypes</div>
                 </div>
                 <div class="bg-white border rounded-3xl p-5">
-                    <div class="tier-pill font-semibold text-violet-700 mb-1">TIERS 7–8</div>
-                    <div class="font-semibold text-base">Ensembles • SSL • Selective LLM</div>
-                    <div class="text-xs text-slate-500 mt-2.5 leading-relaxed">Layered cascades, self-supervised pretraining (e.g. SEFraud-style), GraphRAG and agentic review on high-uncertainty cases only. The production standard.</div>
-                    <div class="mt-4 text-[10px] text-violet-600">Cost-sensitive, explainable, drift-resilient</div>
+                    <div class="tier-pill font-semibold text-violet-700 mb-1" data-i18n="roadmap.tier7.title">TIERS 7–8</div>
+                    <div class="font-semibold text-base" data-i18n="roadmap.tier7.subtitle">Ensembles • SSL • Selective LLM</div>
+                    <div class="text-xs text-slate-500 mt-2.5 leading-relaxed" data-i18n="roadmap.tier7.detail">Layered cascades, self-supervised pretraining (e.g. SEFraud-style), GraphRAG and agentic review on high-uncertainty cases only. The production standard.</div>
+                    <div class="mt-4 text-[10px] text-violet-600" data-i18n="roadmap.tier7.note">Cost-sensitive, explainable, drift-resilient</div>
                 </div>
             </div>
 
-            <div class="mt-3 text-xs text-slate-500">Recommended path: Strong feature engineering + XGBoost + Isolation Forest gate → augment with VAE latents or TabTransformer embeddings → introduce graph and sequence layers → cap with MoE hybrids or full cascades.</div>
+            <div class="mt-3 text-xs text-slate-500" data-i18n="roadmap.recommended">Recommended path: Strong feature engineering + XGBoost + Isolation Forest gate → augment with VAE latents or TabTransformer embeddings → introduce graph and sequence layers → cap with MoE hybrids or full cascades.</div>
+        </div>
+
+        <!-- Exhaustive Model Catalog -->
+        <div id="catalog" class="mb-16">
+            <div class="flex items-end justify-between mb-5">
+                <div>
+                    <div class="uppercase text-xs font-semibold tracking-[1.5px] text-blue-600">EXPANDED RESEARCH COVERAGE</div>
+                    <h3 class="section-title">Model Catalog: Broad Coverage Map</h3>
+                    <p class="text-sm text-slate-500 mt-1 max-w-3xl">The flagship cards teach the main path. The catalog captures the wider professional toolkit: statistical gates, density methods, balanced ensembles, graph mining, temporal graph learning, self-supervised representation learning, and GraphRAG analyst workflows.</p>
+                </div>
+                <a href="../docs/roadmap/exhaustive_model_catalog.md" target="_blank"
+                   class="hidden md:flex text-sm font-semibold items-center gap-x-1 text-blue-700 hover:text-blue-800">
+                    Full catalog <span class="text-xl leading-none">→</span>
+                </a>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="bg-white border rounded-3xl p-5">
+                    <div class="font-semibold text-base">Classical Foundations</div>
+                    <div class="text-xs text-slate-500 mt-2 leading-relaxed">Rules, robust z-score/MAD, IQR, Isolation Forest, LOF, One-Class SVM, robust covariance, PCA reconstruction, HBOS/ECOD/COPOD-style density scoring.</div>
+                    <a href="../experiments/toy_classical_anomaly_suite.py" class="inline-block mt-3 text-[10px] font-mono text-blue-700 hover:underline">python experiments/toy_classical_anomaly_suite.py</a>
+                </div>
+                <div class="bg-white border rounded-3xl p-5">
+                    <div class="font-semibold text-base">Cost-Sensitive Ensembles</div>
+                    <div class="text-xs text-slate-500 mt-2 leading-relaxed">Logistic scorecards, Random Forest, ExtraTrees, GBDT/XGBoost/LightGBM/CatBoost, Balanced RF, EasyEnsemble, RUSBoost, stacking, calibrated top-K thresholds.</div>
+                    <a href="../docs/model-cards/Cost_Sensitive_Ensembles.md" class="inline-block mt-3 text-[10px] font-mono text-blue-700 hover:underline">docs/model-cards/Cost_Sensitive_Ensembles.md</a>
+                </div>
+                <div class="bg-white border rounded-3xl p-5">
+                    <div class="font-semibold text-base">Criminal Network Graphs</div>
+                    <div class="text-xs text-slate-500 mt-2 leading-relaxed">Centrality, k-core, community detection, role discovery, dense subgraph search, graph anomaly features, GraphSAGE/GAT/R-GCN/HGT and community-aware GNNs.</div>
+                    <a href="../experiments/toy_community_role_detection.py" class="inline-block mt-3 text-[10px] font-mono text-blue-700 hover:underline">python experiments/toy_community_role_detection.py</a>
+                </div>
+                <div class="bg-white border rounded-3xl p-5">
+                    <div class="font-semibold text-base">Temporal Graphs + GraphRAG</div>
+                    <div class="text-xs text-slate-500 mt-2 leading-relaxed">TGAT/TGN/JODIE/DyRep/EvolveGCN-style event memory, temporal validation, plus offline GraphRAG case packets for evidence-grounded analyst review.</div>
+                    <a href="../experiments/toy_temporal_graph_risk.py" class="inline-block mt-3 text-[10px] font-mono text-blue-700 hover:underline">python experiments/toy_temporal_graph_risk.py</a>
+                    <a href="../experiments/toy_graphrag_analyst.py" class="inline-block mt-1 text-[10px] font-mono text-blue-700 hover:underline">python experiments/toy_graphrag_analyst.py</a>
+                </div>
+            </div>
+
+            <div class="mt-4 bg-white border rounded-3xl p-6">
+                <div class="font-semibold text-sm mb-3">Representative Expansion Cards</div>
+                <div class="grid md:grid-cols-5 gap-2 text-xs">
+                    <a class="px-3 py-2 rounded-2xl border hover:bg-slate-50" href="../docs/model-cards/Community_Role_Detection.md">Community + Role Detection</a>
+                    <a class="px-3 py-2 rounded-2xl border hover:bg-slate-50" href="../docs/model-cards/Temporal_GNNs.md">Temporal GNNs</a>
+                    <a class="px-3 py-2 rounded-2xl border hover:bg-slate-50" href="../docs/model-cards/Cost_Sensitive_Ensembles.md">Cost-Sensitive Ensembles</a>
+                    <a class="px-3 py-2 rounded-2xl border hover:bg-slate-50" href="../docs/model-cards/DeepSVDD_DAGMM.md">Deep SVDD + DAGMM</a>
+                    <a class="px-3 py-2 rounded-2xl border hover:bg-slate-50" href="../docs/model-cards/GraphRAG_Analyst.md">GraphRAG Analyst</a>
+                </div>
+                <div class="mt-3 text-xs text-slate-500">Success condition for this layer: each family has a clear fraud use case, assumptions, limitations, and either a runnable local example or a dependency-light proxy with production upgrade guidance.</div>
+            </div>
         </div>
 
         <!-- Conceptual Architecture Diagram -->
         <div class="mb-16">
             <div class="flex justify-between items-baseline mb-4 px-1">
                 <div>
-                    <div class="font-semibold text-lg tracking-tight">Layered Fraud Detection Architecture</div>
-                    <div class="text-sm text-slate-500">Conceptual flow used across the cards and pipeline</div>
+                    <div class="font-semibold text-lg tracking-tight" data-i18n="arch.title">Layered Fraud Detection Architecture</div>
+                    <div class="text-sm text-slate-500" data-i18n="arch.subtitle">Conceptual flow used across the cards and pipeline</div>
                 </div>
             </div>
 
@@ -332,53 +458,53 @@
                     
                     <!-- Input -->
                     <rect x="20" y="55" width="128" height="78" rx="10" fill="#f1f5f9" stroke="#64748b" stroke-width="1.25"/>
-                    <text x="84" y="82" fill="#334155" font-size="11" font-weight="600" text-anchor="middle">RAW DATA</text>
-                    <text x="84" y="100" fill="#64748b" font-size="9.5" text-anchor="middle">Txns • KYA/KYE</text>
-                    <text x="84" y="115" fill="#64748b" font-size="9.5" text-anchor="middle">Graph edges • Logs</text>
+                    <text id="svg-raw" x="84" y="82" fill="#334155" font-size="11" font-weight="600" text-anchor="middle" data-i18n="svg.raw">RAW DATA</text>
+                    <text id="svg-txns" x="84" y="100" fill="#64748b" font-size="9.5" text-anchor="middle" data-i18n="svg.txns">Txns • KYA/KYE</text>
+                    <text id="svg-graph" x="84" y="115" fill="#64748b" font-size="9.5" text-anchor="middle" data-i18n="svg.graph">Graph edges • Logs</text>
 
                     <!-- Arrow 1 -->
                     <line x1="152" y1="94" x2="188" y2="94" class="flow-arrow"/>
                     
                     <!-- Feature Engineering -->
                     <rect x="195" y="50" width="132" height="88" rx="10" fill="#e0e7ff" stroke="#1e40af" stroke-width="1.5"/>
-                    <text x="261" y="78" fill="#1e3a8a" font-size="11" font-weight="700" text-anchor="middle">FEATURE ENGINEERING</text>
-                    <text x="261" y="96" fill="#334155" font-size="9.5" text-anchor="middle">Velocity • Amount stats</text>
-                    <text x="261" y="110" fill="#334155" font-size="9.5" text-anchor="middle">KYA aggregates • Time</text>
-                    <text x="261" y="124" fill="#475569" font-size="8.5" text-anchor="middle">+ Graph construction</text>
+                    <text id="svg-fe" x="261" y="78" fill="#1e3a8a" font-size="11" font-weight="700" text-anchor="middle" data-i18n="svg.fe">FEATURE ENGINEERING</text>
+                    <text id="svg-fe1" x="261" y="96" fill="#334155" font-size="9.5" text-anchor="middle" data-i18n="svg.fe1">Velocity • Amount stats</text>
+                    <text id="svg-fe2" x="261" y="110" fill="#334155" font-size="9.5" text-anchor="middle" data-i18n="svg.fe2">KYA aggregates • Time</text>
+                    <text id="svg-fe3" x="261" y="124" fill="#475569" font-size="8.5" text-anchor="middle" data-i18n="svg.fe3">+ Graph construction</text>
 
                     <!-- Arrow 2 -->
                     <line x1="332" y1="94" x2="362" y2="94" class="flow-arrow"/>
 
                     <!-- Gate -->
                     <rect x="368" y="28" width="110" height="55" rx="8" fill="#fefce8" stroke="#854d0e" stroke-width="1.25"/>
-                    <text x="423" y="51" fill="#713f12" font-size="10" font-weight="700" text-anchor="middle">FAST GATE</text>
-                    <text x="423" y="66" fill="#854d0e" font-size="9" text-anchor="middle">Rules + IForest</text>
+                    <text id="svg-gate" x="423" y="51" fill="#713f12" font-size="10" font-weight="700" text-anchor="middle" data-i18n="svg.gate">FAST GATE</text>
+                    <text id="svg-gate1" x="423" y="66" fill="#854d0e" font-size="9" text-anchor="middle" data-i18n="svg.gate1">Rules + IForest</text>
 
                     <!-- Parallel models -->
                     <!-- XGB -->
                     <rect x="368" y="95" width="110" height="44" rx="8" fill="#ecfdf5" stroke="#166534" stroke-width="1.25"/>
-                    <text x="423" y="114" fill="#166534" font-size="10" font-weight="600" text-anchor="middle">XGBoost (Supervised)</text>
-                    <text x="423" y="127" fill="#166534" font-size="8" text-anchor="middle">Known patterns</text>
+                    <text id="svg-xgb" x="423" y="114" fill="#166534" font-size="10" font-weight="600" text-anchor="middle" data-i18n="svg.xgb">XGBoost (Supervised)</text>
+                    <text id="svg-xgb1" x="423" y="127" fill="#166534" font-size="8" text-anchor="middle" data-i18n="svg.xgb1">Known patterns</text>
 
                     <!-- VAE -->
                     <rect x="498" y="28" width="106" height="44" rx="8" fill="#f0f9ff" stroke="#0369a1" stroke-width="1.25"/>
-                    <text x="551" y="47" fill="#0369a1" font-size="10" font-weight="600" text-anchor="middle">VAE (Generative AD)</text>
-                    <text x="551" y="60" fill="#0369a1" font-size="8" text-anchor="middle">Novel + recon prob</text>
+                    <text id="svg-vae" x="551" y="47" fill="#0369a1" font-size="10" font-weight="600" text-anchor="middle" data-i18n="svg.vae">VAE (Generative AD)</text>
+                    <text id="svg-vae1" x="551" y="60" fill="#0369a1" font-size="8" text-anchor="middle" data-i18n="svg.vae1">Novel + recon prob</text>
 
                     <!-- MoE -->
                     <rect x="498" y="82" width="106" height="44" rx="8" fill="#fef3c7" stroke="#92400e" stroke-width="1.25"/>
-                    <text x="551" y="101" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle">MoE Hybrid</text>
-                    <text x="551" y="114" fill="#92400e" font-size="8" text-anchor="middle">RNN + Trans + AE</text>
+                    <text id="svg-moe" x="551" y="101" fill="#92400e" font-size="10" font-weight="600" text-anchor="middle" data-i18n="svg.moe">MoE Hybrid</text>
+                    <text id="svg-moe1" x="551" y="114" fill="#92400e" font-size="8" text-anchor="middle" data-i18n="svg.moe1">RNN + Trans + AE</text>
 
                     <!-- LSTM -->
                     <rect x="498" y="136" width="106" height="44" rx="8" fill="#ede9fe" stroke="#4338ca" stroke-width="1.25"/>
-                    <text x="551" y="155" fill="#4338ca" font-size="10" font-weight="600" text-anchor="middle">LSTM Sequence</text>
-                    <text x="551" y="168" fill="#4338ca" font-size="8" text-anchor="middle">Behavioral dynamics</text>
+                    <text id="svg-lstm" x="551" y="155" fill="#4338ca" font-size="10" font-weight="600" text-anchor="middle" data-i18n="svg.lstm">LSTM Sequence</text>
+                    <text id="svg-lstm1" x="551" y="168" fill="#4338ca" font-size="8" text-anchor="middle" data-i18n="svg.lstm1">Behavioral dynamics</text>
 
                     <!-- Graph -->
                     <rect x="368" y="150" width="110" height="44" rx="8" fill="#f3e8ff" stroke="#6b21a8" stroke-width="1.25"/>
-                    <text x="423" y="169" fill="#6b21a8" font-size="10" font-weight="600" text-anchor="middle">GraphSAGE</text>
-                    <text x="423" y="182" fill="#6b21a8" font-size="8" text-anchor="middle">Relational / rings</text>
+                    <text id="svg-graphsage" x="423" y="169" fill="#6b21a8" font-size="10" font-weight="600" text-anchor="middle" data-i18n="svg.graphsage">GraphSAGE</text>
+                    <text id="svg-graphsage1" x="423" y="182" fill="#6b21a8" font-size="8" text-anchor="middle" data-i18n="svg.graphsage1">Relational / rings</text>
 
                     <!-- Arrow to fusion -->
                     <line x1="610" y1="94" x2="655" y2="94" class="flow-arrow"/>
@@ -387,256 +513,316 @@
 
                     <!-- Ensemble / Fusion -->
                     <rect x="662" y="58" width="128" height="72" rx="10" fill="#0f172a" stroke="#0f172a"/>
-                    <text x="726" y="83" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">ENSEMBLE / GATE</text>
-                    <text x="726" y="99" fill="#94a3b8" font-size="9" text-anchor="middle">Weighted fusion</text>
-                    <text x="726" y="113" fill="#64748b" font-size="9" text-anchor="middle">+ late MoE routing</text>
+                    <text id="svg-ensemble" x="726" y="83" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" data-i18n="svg.ensemble">ENSEMBLE / GATE</text>
+                    <text id="svg-ensemble1" x="726" y="99" fill="#94a3b8" font-size="9" text-anchor="middle" data-i18n="svg.ensemble1">Weighted fusion</text>
+                    <text id="svg-ensemble2" x="726" y="113" fill="#64748b" font-size="9" text-anchor="middle" data-i18n="svg.ensemble2">+ late MoE routing</text>
 
                     <!-- Arrow to output -->
                     <line x1="795" y1="94" x2="831" y2="94" class="flow-arrow"/>
 
                     <!-- Output -->
                     <rect x="837" y="52" width="135" height="86" rx="10" fill="#f8fafc" stroke="#1e40af" stroke-width="1.5"/>
-                    <text x="904" y="76" fill="#1e3a8a" font-size="11" font-weight="700" text-anchor="middle">RISK SCORE</text>
-                    <text x="904" y="92" fill="#475569" font-size="9" text-anchor="middle">+ Explanations</text>
-                    <text x="904" y="107" fill="#475569" font-size="9" text-anchor="middle">(SHAP • Recon • Attn)</text>
-                    <text x="904" y="122" fill="#64748b" font-size="8.5" text-anchor="middle">Review queue</text>
+                    <text id="svg-risk" x="904" y="76" fill="#1e3a8a" font-size="11" font-weight="700" text-anchor="middle" data-i18n="svg.risk">RISK SCORE</text>
+                    <text id="svg-risk1" x="904" y="92" fill="#475569" font-size="9" text-anchor="middle" data-i18n="svg.risk1">+ Explanations</text>
+                    <text id="svg-risk2" x="904" y="107" fill="#475569" font-size="9" text-anchor="middle" data-i18n="svg.risk2">(SHAP • Recon • Attn)</text>
+                    <text id="svg-risk3" x="904" y="122" fill="#64748b" font-size="8.5" text-anchor="middle" data-i18n="svg.risk3">Review queue</text>
                 </svg>
-                <div class="text-[10px] text-center text-slate-500 mt-1">All six model families feed the ensemble. Classical gates protect latency; generative and graph layers address coverage gaps.</div>
+                <div class="text-[10px] text-center text-slate-500 mt-1" data-i18n="arch.caption">All six model families feed the ensemble. Classical gates protect latency; generative and graph layers address coverage gaps.</div>
             </div>
         </div>
+
+        <!-- Analyst Workbench -->
+        <section id="workbench" class="mb-16">
+            <div class="mb-5">
+                <div class="uppercase tracking-[1.5px] text-xs font-semibold text-blue-700">CASE INVESTIGATION FLOW</div>
+                <h3 class="section-title">Analyst Workbench: From Score to Evidence</h3>
+                <p class="text-sm text-slate-500 mt-1 max-w-3xl">Competent fraud products do not stop at a score. They help an analyst understand why the alert exists, what graph context matters, what is missing, and which action is defensible.</p>
+            </div>
+            <div class="bg-white border rounded-3xl overflow-hidden">
+                <div class="grid lg:grid-cols-12">
+                    <div class="lg:col-span-4 p-6 border-b lg:border-b-0 lg:border-r">
+                        <div class="text-xs font-semibold text-emerald-700 tracking-wider">1. ALERT SUMMARY</div>
+                        <div class="mt-3 flex items-start justify-between gap-4">
+                            <div>
+                                <div class="font-semibold text-lg">TXN002230</div>
+                                <div class="text-xs text-slate-500">High amount + night flag + velocity context</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-2xl font-semibold text-slate-900">0.87</div>
+                                <div class="text-[10px] text-slate-500">hybrid risk</div>
+                            </div>
+                        </div>
+                        <div class="mt-5 space-y-2 text-xs">
+                            <div class="flex justify-between"><span class="text-slate-500">Rules / IF gate</span><span class="font-medium text-amber-700">triggered</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Tree classifier</span><span class="font-medium">0.62</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Graph context</span><span class="font-medium">shared merchant cluster</span></div>
+                            <div class="flex justify-between"><span class="text-slate-500">Review action</span><span class="font-medium text-blue-700">manual review</span></div>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-4 p-6 border-b lg:border-b-0 lg:border-r">
+                        <div class="text-xs font-semibold text-blue-700 tracking-wider">2. EVIDENCE GRAPH</div>
+                        <svg viewBox="0 0 320 190" class="mt-3 w-full h-auto" role="img" aria-label="Suspicious entity graph">
+                            <line x1="82" y1="96" x2="160" y2="45" stroke="#94a3b8" stroke-width="2"/>
+                            <line x1="82" y1="96" x2="168" y2="118" stroke="#ef4444" stroke-width="3"/>
+                            <line x1="168" y1="118" x2="244" y2="76" stroke="#94a3b8" stroke-width="2"/>
+                            <line x1="168" y1="118" x2="238" y2="150" stroke="#94a3b8" stroke-width="2"/>
+                            <circle cx="82" cy="96" r="25" fill="#dbeafe" stroke="#1e40af" stroke-width="2"/>
+                            <circle cx="160" cy="45" r="18" fill="#f1f5f9" stroke="#64748b"/>
+                            <circle cx="168" cy="118" r="27" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+                            <circle cx="244" cy="76" r="18" fill="#f1f5f9" stroke="#64748b"/>
+                            <circle cx="238" cy="150" r="18" fill="#fef3c7" stroke="#d97706"/>
+                            <text x="82" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a8a">U0068</text>
+                            <text x="160" y="49" text-anchor="middle" font-size="9" fill="#475569">Device</text>
+                            <text x="168" y="122" text-anchor="middle" font-size="11" font-weight="700" fill="#991b1b">M066</text>
+                            <text x="244" y="80" text-anchor="middle" font-size="9" fill="#475569">Peer</text>
+                            <text x="238" y="154" text-anchor="middle" font-size="9" fill="#92400e">Worker</text>
+                        </svg>
+                        <div class="text-xs text-slate-500 mt-2">GraphRAG input: user, merchant, device, worker access, and nearest suspicious neighbors.</div>
+                    </div>
+                    <div class="lg:col-span-4 p-6">
+                        <div class="text-xs font-semibold text-violet-700 tracking-wider">3. CASE MEMO</div>
+                        <div class="mt-3 rounded-2xl bg-slate-50 p-4 text-xs text-slate-600 leading-relaxed">
+                            <div class="font-semibold text-slate-800 mb-2">Evidence-grounded summary</div>
+                            <p>Prioritize review. Retrieved evidence shows amount anomaly, unusual timing, repeated merchant-neighborhood exposure, and KYE adjacency. Missing data: device history and recent KYA change log.</p>
+                            <div class="mt-3 border-t pt-3 font-mono text-[10px] text-blue-700">python experiments/toy_graphrag_analyst.py</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Model Cards -->
         <div id="cards" class="mb-16">
             <div class="flex items-baseline justify-between mb-5 px-0.5">
                 <div>
-                    <div class="uppercase text-xs font-semibold tracking-widest text-blue-700">6 RESEARCH-BACKED MODELS</div>
-                    <h3 class="section-title">Model Cards</h3>
-                    <p class="text-slate-500 text-sm mt-0.5">Concise, executive-grade overviews with mechanism, performance, fraud fit, limitations, and directly executable implementations linked to source documentation.</p>
+                    <div class="uppercase text-xs font-semibold tracking-widest text-blue-700" data-i18n="cards.badge">6 FLAGSHIP MODEL CARDS + EXPANDED CATALOG</div>
+                    <h3 class="section-title" data-i18n="cards.title">Model Cards</h3>
+                    <p class="text-slate-500 text-sm mt-0.5" data-i18n="cards.desc">Concise, executive-grade overviews with mechanism, performance, fraud fit, limitations, and directly executable implementations linked to source documentation.</p>
                 </div>
-                <div class="text-xs px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium">All implementations validated • PR-AUC measured</div>
+                <div class="text-xs px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-medium" data-i18n="cards.badge2">All implementations validated • PR-AUC measured</div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" role="list">
                 
                 <!-- XGBoost -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" role="listitem" data-category="supervised">
                     <div class="flex justify-between items-start">
                         <div>
-                            <div class="font-semibold text-xl tracking-tight">XGBoost</div>
-                            <div class="model-badge bg-emerald-100 text-emerald-700 rounded mt-1 inline-block">SUPERVISED BASELINE</div>
+                            <div class="font-semibold text-xl tracking-tight" data-i18n="cards.xgboost.title">XGBoost</div>
+                            <div class="model-badge bg-emerald-100 text-emerald-700 rounded mt-1 inline-block" data-i18n="cards.xgboost.badge">SUPERVISED BASELINE</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-emerald-50 text-emerald-700 font-medium rounded">Tier 1</span>
+                        <span class="text-[10px] px-2 py-px bg-emerald-50 text-emerald-700 font-medium rounded" data-i18n="cards.xgboost.tier">Tier 1</span>
                     </div>
-                    <p class="mt-3 text-sm leading-snug text-slate-600">Gradient-boosted trees constitute the production standard for labeled tabular fraud. Strong feature engineering—velocity, amount deviation, KYA aggregates—yields high PR-AUC on known patterns while delivering native feature importances and SHAP explanations.</p>
+                    <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.xgboost.desc">Gradient-boosted trees constitute the production standard for labeled tabular fraud. Strong feature engineering—velocity, amount deviation, KYA aggregates—yields high PR-AUC on known patterns while delivering native feature importances and SHAP explanations.</p>
                     
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700">Representative PR-AUC: 0.284</div>
-                        <div class="text-[10px] text-slate-500">Velocity and KYA aggregates dominate importance rankings. Primary supervised layer; pairs naturally with anomaly scores.</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.xgboost.pr">Representative PR-AUC: 0.284</div>
+                        <div class="text-[10px] text-slate-500" data-i18n="cards.xgboost.note">Velocity and KYA aggregates dominate importance rankings. Primary supervised layer; pairs naturally with anomaly scores.</div>
                     </div>
                     
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
-                        <a href="docs/model-cards/XGBoost_Supervised.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">Full Card</a>
-                        <a href="experiments/toy_xgboost.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">Run Script</a>
+                        <a href="../docs/model-cards/XGBoost_Supervised.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.xgboost.full">Full Card</a>
+                        <a href="../experiments/toy_xgboost.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.xgboost.run">Run Script</a>
                     </div>
                 </div>
 
                 <!-- VAE -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="generative">
                     <div class="flex justify-between items-start">
                         <div>
-                            <div class="font-semibold text-xl tracking-tight">VAE</div>
-                            <div class="model-badge bg-sky-100 text-sky-700 rounded mt-1 inline-block">GENERATIVE ANOMALY</div>
+                            <div class="font-semibold text-xl tracking-tight" data-i18n="cards.vae.title">VAE</div>
+                            <div class="model-badge bg-sky-100 text-sky-700 rounded mt-1 inline-block" data-i18n="cards.vae.badge">GENERATIVE ANOMALY</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-sky-50 text-sky-700 font-medium rounded">Tier 3</span>
+                        <span class="text-[10px] px-2 py-px bg-sky-50 text-sky-700 font-medium rounded" data-i18n="cards.vae.tier">Tier 3</span>
                     </div>
-                    <p class="mt-3 text-sm leading-snug text-slate-600">VAE trained exclusively on legitimate transactions learns a probabilistic manifold of normal behavior. Per An &amp; Cho (2015), reconstruction probability provides a calibrated anomaly score that surfaces novel and zero-day fraud where labels are absent. Latent representations also serve as high-value features for downstream supervised models.</p>
+                    <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.vae.desc">VAE trained exclusively on legitimate transactions learns a probabilistic manifold of normal behavior. Per An &amp; Cho (2015), reconstruction probability provides a calibrated anomaly score that surfaces novel and zero-day fraud where labels are absent. Latent representations also serve as high-value features for downstream supervised models.</p>
                     
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700">Representative PR-AUC: 0.367 (VAE + IF hybrid)</div>
-                        <div class="text-[10px] text-slate-500">An &amp; Cho (2015) reconstruction probability. Latents integrate directly into hybrid pipelines.</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.vae.pr">Representative PR-AUC: 0.367 (VAE + IF hybrid)</div>
+                        <div class="text-[10px] text-slate-500" data-i18n="cards.vae.note">An &amp; Cho (2015) reconstruction probability. Latents integrate directly into hybrid pipelines.</div>
                     </div>
                     
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
-                        <a href="docs/model-cards/VAE.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">Full Card</a>
-                        <a href="experiments/toy_vae.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">Run Script (PyTorch)</a>
+                        <a href="../docs/model-cards/VAE.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.vae.full">Full Card</a>
+                        <a href="../experiments/toy_vae.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.vae.run">Run Script (PyTorch)</a>
                     </div>
                 </div>
 
                 <!-- MoE Hybrid -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="hybrid">
                     <div class="flex justify-between items-start">
                         <div>
-                            <div class="font-semibold text-xl tracking-tight">MoE Hybrid</div>
-                            <div class="model-badge bg-amber-100 text-amber-700 rounded mt-1 inline-block">ADVANCED HYBRID</div>
+                            <div class="font-semibold text-xl tracking-tight" data-i18n="cards.moe.title">MoE Hybrid</div>
+                            <div class="model-badge bg-amber-100 text-amber-700 rounded mt-1 inline-block" data-i18n="cards.moe.badge">ADVANCED HYBRID</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-amber-50 text-amber-700 font-medium rounded">Tier 5–6</span>
+                        <span class="text-[10px] px-2 py-px bg-amber-50 text-amber-700 font-medium rounded" data-i18n="cards.moe.tier">Tier 5–6</span>
                     </div>
-                    <p class="mt-3 text-sm leading-snug text-slate-600">Mixture-of-Experts architecture routes inputs to specialized experts (sequence / RNN for behavior, transformer / MLP for high-order KYA interactions, autoencoder for reconstruction anomalies). Learned or heuristic gating enables adaptive coverage across fraud archetypes. Vallarino 2025 demonstrated strong results on high-fidelity synthetic credit card data.</p>
+                    <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.moe.desc">Mixture-of-Experts architecture routes inputs to specialized experts (sequence / RNN for behavior, transformer / MLP for high-order KYA interactions, autoencoder for reconstruction anomalies). Learned or heuristic gating enables adaptive coverage across fraud archetypes. Vallarino 2025 demonstrated strong results on high-fidelity synthetic credit card data.</p>
                     
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700">Representative PR-AUC: 0.295 • 91.5% Recall (Vallarino 2025)</div>
-                        <div class="text-[10px] text-slate-500">Gating routes seq-heavy or anomalous cases to specialized experts. Flagship mixture.</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.moe.pr">Representative PR-AUC: 0.295 • 91.5% Recall (Vallarino 2025)</div>
+                        <div class="text-[10px] text-slate-500" data-i18n="cards.moe.note">Gating routes seq-heavy or anomalous cases to specialized experts. Flagship mixture.</div>
                     </div>
                     
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
-                        <a href="docs/model-cards/MoE_Hybrid.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">Full Card</a>
-                        <a href="experiments/toy_moe_hybrid.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">Run Script</a>
+                        <a href="../docs/model-cards/MoE_Hybrid.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.moe.full">Full Card</a>
+                        <a href="../experiments/toy_moe_hybrid.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.moe.run">Run Script</a>
                     </div>
                 </div>
 
                 <!-- LSTM Sequence -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="sequence">
                     <div class="flex justify-between items-start">
                         <div>
-                            <div class="font-semibold text-xl tracking-tight">LSTM Sequence</div>
-                            <div class="model-badge bg-violet-100 text-violet-700 rounded mt-1 inline-block">BEHAVIORAL</div>
+                            <div class="font-semibold text-xl tracking-tight" data-i18n="cards.lstm.title">LSTM Sequence</div>
+                            <div class="model-badge bg-violet-100 text-violet-700 rounded mt-1 inline-block" data-i18n="cards.lstm.badge">BEHAVIORAL</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-violet-50 text-violet-700 font-medium rounded">Tier 5</span>
+                        <span class="text-[10px] px-2 py-px bg-violet-50 text-violet-700 font-medium rounded" data-i18n="cards.lstm.tier">Tier 5</span>
                     </div>
-                    <p class="mt-3 text-sm leading-snug text-slate-600">Recurrent models capture temporal dependencies across a user’s transaction history. Sudden deviations in velocity, amount patterns, or merchant sequences become detectable even when individual transactions appear benign. Essential for modeling drift and behavioral fraud.</p>
+                    <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.lstm.desc">Recurrent models capture temporal dependencies across a user’s transaction history. Sudden deviations in velocity, amount patterns, or merchant sequences become detectable even when individual transactions appear benign. Essential for modeling drift and behavioral fraud.</p>
                     
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700">Representative PR-AUC: 0.261</div>
-                        <div class="text-[10px] text-slate-500">Proxy uses lagged + velocity features; native LSTM uses per-user sequences.</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.lstm.pr">Representative PR-AUC: 0.261</div>
+                        <div class="text-[10px] text-slate-500" data-i18n="cards.lstm.note">Educational proxy uses lagged + velocity features; native LSTM uses per-user sequences.</div>
                     </div>
                     
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
-                        <a href="docs/model-cards/LSTM_Sequence.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">Full Card</a>
-                        <a href="experiments/toy_lstm_seq.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">Run Script</a>
+                        <a href="../docs/model-cards/LSTM_Sequence.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.lstm.full">Full Card</a>
+                        <a href="../experiments/toy_lstm_seq.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.lstm.run">Run Script</a>
                     </div>
                 </div>
 
                 <!-- TabTransformer -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="tabular">
                     <div class="flex justify-between items-start">
                         <div>
-                            <div class="font-semibold text-xl tracking-tight">TabTransformer</div>
-                            <div class="model-badge bg-cyan-100 text-cyan-700 rounded mt-1 inline-block">TABULAR DL</div>
+                            <div class="font-semibold text-xl tracking-tight" data-i18n="cards.tab.title">TabTransformer</div>
+                            <div class="model-badge bg-cyan-100 text-cyan-700 rounded mt-1 inline-block" data-i18n="cards.tab.badge">TABULAR DL</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-cyan-50 text-cyan-700 font-medium rounded">Tier 4</span>
+                        <span class="text-[10px] px-2 py-px bg-cyan-50 text-cyan-700 font-medium rounded" data-i18n="cards.tab.tier">Tier 4</span>
                     </div>
-                    <p class="mt-3 text-sm leading-snug text-slate-600">Self-attention applied to categorical features (merchant type, KYA risk buckets, time-of-day) produces contextual embeddings. Captures complex interactions that tree models require explicit cross-features to detect. Highly effective when tabular data includes rich categorical signals from KYA/KYE profiles.</p>
+                    <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.tab.desc">Self-attention applied to categorical features (merchant type, KYA risk buckets, time-of-day) produces contextual embeddings. Captures complex interactions that tree models require explicit cross-features to detect. Highly effective when tabular data includes rich categorical signals from KYA/KYE profiles.</p>
                     
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700">Representative PR-AUC: 0.278</div>
-                        <div class="text-[10px] text-slate-500">Educational simulation using embeddings + classifier; attention provides feature-level interpretability.</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.tab.pr">Representative PR-AUC: 0.278</div>
+                        <div class="text-[10px] text-slate-500" data-i18n="cards.tab.note">Educational simulation using embeddings + classifier; attention provides feature-level interpretability. Production: use full TabTransformer.</div>
                     </div>
                     
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
-                        <a href="docs/model-cards/TabTransformer.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">Full Card</a>
-                        <a href="experiments/toy_tabtransformer.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">Run Script</a>
+                        <a href="../docs/model-cards/TabTransformer.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.tab.full">Full Card</a>
+                        <a href="../experiments/toy_tabtransformer.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.tab.run">Run Script</a>
                     </div>
                 </div>
 
                 <!-- GraphSAGE -->
-                <div class="consulting-card bg-white rounded-3xl p-6 model-card">
+                <div class="consulting-card bg-white rounded-3xl p-6 model-card" data-category="graph">
                     <div class="flex justify-between items-start">
                         <div>
-                            <div class="font-semibold text-xl tracking-tight">GraphSAGE</div>
-                            <div class="model-badge bg-indigo-100 text-indigo-700 rounded mt-1 inline-block">GRAPH / RELATIONAL</div>
+                            <div class="font-semibold text-xl tracking-tight" data-i18n="cards.graph.title">GraphSAGE</div>
+                            <div class="model-badge bg-indigo-100 text-indigo-700 rounded mt-1 inline-block" data-i18n="cards.graph.badge">GRAPH / RELATIONAL</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-indigo-50 text-indigo-700 font-medium rounded">Tier 4</span>
+                        <span class="text-[10px] px-2 py-px bg-indigo-50 text-indigo-700 font-medium rounded" data-i18n="cards.graph.tier">Tier 4</span>
                     </div>
-                    <p class="mt-3 text-sm leading-snug text-slate-600">Inductive graph neural network that learns node embeddings via neighbor sampling and aggregation. Critical for detecting collusion rings, mule networks, and shared-device or KYA-linked fraud that is invisible to purely tabular models. Naturally handles new entities at inference time.</p>
+                    <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.graph.desc">Inductive graph neural network that learns node embeddings via neighbor sampling and aggregation. Critical for detecting collusion rings, mule networks, and shared-device or KYA-linked fraud that is invisible to purely tabular models. Naturally handles new entities at inference time.</p>
                     
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700">Representative PR-AUC: 0.319 (proxy)</div>
-                        <div class="text-[10px] text-slate-500">Uses networkx + mean aggregation on synthetic transaction + KYA graph. Production: use PyG / DGL.</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.graph.pr">Representative PR-AUC: 0.319 (networkx-based educational proxy)</div>
+                        <div class="text-[10px] text-slate-500" data-i18n="cards.graph.note">Uses networkx + mean aggregation on synthetic transaction + KYA graph (educational proxy). Production: use PyG / DGL with proper sampling.</div>
                     </div>
                     
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
-                        <a href="docs/model-cards/GraphSAGE.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">Full Card</a>
-                        <a href="experiments/toy_graphsage.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">Run Script</a>
+                        <a href="../docs/model-cards/GraphSAGE.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.graph.full">Full Card</a>
+                        <a href="../experiments/toy_graphsage.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.graph.run">Run Script</a>
                     </div>
                 </div>
             </div>
-            <div class="text-center mt-3 text-xs text-slate-400">All six cards include: origin &amp; mechanism, pros/cons/assumptions/limitations, fraud-specific fit, key references, and a fully functional runnable implementation. Isolation Forest (classical AD baseline) is covered via pipeline and dedicated example.</div>
+            <div class="text-center mt-3 text-xs text-slate-400" data-i18n="cards.footer">All six cards include: origin &amp; mechanism, pros/cons/assumptions/limitations, fraud-specific fit, key references, and a fully functional runnable implementation. Isolation Forest (classical AD baseline) is covered via pipeline and dedicated example.</div>
         </div>
 
         <!-- Experiments & Results -->
         <div id="experiments" class="mb-16">
             <div class="mb-5">
-                <div class="uppercase tracking-[1.5px] text-xs font-semibold text-blue-700">Comparative Experiments • Reproducible</div>
-                <h3 class="section-title">Comparative Results on Synthetic Data</h3>
+                <div class="uppercase tracking-[1.5px] text-xs font-semibold text-blue-700" data-i18n="exp.badge">Comparative Experiments • Reproducible</div>
+                <h3 class="section-title" data-i18n="exp.title">Comparative Results on Synthetic Data</h3>
             </div>
 
             <div class="grid lg:grid-cols-5 gap-6">
                 <!-- Table -->
                 <div class="lg:col-span-3 bg-white border rounded-3xl p-7">
                     <div class="text-sm font-semibold mb-3 flex justify-between items-center">
-                        <span>Model Performance (PR-AUC)</span>
-                        <span class="text-[10px] font-normal text-emerald-600">Higher is better • Imbalanced evaluation</span>
+                        <span data-i18n="exp.table.perf">Model Performance (PR-AUC)</span>
+                        <span class="text-[10px] font-normal text-emerald-600" data-i18n="exp.table.note">Higher is better • Imbalanced evaluation</span>
                     </div>
                     
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm comparison-table">
                             <thead>
                                 <tr class="text-left text-xs border-b">
-                                    <th class="py-2 pr-3 font-semibold text-slate-600">Model</th>
-                                    <th class="py-2 pr-3 font-semibold text-slate-600">Best For</th>
-                                    <th class="py-2 text-right font-semibold text-slate-600">Benchmark PR-AUC (synthetic data)</th>
-                                    <th class="py-2 pl-4 font-semibold text-slate-600">Complexity</th>
+                                    <th class="py-2 pr-3 font-semibold text-slate-600" data-i18n="exp.table.model">Model</th>
+                                    <th class="py-2 pr-3 font-semibold text-slate-600" data-i18n="exp.table.best">Best For</th>
+                                    <th class="py-2 text-right font-semibold text-slate-600" data-i18n="exp.table.pr">Benchmark PR-AUC (synthetic data)</th>
+                                    <th class="py-2 pl-4 font-semibold text-slate-600" data-i18n="exp.table.complex">Complexity</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y text-sm text-slate-700">
                                 <tr>
-                                    <td class="py-2.5 pr-3 font-medium">Isolation Forest</td>
-                                    <td class="py-2.5 pr-3 text-xs">Novel anomalies; fast gate</td>
+                                    <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.if.model">Isolation Forest</td>
+                                    <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.if.best">Novel anomalies; fast gate</td>
                                     <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.218</td>
-                                    <td class="py-2.5 pl-4 text-xs text-slate-500">Low</td>
+                                    <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.if.complex">Low</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-2.5 pr-3 font-medium">XGBoost</td>
-                                    <td class="py-2.5 pr-3 text-xs">Known patterns with rich feature engineering</td>
+                                    <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.xgb.model">XGBoost</td>
+                                    <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.xgb.best">Known patterns with rich feature engineering</td>
                                     <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.284</td>
-                                    <td class="py-2.5 pl-4 text-xs text-slate-500">Low</td>
+                                    <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.xgb.complex">Low</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-2.5 pr-3 font-medium">GraphSAGE</td>
-                                    <td class="py-2.5 pr-3 text-xs">KYA/KYE collusion rings and relational signals</td>
+                                    <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.graph.model">GraphSAGE</td>
+                                    <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.graph.best">KYA/KYE collusion rings and relational signals</td>
                                     <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.319</td>
-                                    <td class="py-2.5 pl-4 text-xs text-slate-500">Medium-High</td>
+                                    <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.graph.complex">Medium-High</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-2.5 pr-3 font-medium">VAE + IF Hybrid</td>
-                                    <td class="py-2.5 pr-3 text-xs">Novel and zero-day fraud patterns</td>
+                                    <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.vae.model">VAE + IF Hybrid</td>
+                                    <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.vae.best">Novel and zero-day fraud patterns</td>
                                     <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.367</td>
-                                    <td class="py-2.5 pl-4 text-xs text-slate-500">Medium</td>
+                                    <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.vae.complex">Medium</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-2.5 pr-3 font-medium">MoE Hybrid</td>
-                                    <td class="py-2.5 pr-3 text-xs">Mixed fraud archetypes (adaptive routing)</td>
+                                    <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.moe.model">MoE Hybrid</td>
+                                    <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.moe.best">Mixed fraud archetypes (adaptive routing)</td>
                                     <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.295</td>
-                                    <td class="py-2.5 pl-4 text-xs text-slate-500">High</td>
+                                    <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.moe.complex">High</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-2.5 pr-3 font-medium">TabTransformer</td>
-                                    <td class="py-2.5 pr-3 text-xs">Categorical KYA signals and feature interactions</td>
+                                    <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.tab.model">TabTransformer</td>
+                                    <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.tab.best">Categorical KYA signals and feature interactions</td>
                                     <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.278</td>
-                                    <td class="py-2.5 pl-4 text-xs text-slate-500">Medium</td>
+                                    <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.tab.complex">Medium</td>
                                 </tr>
                                 <tr>
-                                    <td class="py-2.5 pr-3 font-medium">LSTM Sequence</td>
-                                    <td class="py-2.5 pr-3 text-xs">Behavioral velocity and temporal drift</td>
+                                    <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.lstm.model">LSTM Sequence</td>
+                                    <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.lstm.best">Behavioral velocity and temporal drift</td>
                                     <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.261</td>
-                                    <td class="py-2.5 pl-4 text-xs text-slate-500">Medium</td>
+                                    <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.lstm.complex">Medium</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     
-                    <div class="mt-4 text-xs text-slate-500 leading-snug border-t pt-3">
+                    <div class="mt-4 text-xs text-slate-500 leading-snug border-t pt-3" data-i18n="exp.takeaway">
                         All runs use the shared synthetic generator (1,500–4,000 transactions, 1.2% fraud rate). Temporal splits recommended in production. PR-AUC is the primary metric; hybrids and relational layers deliver measurable lift. Full scripts and additional baselines (e.g., pure IF) reside in experiments/. The comparison harness orchestrates all six families plus classical baselines.
                     </div>
                     <div class="mt-3 text-[10px] font-mono bg-slate-100 px-3 py-1.5 rounded-2xl text-slate-600 inline-block">
                         python experiments/compare_models.py
                     </div>
-                    <div class="text-[10px] text-slate-500 mt-1">Production comparison harness (proxies for heavier families (full production uses PyG/DGL etc.) + real runnable implementations). See also <code>experiments/junior_starter.py</code> for explicit pandas starter.</div>
+                    <div class="text-[10px] text-slate-500 mt-1" data-i18n="exp.note">Production comparison harness (proxies for heavier families (full production uses PyG/DGL etc.) + real runnable implementations). See also <code>experiments/junior_starter.py</code> for explicit pandas starter.</div>
                 </div>
 
                 <!-- Bar Chart SVG -->
                 <div class="lg:col-span-2 bg-white border rounded-3xl p-7 flex flex-col">
-                    <div class="font-semibold text-sm mb-4">PR-AUC Comparison (Reproducible Runs)</div>
+                    <div class="font-semibold text-sm mb-4" data-i18n="exp.bar.title">PR-AUC Comparison (Reproducible Runs)</div>
                     
                     <svg width="100%" height="210" viewBox="0 0 320 210" class="flex-1">
                         <defs>
@@ -662,46 +848,46 @@
                         <!-- Bars (incl. Isolation Forest baseline) -->
                         <!-- IF 0.218 -->
                         <rect x="45" y="125" width="26" height="63" rx="3" fill="url(#barGrad)"/>
-                        <text x="58" y="205" font-size="7" fill="#475569" text-anchor="middle">IF</text>
+                        <text x="58" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.if">IF</text>
                         <text x="58" y="122" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.22</text>
                         
                         <!-- XGB 0.284 -->
                         <rect x="78" y="115" width="26" height="73" rx="3" fill="url(#barGrad)"/>
-                        <text x="91" y="205" font-size="7" fill="#475569" text-anchor="middle">XGB</text>
+                        <text x="91" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.xgb">XGB</text>
                         <text x="91" y="112" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.28</text>
                         
                         <!-- GraphSAGE 0.319 -->
                         <rect x="111" y="98" width="26" height="90" rx="3" fill="url(#barGrad)"/>
-                        <text x="124" y="205" font-size="7" fill="#475569" text-anchor="middle">Graph</text>
+                        <text x="124" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.graph">Graph</text>
                         <text x="124" y="95" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.32</text>
                         
                         <!-- VAE 0.367 -->
                         <rect x="144" y="72" width="26" height="116" rx="3" fill="#0f172a"/>
-                        <text x="157" y="205" font-size="7" fill="#475569" text-anchor="middle">VAE</text>
+                        <text x="157" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.vae">VAE</text>
                         <text x="157" y="69" font-size="8" font-weight="700" fill="#0f172a" text-anchor="middle">0.37</text>
                         
                         <!-- MoE 0.295 -->
                         <rect x="177" y="109" width="26" height="79" rx="3" fill="url(#barGrad)"/>
-                        <text x="190" y="205" font-size="7" fill="#475569" text-anchor="middle">MoE</text>
+                        <text x="190" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.moe">MoE</text>
                         <text x="190" y="106" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.30</text>
                         
                         <!-- TabTrans 0.278 -->
                         <rect x="210" y="117" width="26" height="71" rx="3" fill="url(#barGrad)"/>
-                        <text x="223" y="205" font-size="7" fill="#475569" text-anchor="middle">TabT</text>
+                        <text x="223" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.tab">TabT</text>
                         <text x="223" y="114" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.28</text>
                         
                         <!-- LSTM 0.261 -->
                         <rect x="243" y="126" width="26" height="62" rx="3" fill="url(#barGrad)"/>
-                        <text x="256" y="205" font-size="7" fill="#475569" text-anchor="middle">LSTM</text>
+                        <text x="256" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.lstm">LSTM</text>
                         <text x="256" y="123" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.26</text>
                     </svg>
                     
-                    <div class="text-[10px] text-slate-500 mt-auto pt-1">Representative values from reproducible runs on synthetic benchmark data (seeds and hyperparameters affect results). Execute the comparison script locally for current outputs.</div>
+                    <div class="text-[10px] text-slate-500 mt-auto pt-1" data-i18n="exp.bar.note">Representative values from reproducible runs on synthetic benchmark data (seeds and hyperparameters affect results). Execute the comparison script locally for current outputs.</div>
                 </div>
             </div>
 
             <div class="mt-4 text-xs bg-white border rounded-2xl p-4 text-slate-600">
-                <strong>Key takeaway from experiments:</strong> Hybrids (VAE+IF, ensemble+AD) consistently deliver the highest PR-AUC on this data. Graph features add lift for relational patterns. Simple supervised baselines remain competitive once velocity and KYA features are engineered. All models pass the regression gate (PR-AUC &gt; 0.15).
+                <strong data-i18n="exp.key">Key takeaway from experiments:</strong> <span data-i18n="exp.key.text">Hybrids (VAE+IF, ensemble+AD) consistently deliver the highest PR-AUC on this data. Graph features add lift for relational patterns. Simple supervised baselines remain competitive once velocity and KYA features are engineered. All models pass the regression gate (PR-AUC &gt; 0.15).</span>
             </div>
         </div>
 
@@ -712,134 +898,135 @@
                 <h3 class="section-title">Model Family Trade-offs</h3>
             </div>
             <div class="bg-white border rounded-3xl p-7 text-sm">
-                <p class="text-slate-600 mb-4">Key dimensions for real deployments (drawn from sub-agent research and practitioner reviews). Latency/scale on representative hardware; always validate on your data and stack.</p>
-                <table class="w-full text-xs border-collapse">
+                <p class="text-slate-600 mb-4" data-i18n="tradeoffs.intro">Key dimensions for real deployments (drawn from sub-agent research and practitioner reviews). Latency/scale on representative hardware; always validate on your data and stack.</p>
+                <table class="w-full text-xs border-collapse" aria-label="Model family production trade-offs">
+                    <caption class="sr-only">Comparison of latency, coverage, scalability, integration effort, FP risk, and recommended cascade placement for each model family.</caption>
                     <thead>
                         <tr class="border-b text-left text-slate-600">
-                            <th class="py-2 pr-3">Family</th>
-                            <th class="py-2 pr-3">Latency (est.)</th>
-                            <th class="py-2 pr-3">Coverage</th>
-                            <th class="py-2 pr-3">Scalability</th>
-                            <th class="py-2 pr-3">Integration</th>
-                            <th class="py-2">When in Cascade</th>
+                            <th class="py-2 pr-3" data-i18n="trade.header.family">Family</th>
+                            <th class="py-2 pr-3" data-i18n="trade.header.lat">Latency (est.)</th>
+                            <th class="py-2 pr-3" data-i18n="trade.header.cov">Coverage</th>
+                            <th class="py-2 pr-3" data-i18n="trade.header.scal">Scalability</th>
+                            <th class="py-2 pr-3" data-i18n="trade.header.int">Integration</th>
+                            <th class="py-2" data-i18n="trade.header.when">When in Cascade</th>
                         </tr>
                     </thead>
                     <tbody class="text-slate-700">
                         <tr class="border-b">
-                            <td class="py-1.5 pr-3 font-medium">Rules + IF</td>
-                            <td class="py-1.5 pr-3">&lt;1ms</td>
-                            <td class="py-1.5 pr-3">High novel</td>
-                            <td class="py-1.5 pr-3">Excellent</td>
-                            <td class="py-1.5 pr-3">Low</td>
-                            <td class="py-1.5">Always first gate</td>
+                            <td class="py-1.5 pr-3 font-medium" data-i18n="trade.row.if.family">Rules + IF</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.if.lat">&lt;1ms</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.if.cov">High novel</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.if.scal">Excellent</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.if.int">Low</td>
+                            <td class="py-1.5" data-i18n="trade.row.if.when">Always first gate</td>
                         </tr>
                         <tr class="border-b">
-                            <td class="py-1.5 pr-3 font-medium">XGBoost</td>
-                            <td class="py-1.5 pr-3">&lt;5ms</td>
-                            <td class="py-1.5 pr-3">High known</td>
-                            <td class="py-1.5 pr-3">High</td>
-                            <td class="py-1.5 pr-3">Low</td>
-                            <td class="py-1.5">After gate; primary known</td>
+                            <td class="py-1.5 pr-3 font-medium" data-i18n="trade.row.xgb.family">XGBoost</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.xgb.lat">&lt;5ms</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.xgb.cov">High known</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.xgb.scal">High</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.xgb.int">Low</td>
+                            <td class="py-1.5" data-i18n="trade.row.xgb.when">After gate; primary known</td>
                         </tr>
                         <tr class="border-b">
-                            <td class="py-1.5 pr-3 font-medium">VAE (hybrid)</td>
-                            <td class="py-1.5 pr-3">5-20ms</td>
-                            <td class="py-1.5 pr-3">High novel</td>
-                            <td class="py-1.5 pr-3">Med</td>
-                            <td class="py-1.5 pr-3">Med</td>
-                            <td class="py-1.5">Gate-flagged only</td>
+                            <td class="py-1.5 pr-3 font-medium" data-i18n="trade.row.vae.family">VAE (hybrid)</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.vae.lat">5-20ms</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.vae.cov">High novel</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.vae.scal">Med</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.vae.int">Med</td>
+                            <td class="py-1.5" data-i18n="trade.row.vae.when">Gate-flagged only</td>
                         </tr>
                         <tr class="border-b">
-                            <td class="py-1.5 pr-3 font-medium">GraphSAGE</td>
-                            <td class="py-1.5 pr-3">10-50ms+</td>
-                            <td class="py-1.5 pr-3">High relational</td>
-                            <td class="py-1.5 pr-3">High (with sampling)</td>
-                            <td class="py-1.5 pr-3">High (graph store)</td>
-                            <td class="py-1.5">Relational subset</td>
+                            <td class="py-1.5 pr-3 font-medium" data-i18n="trade.row.graph.family">GraphSAGE</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.graph.lat">10-50ms+</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.graph.cov">High relational</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.graph.scal">High (with sampling)</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.graph.int">High (graph store)</td>
+                            <td class="py-1.5" data-i18n="trade.row.graph.when">Relational subset</td>
                         </tr>
                         <tr class="border-b">
-                            <td class="py-1.5 pr-3 font-medium">MoE / Hybrids</td>
-                            <td class="py-1.5 pr-3">10-100ms</td>
-                            <td class="py-1.5 pr-3">High across</td>
-                            <td class="py-1.5 pr-3">Med-High</td>
-                            <td class="py-1.5 pr-3">High</td>
-                            <td class="py-1.5">High-uncertainty</td>
+                            <td class="py-1.5 pr-3 font-medium" data-i18n="trade.row.moe.family">MoE / Hybrids</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.moe.lat">10-100ms</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.moe.cov">High across</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.moe.scal">Med-High</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.moe.int">High</td>
+                            <td class="py-1.5" data-i18n="trade.row.moe.when">High-uncertainty</td>
                         </tr>
                         <tr>
-                            <td class="py-1.5 pr-3 font-medium">LSTM/Seq</td>
-                            <td class="py-1.5 pr-3">5-30ms</td>
-                            <td class="py-1.5 pr-3">Med-high behavioral</td>
-                            <td class="py-1.5 pr-3">Med</td>
-                            <td class="py-1.5 pr-3">Med-High</td>
-                            <td class="py-1.5">Behavioral after gate</td>
+                            <td class="py-1.5 pr-3 font-medium" data-i18n="trade.row.lstm.family">LSTM/Seq</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.lstm.lat">5-30ms</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.lstm.cov">Med-high behavioral</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.lstm.scal">Med</td>
+                            <td class="py-1.5 pr-3" data-i18n="trade.row.lstm.int">Med-High</td>
+                            <td class="py-1.5" data-i18n="trade.row.lstm.when">Behavioral after gate</td>
                         </tr>
                     </tbody>
                 </table>
-                <div class="mt-4 text-[10px] text-slate-500">Full details and caveats in data/subagents/*/limitations_*.md. Always measure on your volume and infra. FP cost context: review queue volume and customer friction.</div>
+                <div class="mt-4 text-[10px] text-slate-500" data-i18n="tradeoffs.note">Full details and caveats in data/subagents/*/limitations_*.md. Always measure on your volume and infra. FP cost context: review queue volume and customer friction.</div>
             </div>
         </div>
 
         <!-- Metrics for Fraud in Practice (P0 from reviews) -->
         <div class="mb-12 bg-white border rounded-3xl p-7">
-            <div class="uppercase text-xs tracking-[1.5px] text-blue-700 font-semibold mb-1">Metrics that matter</div>
-            <h4 class="font-semibold mb-3">PR-AUC + operational context</h4>
+            <div class="uppercase text-xs tracking-[1.5px] text-blue-700 font-semibold mb-1" data-i18n="metrics.title">Metrics that matter</div>
+            <h4 class="font-semibold mb-3" data-i18n="metrics.subtitle">PR-AUC + operational context</h4>
             <div class="text-sm text-slate-600 leading-relaxed">
-                <p><strong>PR-AUC</strong> is primary because it focuses on the rare positive class. On 1.2% fraud data, random guessing scores 0.012. A model with 0.28–0.37 is meaningfully better at surfacing fraud in the top of a review queue.</p>
-                <p class="mt-2">Production framing: Review budget is limited (e.g. top-K=50–200 alerts). <strong>Recall@K</strong> tells you what fraction of actual fraud you catch within budget. <strong>Cost</strong> framing (Bahnsen-style): FN ≈ fraud amount lost; FP ≈ review/investigator cost + customer friction. Hybrids and good FE improve both lift and queue efficiency.</p>
-                <p class="mt-2">Always report vs. random baseline and vs. simple rules. Use temporal splits for evaluation. See junior_starter.py and compare_models.py for runnable scripts with these metrics.</p>
+                <p data-i18n="metrics.p1"><strong>PR-AUC</strong> is primary because it focuses on the rare positive class. On 1.2% fraud data, random guessing scores 0.012. A model with 0.28–0.37 is meaningfully better at surfacing fraud in the top of a review queue.</p>
+                <p class="mt-2" data-i18n="metrics.p2">Production framing: Review budget is limited (e.g. top-K=50–200 alerts). <strong>Recall@K</strong> tells you what fraction of actual fraud you catch within budget. <strong>Cost</strong> framing (Bahnsen-style): FN ≈ fraud amount lost; FP ≈ review/investigator cost + customer friction. Hybrids and good FE improve both lift and queue efficiency.</p>
+                <p class="mt-2" data-i18n="metrics.p3">Always report vs. random baseline and vs. simple rules. Use temporal splits for evaluation. See junior_starter.py and compare_models.py for runnable scripts with these metrics.</p>
             </div>
         </div>
 
         <!-- Glossary (P0 accessibility polish) -->
         <div class="mb-12">
-            <div class="uppercase text-xs tracking-[1.5px] text-blue-700 font-semibold mb-2">Key Terms Glossary</div>
+            <div class="uppercase text-xs tracking-[1.5px] text-blue-700 font-semibold mb-2" data-i18n="glossary.title">Key Terms Glossary</div>
             <div class="grid md:grid-cols-2 gap-4 text-sm bg-white border rounded-3xl p-6">
-                <div><strong>PR-AUC</strong>: Precision-Recall Area Under Curve. Primary metric for imbalanced fraud detection (focuses on catching the rare frauds). Random baseline ≈ fraud rate (0.012 here).</div>
-                <div><strong>Velocity</strong>: Rate of activity (e.g. tx counts in last 1h/24h). Sudden spikes are strong fraud signals.</div>
-                <div><strong>KYA / KYE</strong>: Know Your Account / Know Your Entity. Relational signals about users, merchants, workers, links — used for collusion detection.</div>
-                <div><strong>Recall@K</strong>: Fraction of all fraud caught when reviewing only the top K highest-risk cases. Critical for limited review budgets.</div>
-                <div><strong>Layered Cascades</strong>: Fast cheap gate (rules/IF) first, then heavier models only on uncertain cases. Production standard for latency + coverage.</div>
-                <div><strong>Hybrid / MoE</strong>: Combining multiple model families (e.g. trees + generative + graph) with routing or fusion for better coverage across fraud types.</div>
+                <div data-i18n="glossary.pr-auc"><strong>PR-AUC</strong>: Precision-Recall Area Under Curve. Primary metric for imbalanced fraud detection (focuses on catching the rare frauds). Random baseline ≈ fraud rate (0.012 here).</div>
+                <div data-i18n="glossary.velocity"><strong>Velocity</strong>: Rate of activity (e.g. tx counts in last 1h/24h). Sudden spikes are strong fraud signals.</div>
+                <div data-i18n="glossary.kya"><strong>KYA / KYE</strong>: Know Your Account / Know Your Entity. Relational signals about users, merchants, workers, links — used for collusion detection.</div>
+                <div data-i18n="glossary.recall"><strong>Recall@K</strong>: Fraction of all fraud caught when reviewing only the top K highest-risk cases. Critical for limited review budgets.</div>
+                <div data-i18n="glossary.cascades"><strong>Layered Cascades</strong>: Fast cheap gate (rules/IF) first, then heavier models only on uncertain cases. Production standard for latency + coverage.</div>
+                <div data-i18n="glossary.hybrid"><strong>Hybrid / MoE</strong>: Combining multiple model families (e.g. trees + generative + graph) with routing or fusion for better coverage across fraud types.</div>
             </div>
         </div>
 
         <!-- Pipeline -->
         <div id="pipeline" class="mb-16">
             <div class="mb-5">
-                <div class="uppercase text-xs tracking-[1.5px] text-blue-700 font-semibold">Production-Style End-to-End</div>
-                <h3 class="section-title">Documented Pipeline</h3>
+                <div class="uppercase text-xs tracking-[1.5px] text-blue-700 font-semibold" data-i18n="pipeline.badge">Production-Style End-to-End</div>
+                <h3 class="section-title" data-i18n="pipeline.title">Documented Pipeline</h3>
             </div>
 
             <div class="bg-white border rounded-3xl p-8">
                 <div class="flex flex-wrap gap-x-4 items-baseline mb-4">
                     <div class="font-semibold">scripts/full_pipeline.py</div>
-                    <a href="scripts/full_pipeline.py" class="text-xs px-3 py-1 bg-slate-900 hover:bg-black text-white rounded-2xl font-medium">View Source</a>
-                    <div class="text-xs text-emerald-600">Fully commented • Step-by-step rationale • Reproducible</div>
+                    <a href="../scripts/full_pipeline.py" class="text-xs px-3 py-1 bg-slate-900 hover:bg-black text-white rounded-2xl font-medium" data-i18n="pipeline.view">View Source</a>
+                    <div class="text-xs text-emerald-600" data-i18n="pipeline.note">Fully commented • Step-by-step rationale • Reproducible</div>
                 </div>
 
                 <div class="grid md:grid-cols-4 gap-4 text-sm">
                     <div class="border-l-4 border-emerald-600 pl-4">
-                        <div class="font-semibold text-emerald-700">1. Load &amp; Clean</div>
-                        <div class="text-xs text-slate-600 mt-1">Generate synthetic transactional + entity + graph data. Clean missing values. Profile distributions and injected fraud archetypes (velocity, amount deviation, relational). Reproducible with fixed seeds.</div>
+                        <div class="font-semibold text-emerald-700" data-i18n="pipeline.step1.title">1. Load &amp; Clean</div>
+                        <div class="text-xs text-slate-600 mt-1" data-i18n="pipeline.step1.desc">Generate synthetic transactional + entity + graph data. Clean missing values. Profile distributions and injected fraud archetypes (velocity, amount deviation, relational). Reproducible with fixed seeds.</div>
                     </div>
                     <div class="border-l-4 border-emerald-600 pl-4">
-                        <div class="font-semibold text-emerald-700">2. Feature Engineering</div>
-                        <div class="text-xs text-slate-600 mt-1">Core signals: velocity (1h/24h counts), amount statistics vs. history, temporal (hour, night), KYA risk proxies. StandardScaler + OneHot. Feature engineering routinely outperforms model swaps (Bahnsen et al.).</div>
+                        <div class="font-semibold text-emerald-700" data-i18n="pipeline.step2.title">2. Feature Engineering</div>
+                        <div class="text-xs text-slate-600 mt-1" data-i18n="pipeline.step2.desc">Core signals: velocity (1h/24h counts), amount statistics vs. history, temporal (hour, night), KYA risk proxies. StandardScaler + OneHot. Feature engineering routinely outperforms model swaps (Bahnsen et al.).</div>
                     </div>
                     <div class="border-l-4 border-emerald-600 pl-4">
-                        <div class="font-semibold text-emerald-700">3. Modeling</div>
-                        <div class="text-xs text-slate-600 mt-1">Parallel training across families: supervised (XGBoost), tabular proxies, Isolation Forest (anomaly gate), ensemble meta-learner. Covers known patterns, novel deviations, and relational signals.</div>
+                        <div class="font-semibold text-emerald-700" data-i18n="pipeline.step3.title">3. Modeling</div>
+                        <div class="text-xs text-slate-600 mt-1" data-i18n="pipeline.step3.desc">Parallel training across families: supervised (XGBoost), tabular proxies, Isolation Forest (anomaly gate), ensemble meta-learner. Covers known patterns, novel deviations, and relational signals.</div>
                     </div>
                     <div class="border-l-4 border-emerald-600 pl-4">
-                        <div class="font-semibold text-emerald-700">4. Ensemble + Output</div>
-                        <div class="text-xs text-slate-600 mt-1">Late score fusion (supervised + anomaly). Report PR-AUC for ensemble and hybrid. Rank highest-risk transactions with multi-view explanations (importance, reconstruction, attention). Foundation for production cascades.</div>
+                        <div class="font-semibold text-emerald-700" data-i18n="pipeline.step4.title">4. Ensemble + Output</div>
+                        <div class="text-xs text-slate-600 mt-1" data-i18n="pipeline.step4.desc">Late score fusion (supervised + anomaly). Report PR-AUC for ensemble and hybrid. Rank highest-risk transactions with multi-view explanations (importance, reconstruction, attention). Foundation for production cascades.</div>
                     </div>
                 </div>
                 
                 <div class="mt-6 pt-5 border-t text-xs text-slate-500">
-                    Run: <span class="font-mono bg-slate-100 px-2 py-0.5 rounded">python scripts/full_pipeline.py</span>. 
-                    The script emits documented rationales per step, Ensemble PR-AUC, Hybrid PR-AUC (typically 0.29–0.35 range on synthetic benchmark data), and ranked top transactions with explanations. 
-                    This is the canonical reference implementation invoked by model cards, the comparison harness, and the guided tour.
+                    <span data-i18n="pipeline.run">Run:</span> <span class="font-mono bg-slate-100 px-2 py-0.5 rounded">python scripts/full_pipeline.py</span>. 
+                    <span data-i18n="pipeline.run.text">The script emits documented rationales per step, Ensemble PR-AUC, Hybrid PR-AUC (typically 0.29–0.35 range on synthetic benchmark data), and ranked top transactions with explanations. 
+                    This is the canonical reference implementation invoked by model cards, the comparison harness, and the guided tour.</span>
                 </div>
             </div>
         </div>
@@ -847,53 +1034,53 @@
         <!-- Guided Tour -->
         <div id="tour" class="mb-16">
             <div class="bg-white border rounded-3xl p-8">
-                <h4 class="font-semibold text-xl tracking-tight mb-1">Guided Tour for Beginners</h4>
-                <p class="text-sm text-slate-600 mb-6">A progressive curriculum. Run the scripts locally to internalize concepts.</p>
+                <h4 class="font-semibold text-xl tracking-tight mb-1" data-i18n="tour.title">Guided Tour for Beginners</h4>
+                <p class="text-sm text-slate-600 mb-6" data-i18n="tour.desc">A progressive curriculum. Run the scripts locally to internalize concepts.</p>
                 
                 <div class="space-y-5 text-sm">
                     <div class="flex gap-4">
                         <div class="font-semibold text-xs w-7 shrink-0 pt-0.5 text-emerald-700">01</div>
                         <div>
-                            <span class="font-semibold">Baseline supervised.</span> Engineer velocity + KYA features. Train XGBoost. Inspect feature importance. This is your production foundation.<br>
-                            <a href="docs/model-cards/XGBoost_Supervised.md" class="text-blue-700 hover:underline text-xs">Card</a> • 
-                            <a href="experiments/toy_xgboost.py" class="text-blue-700 hover:underline text-xs">Example</a>
+                            <span class="font-semibold" data-i18n="tour.01.title">Baseline supervised.</span> <span data-i18n="tour.01.desc">Engineer velocity + KYA features. Train XGBoost. Inspect feature importance. This is your production foundation.</span><br>
+                            <a href="../docs/model-cards/XGBoost_Supervised.md" class="text-blue-700 hover:underline text-xs">Card</a> • 
+                            <a href="../experiments/toy_xgboost.py" class="text-blue-700 hover:underline text-xs">Script</a>
                         </div>
                     </div>
                     <div class="flex gap-4">
                         <div class="font-semibold text-xs w-7 shrink-0 pt-0.5 text-emerald-700">02</div>
                         <div>
-                            <span class="font-semibold">Add unsupervised representation.</span> Train VAE on normal transactions. Use reconstruction probability or latent vectors as additional features. Combine with the baseline.<br>
-                            <a href="docs/model-cards/VAE.md" class="text-blue-700 hover:underline text-xs">Card</a> • 
-                            <a href="experiments/toy_vae.py" class="text-blue-700 hover:underline text-xs">Example</a>
+                            <span class="font-semibold" data-i18n="tour.02.title">Add unsupervised representation.</span> <span data-i18n="tour.02.desc">Train VAE on normal transactions. Use reconstruction probability or latent vectors as additional features. Combine with the baseline.</span><br>
+                            <a href="../docs/model-cards/VAE.md" class="text-blue-700 hover:underline text-xs">Card</a> • 
+                            <a href="../experiments/toy_vae.py" class="text-blue-700 hover:underline text-xs">Script</a>
                         </div>
                     </div>
                     <div class="flex gap-4">
                         <div class="font-semibold text-xs w-7 shrink-0 pt-0.5 text-emerald-700">03</div>
                         <div>
-                            <span class="font-semibold">Incorporate behavior and context.</span> Model sequences with LSTM-style features or TabTransformer for categorical interactions. Observe lift on velocity-driven or merchant-pattern fraud.<br>
-                            <a href="docs/model-cards/LSTM_Sequence.md" class="text-blue-700 hover:underline text-xs">Card</a> • 
-                            <a href="docs/model-cards/TabTransformer.md" class="text-blue-700 hover:underline text-xs">Card</a>
+                            <span class="font-semibold" data-i18n="tour.03.title">Incorporate behavior and context.</span> <span data-i18n="tour.03.desc">Model sequences with LSTM-style features or TabTransformer for categorical interactions. Observe lift on velocity-driven or merchant-pattern fraud.</span><br>
+                            <a href="../docs/model-cards/LSTM_Sequence.md" class="text-blue-700 hover:underline text-xs">Card</a> • 
+                            <a href="../docs/model-cards/TabTransformer.md" class="text-blue-700 hover:underline text-xs">Card</a>
                         </div>
                     </div>
                     <div class="flex gap-4">
                         <div class="font-semibold text-xs w-7 shrink-0 pt-0.5 text-emerald-700">04</div>
                         <div>
-                            <span class="font-semibold">Add relational signals.</span> Construct the transaction + KYA/KYE graph. Use GraphSAGE embeddings as features. Detect rings that tabular models miss.<br>
-                            <a href="docs/model-cards/GraphSAGE.md" class="text-blue-700 hover:underline text-xs">Card</a> • 
-                            <a href="experiments/toy_graphsage.py" class="text-blue-700 hover:underline text-xs">Example</a>
+                            <span class="font-semibold" data-i18n="tour.04.title">Add relational signals.</span> <span data-i18n="tour.04.desc">Construct the transaction + KYA/KYE graph. Use GraphSAGE embeddings as features. Detect rings that tabular models miss.</span><br>
+                            <a href="../docs/model-cards/GraphSAGE.md" class="text-blue-700 hover:underline text-xs">Card</a> • 
+                            <a href="../experiments/toy_graphsage.py" class="text-blue-700 hover:underline text-xs">Script</a>
                         </div>
                     </div>
                     <div class="flex gap-4">
                         <div class="font-semibold text-xs w-7 shrink-0 pt-0.5 text-emerald-700">05</div>
                         <div>
-                            <span class="font-semibold">Move to adaptive hybrids.</span> Implement simple MoE routing or stacked ensembles. Gate with fast classical layer. This mirrors production layered systems.<br>
-                            <a href="docs/model-cards/MoE_Hybrid.md" class="text-blue-700 hover:underline text-xs">Card</a> • 
-                            <a href="experiments/toy_moe_hybrid.py" class="text-blue-700 hover:underline text-xs">Example</a> • 
-                            <a href="scripts/full_pipeline.py" class="text-blue-700 hover:underline text-xs">Full Pipeline</a>
+                            <span class="font-semibold" data-i18n="tour.05.title">Move to adaptive hybrids.</span> <span data-i18n="tour.05.desc">Implement simple MoE routing or stacked ensembles. Gate with fast classical layer. This mirrors production layered systems.</span><br>
+                            <a href="../docs/model-cards/MoE_Hybrid.md" class="text-blue-700 hover:underline text-xs">Card</a> • 
+                            <a href="../experiments/toy_moe_hybrid.py" class="text-blue-700 hover:underline text-xs">Script</a> • 
+                            <a href="../scripts/full_pipeline.py" class="text-blue-700 hover:underline text-xs">Full Pipeline</a>
                         </div>
                     </div>
                 </div>
-                <div class="text-xs text-slate-500 mt-6">All experiments use the same data generator. Execute with different seeds to explore variance and robustness.</div>
+                <div class="text-xs text-slate-500 mt-6" data-i18n="tour.note">All experiments use the same data generator. Execute with different seeds to explore variance and robustness.</div>
             </div>
         </div>
 
@@ -901,16 +1088,16 @@
         <div class="mb-12">
             <div class="grid md:grid-cols-2 gap-4">
                 <div class="bg-white border rounded-3xl p-7">
-                    <div class="font-semibold mb-2">Core Insights from Research &amp; Experiments</div>
-                    <ul class="text-sm text-slate-600 space-y-2">
-                        <li>• Feature engineering (velocity + entity aggregates) often yields larger gains than switching model families.</li>
-                        <li>• Hybrids dominate: generative models surface novel fraud; supervised models surface known patterns.</li>
-                        <li>• Graph layers are essential once KYA/KYE data exists; they close coverage gaps tabular models cannot see.</li>
-                        <li>• PR-AUC and Recall@K matter far more than accuracy or even ROC-AUC in production settings.</li>
+                    <div class="font-semibold mb-2" data-i18n="insights.core.title">Core Insights from Research &amp; Experiments</div>
+                    <ul class="text-sm text-slate-600 space-y-2" data-i18n="insights.core.list">
+                        <li data-i18n="insights.core.1">• Feature engineering (velocity + entity aggregates) often yields larger gains than switching model families.</li>
+                        <li data-i18n="insights.core.2">• Hybrids dominate: generative models surface novel fraud; supervised models surface known patterns.</li>
+                        <li data-i18n="insights.core.3">• Graph layers are essential once KYA/KYE data exists; they close coverage gaps tabular models cannot see.</li>
+                        <li data-i18n="insights.core.4">• PR-AUC and Recall@K matter far more than accuracy or even ROC-AUC in production settings.</li>
                     </ul>
                 </div>
                 <div class="bg-white border rounded-3xl p-7">
-                    <div class="font-semibold mb-2">When to Choose What</div>
+                    <div class="font-semibold mb-2" data-i18n="insights.choose.title">When to Choose What</div>
                     <div class="text-sm space-y-2 text-slate-600">
                         <div><span class="font-medium text-slate-700">Start here:</span> XGBoost + IF on engineered features.</div>
                         <div><span class="font-medium text-slate-700">Need novel detection:</span> VAE or Isolation Forest hybrids.</div>
@@ -926,18 +1113,18 @@
         <!-- Footer -->
         <footer class="border-t pt-7 pb-12 text-xs text-slate-500">
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-y-2">
-                <div>
+                <div data-i18n="footer.text1">
                     Built with rigor for practitioners, students, and research teams.<br>
                     All implementations pass regression gate. All model cards include references to Chen (2025), Vallarino (2025), An &amp; Cho (2015), Hamilton et al. (2017) and the broader literature.
                 </div>
                 <div class="text-right md:text-left">
-                    <div>PillB • Educational &amp; research use</div>
-                    <div class="text-[10px] mt-0.5">Clone → <span class="font-mono">pip install -r requirements.txt</span> → run experiments and pipeline</div>
+                    <div data-i18n="footer.pillb">PillB • Educational &amp; research use</div>
+                    <div class="text-[10px] mt-0.5" data-i18n="footer.clone">Clone → <span class="font-mono">pip install -r requirements.txt</span> → run experiments and pipeline</div>
                 </div>
             </div>
-            <div class="mt-4 pt-3 border-t text-[10px]">Self-contained (Tailwind CDN + local CSS/JS assets). 100% complete — no placeholders. Synthesized from model cards, roadmap, pipeline runs, and sub-agent research. Production-ready for GitHub Pages and client delivery. PillB 2026.</div>
+            <div class="mt-4 pt-3 border-t text-[10px]" data-i18n="footer.complete">Self-contained (Tailwind CDN + local CSS/JS assets). 100% complete — no placeholders. Synthesized from model cards, roadmap, pipeline runs, and sub-agent research. Production-ready for GitHub Pages and client delivery. PillB 2026.</div>
         </footer>
-    </div>
+    </main>
 
     <!-- Professional interactivity and enhancements (BCG/McKinsey UX) -->
     <script src="js/main.js"></script>

@@ -37,8 +37,8 @@ Gradient boosting on decision trees:
 
 **Fraud-Specific Fit**: Core for known fraud patterns in tx data. Combine with KYA features and velocity. Use in cascades: rules/IF → XGBoost. Production staple (often >90% of alerts in layered systems).
 
-## Toy Example (Functional Python)
-See experiments/toy_xgboost.py (uses the synthetic generator + sklearn XGB wrapper or native if available; reports PR-AUC, importance).
+## Runnable Example (Production Note)
+See experiments/toy_xgboost.py. In production, prefer the native xgboost package for scale_pos_weight and full SHAP support. Reports PR-AUC and importances.
 
 ## Conceptual Visualization
 - Feature importance bar chart (top: velocity, amount dev, KYA flags).
@@ -50,4 +50,4 @@ See experiments/toy_xgboost.py (uses the synthetic generator + sklearn XGB wrapp
 - Bahnsen et al. on feature engineering for fraud.
 - Full in sub-agent papers.
 
-**Status**: Foundational supervised card. Tested toy.
+**Production Note**: Primary supervised layer in cascades. Use native xgboost package in production for scale_pos_weight and SHAP. Tested runnable example.

@@ -70,6 +70,20 @@ From roadmap tiers:
 - Advanced ensembles & hybrids
 - Notes on LLM / self-supervised extensions
 
+## Expanded Catalog
+The broader catalog now lives in [docs/roadmap/exhaustive_model_catalog.md](docs/roadmap/exhaustive_model_catalog.md). It covers:
+- Classical rules/statistics, density and distance anomaly detection, PCA/Mahalanobis, and streaming gates.
+- Cost-sensitive supervised ensembles, balanced forests, stacking, thresholding, Recall@K, and review-cost framing.
+- Community detection, role discovery, temporal graph learning, and criminal-network analysis.
+- Deep anomaly families beyond VAE, including Deep SVDD and DAGMM.
+- Offline GraphRAG-style analyst workflows for evidence-grounded case review.
+
+Additional runnable examples:
+- `python experiments/toy_classical_anomaly_suite.py`
+- `python experiments/toy_community_role_detection.py`
+- `python experiments/toy_temporal_graph_risk.py`
+- `python experiments/toy_graphrag_analyst.py`
+
 ## Research Foundation
 - Systematic reviews 2024-2025 (arXiv, journals)
 - Curated graph-fraud papers (safe-graph)
