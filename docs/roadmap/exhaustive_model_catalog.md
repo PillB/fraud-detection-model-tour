@@ -33,6 +33,16 @@ This catalog is the broad coverage layer behind the Model Tour. The six flagship
 
 Runnable example: `experiments/toy_classical_anomaly_suite.py`.
 
+Dedicated cards:
+
+- `docs/model-cards/Isolation_Forest.md`
+- `docs/model-cards/LOF_OCSVM_PCA.md`
+- `docs/model-cards/Density_Outlier_PyOD.md`
+
+Additional runnable examples:
+
+- `experiments/toy_density_outlier_suite.py`
+
 ## 3. Supervised Trees and Cost-Sensitive Learning
 
 | Technique | Fraud Fit | Notes |
@@ -45,6 +55,8 @@ Runnable example: `experiments/toy_classical_anomaly_suite.py`.
 | Threshold optimization / cost curves | Operational queue alignment | Use `Recall@K`, expected loss, review capacity |
 
 Existing card: `docs/model-cards/XGBoost_Supervised.md`.
+Additional card: `docs/model-cards/Logistic_RandomForest_Baselines.md`.
+Runnable example: `experiments/toy_supervised_baselines.py`.
 
 ## 4. Deep Reconstruction, Density, and Generative Models
 
@@ -100,6 +112,18 @@ Existing card: `docs/model-cards/GraphSAGE.md`.
 New card: `docs/model-cards/Community_Role_Detection.md`.
 Runnable example: `experiments/toy_community_role_detection.py`.
 
+Additional cards:
+
+- `docs/model-cards/RGCN_Heterogeneous_GNN.md`
+- `docs/model-cards/GAT_Attention_GNN.md`
+- `docs/model-cards/Graph_Link_Prediction.md`
+- `docs/model-cards/Entity_Resolution_KG.md`
+
+Additional runnable examples:
+
+- `experiments/toy_graph_link_prediction.py`
+- `experiments/toy_entity_resolution.py`
+
 ## 8. Temporal Graph Neural Networks and Dynamic Graphs
 
 | Technique | Fraud Fit | Notes |
@@ -136,6 +160,7 @@ Runnable local proxy: `experiments/toy_temporal_graph_risk.py`.
 
 Existing card: `docs/model-cards/MoE_Hybrid.md`.
 New card: `docs/model-cards/Cost_Sensitive_Ensembles.md`.
+Additional privacy/network-intelligence card: `docs/model-cards/Federated_Privacy_Preserving_Fraud.md`.
 
 ## 11. LLM-Augmented Analyst Workflows and GraphRAG
 
@@ -158,4 +183,3 @@ A consulting-grade fraud platform should include all families above in the roadm
 2. Use model cards to document production-grade variants and limitations.
 3. Compare families through PR-AUC, Recall@K, and cost-sensitive queue metrics.
 4. Treat graph, temporal graph, SSL, and LLM/GraphRAG as layered additions over strong feature engineering and supervised baselines.
-

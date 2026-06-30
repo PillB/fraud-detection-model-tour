@@ -24,6 +24,11 @@ Full Model Card: docs/model-cards/VAE.md
 
 import numpy as np
 import pandas as pd
+import os
+from pathlib import Path
+
+os.environ.setdefault("MPLCONFIGDIR", str(Path(__file__).resolve().parent / ".mplconfig"))
+
 import matplotlib.pyplot as plt
 
 try:
@@ -60,44 +65,47 @@ def prepare_normal_data(tx: pd.DataFrame, use_normal_only: bool = True):
     X_all = scaler.transform(X)
     return X_train, X_all, scaler, tx['is_fraud'].values
 
-class SimpleVAE(nn.Module):
-    """Minimal VAE for tabular data (educational)."""
-    def __init__(self, input_dim, latent_dim=8, hidden=64):
-        super().__init__()
-        self.encoder = nn.Sequential(
-            nn.Linear(input_dim, hidden),
-            nn.ReLU(),
-            nn.Linear(hidden, hidden),
-            nn.ReLU()
-        )
-        self.fc_mu = nn.Linear(hidden, latent_dim)
-        self.fc_logvar = nn.Linear(hidden, latent_dim)
-        
-        self.decoder = nn.Sequential(
-            nn.Linear(latent_dim, hidden),
-            nn.ReLU(),
-            nn.Linear(hidden, hidden),
-            nn.ReLU(),
-            nn.Linear(hidden, input_dim)
-        )
-    
-    def encode(self, x):
-        h = self.encoder(x)
-        return self.fc_mu(h), self.fc_logvar(h)
-    
-    def reparameterize(self, mu, logvar):
-        std = torch.exp(0.5 * logvar)
-        eps = torch.randn_like(std)
-        return mu + eps * std
-    
-    def forward(self, x):
-        mu, logvar = self.encode(x)
-        z = self.reparameterize(mu, logvar)
-        recon = self.decoder(z)
-        return recon, mu, logvar
+if HAS_TORCH:
+    class SimpleVAE(nn.Module):
+        """Minimal VAE for tabular data (educational)."""
+        def __init__(self, input_dim, latent_dim=8, hidden=64):
+            super().__init__()
+            self.encoder = nn.Sequential(
+                nn.Linear(input_dim, hidden),
+                nn.ReLU(),
+                nn.Linear(hidden, hidden),
+                nn.ReLU()
+            )
+            self.fc_mu = nn.Linear(hidden, latent_dim)
+            self.fc_logvar = nn.Linear(hidden, latent_dim)
+
+            self.decoder = nn.Sequential(
+                nn.Linear(latent_dim, hidden),
+                nn.ReLU(),
+                nn.Linear(hidden, hidden),
+                nn.ReLU(),
+                nn.Linear(hidden, input_dim)
+            )
+
+        def encode(self, x):
+            h = self.encoder(x)
+            return self.fc_mu(h), self.fc_logvar(h)
+
+        def reparameterize(self, mu, logvar):
+            std = torch.exp(0.5 * logvar)
+            eps = torch.randn_like(std)
+            return mu + eps * std
+
+        def forward(self, x):
+            mu, logvar = self.encode(x)
+            z = self.reparameterize(mu, logvar)
+            recon = self.decoder(z)
+            return recon, mu, logvar
 
 def vae_loss(recon, x, mu, logvar):
     """Standard VAE loss: recon + KL."""
+    if not HAS_TORCH:
+        raise RuntimeError("VAE loss requires PyTorch")
     recon_loss = nn.functional.mse_loss(recon, x, reduction='sum')
     kl = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     return recon_loss + kl
@@ -128,8 +136,8 @@ def train_vae(X_train, epochs=30, batch_size=128, latent_dim=8, lr=1e-3):
 def anomaly_score_vae(model, X, n_samples=10):
     """Approximate reconstruction probability (An & Cho style). Lower = more anomalous."""
     if model is None or not HAS_TORCH:
-        # Fallback: use simple reconstruction error via IsolationForest or mean
-        return -np.mean(X, axis=1)  # dummy
+        center = np.median(X, axis=0)
+        return np.mean((X - center) ** 2, axis=1)
     
     model.eval()
     X_t = torch.FloatTensor(X)
@@ -169,7 +177,7 @@ def main():
     if_scores = -if_model.fit(X_all).decision_function(X_all)
     hybrid_scores = scores + 0.5 * if_scores  # simple fusion
     
-    pr_auc = average_precision_score(y, -hybrid_scores)  # higher anomaly = lower score in some conventions; flip
+    pr_auc = average_precision_score(y, hybrid_scores)
     print(f"\nHybrid (VAE + IF) PR-AUC: {pr_auc:.4f}")
     
     # Top anomalies

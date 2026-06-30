@@ -70,14 +70,26 @@ def test_primary_website_flows_with_playwright():
         page.keyboard.press("Enter")
         assert pr_header.get_attribute("aria-sort") in {"ascending", "descending"}
 
+        page.locator('a[href="#browser-lab"]').first.click()
+        page.wait_for_function("location.hash === '#browser-lab'")
+        page.get_by_role("button", name="Run inference").click()
+        assert page.locator("#lab-chart").get_by_text("PR-AUC").first.is_visible()
+        assert page.locator("#lab-alerts").get_by_text("TXN").first.is_visible()
+        page.locator("#lab-model-select").select_option("graph")
+        assert page.locator("#lab-chart").get_by_text("Graph risk proxy").is_visible()
+
         page.get_by_role("button", name="ES").click()
         page.wait_for_function("document.documentElement.lang === 'es-419'")
         assert "es" in page.url
+        assert page.get_by_role("button", name="Ejecutar inferencia").is_visible()
 
         mobile = browser.new_page(viewport={"width": 390, "height": 900}, is_mobile=True)
         mobile.goto(url, wait_until="networkidle")
         mobile.locator("#mobile-section-jump").select_option("#workbench")
         mobile.wait_for_function("location.hash === '#workbench'")
         assert mobile.locator("#workbench").is_visible()
+        mobile.locator("#mobile-section-jump").select_option("#browser-lab")
+        mobile.wait_for_function("location.hash === '#browser-lab'")
+        assert mobile.get_by_role("button", name="Run inference").is_visible()
 
         browser.close()
