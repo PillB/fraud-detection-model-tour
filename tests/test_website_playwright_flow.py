@@ -84,6 +84,10 @@ def test_primary_website_flows_with_playwright():
         page.get_by_role("button", name="ES").click()
         page.wait_for_function("document.documentElement.lang === 'es-419'")
         assert "es" in page.url
+        assert page.locator("#lang-es").get_attribute("aria-pressed") == "true"
+        assert page.locator("#lang-en").get_attribute("aria-pressed") == "false"
+        assert "text-white" in page.locator("#lang-es").get_attribute("class")
+        assert "text-white" not in page.locator("#lang-en").get_attribute("class")
         assert page.get_by_role("button", name="Ejecutar inferencia").is_visible()
         assert page.locator(".consulting-card").count() == 74
         assert page.locator("#cards [data-card-model-visible]").count() == 74

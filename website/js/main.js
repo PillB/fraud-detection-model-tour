@@ -749,7 +749,7 @@
 
     async function loadTranslations() {
         try {
-            const res = await fetch('translations.json?v=20260630-bilingual2', { cache: 'no-store' });
+            const res = await fetch('translations.json?v=20260630-lang-toggle', { cache: 'no-store' });
             translations = await res.json();
         } catch (e) {
             console.warn('Could not load translations.json, using fallback English');
@@ -828,6 +828,10 @@
             const isActive = btn.dataset.lang === lang;
             btn.classList.toggle('active', isActive);
             btn.setAttribute('aria-pressed', isActive);
+            btn.classList.toggle('bg-[#0f172a]', isActive);
+            btn.classList.toggle('text-white', isActive);
+            btn.classList.toggle('hover:bg-slate-100', !isActive);
+            btn.classList.toggle('text-slate-700', !isActive);
         });
 
         // Persist
