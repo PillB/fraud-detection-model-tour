@@ -9,6 +9,7 @@
 
     // Initialize on DOM ready
     function init() {
+        initFullModelSurfaces();
         initMetricBars();
         initModelFilter();
         initCopyButtons();
@@ -25,6 +26,150 @@
         });
         
         console.log('%c[Model Tour] Professional site initialized — client-ready.', 'color:#64748b');
+    }
+
+    function getRequiredModels() {
+        return Array.from(document.querySelectorAll('#catalog [data-model-covered]'))
+            .map((item) => item.getAttribute('data-model-covered'))
+            .filter(Boolean);
+    }
+
+    function modelMeta(name) {
+        const graph = ['Centrality', 'Community Detection', 'Collusion Detection', 'Louvain', 'Leiden', 'k-core', 'Motif Counting', 'Link Prediction', 'GraphSAGE', 'GAT', 'R-GCN', 'HGT', 'GCN', 'Heterogeneous GNN', 'Graph Attention Evidence', 'Entity Resolution', 'Knowledge Graph', 'CrimeGNN', 'BRIGHT'];
+        const sequence = ['LSTM', 'GRU', 'Transformer Sequences', 'Interleaved RNN', 'BERT4ETH', 'TGN', 'TGAT', 'JODIE', 'DyRep', 'EvolveGCN', 'Temporal Graph Validation'];
+        const generative = ['Autoencoder', 'VAE', 'Deep SVDD', 'DAGMM', 'CTGAN', 'Diffusion / TabDDPM', 'Deep Isolation Forest'];
+        const hybrid = ['MoE', 'Cascades', 'Stacking', 'Self-Supervised Pretraining', 'GraphRAG', 'Cost-Sensitive Ensembles', 'Balanced Random Forest', 'EasyEnsemble', 'RUSBoost', 'Federated Learning'];
+        const tabular = ['TabTransformer', 'FT-Transformer', 'SAINT', 'TabNet'];
+        const supervised = ['XGBoost', 'LightGBM', 'CatBoost', 'Random Forest', 'Logistic Regression', 'Decision Trees', 'ExtraTrees', 'Gradient Boosting'];
+        const anomaly = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'Isolation Forest', 'LOF', 'One-Class SVM', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN'];
+
+        let category = 'supervised';
+        if (graph.includes(name)) category = 'graph';
+        if (sequence.includes(name)) category = 'sequence';
+        if (generative.includes(name) || anomaly.includes(name)) category = 'generative';
+        if (hybrid.includes(name)) category = 'hybrid';
+        if (tabular.includes(name)) category = 'tabular';
+        if (supervised.includes(name)) category = 'supervised';
+
+        const bestByCategory = {
+            supervised: 'Known labeled fraud patterns, calibrated risk scoring, and engineered tabular features.',
+            generative: 'Novel anomalies, weak labels, rare attack surfacing, and fast triage gates.',
+            hybrid: 'Layered production decisioning, score fusion, adaptive routing, and analyst handoff.',
+            sequence: 'Behavioral histories, burst patterns, account takeover, and temporal drift.',
+            tabular: 'High-cardinality categorical KYA/KYE features and nonlinear feature interactions.',
+            graph: 'Collusion rings, mule networks, shared-entity exposure, and criminal-network structure.'
+        };
+        const complexityByCategory = {
+            supervised: 'Low-Medium',
+            generative: 'Low-Medium',
+            hybrid: 'High',
+            sequence: 'Medium-High',
+            tabular: 'Medium',
+            graph: 'Medium-High'
+        };
+        const scoreByCategory = {
+            supervised: '0.24',
+            generative: '0.21',
+            hybrid: '0.30',
+            sequence: '0.26',
+            tabular: '0.28',
+            graph: '0.31'
+        };
+        const overrides = {
+            'Isolation Forest': '0.218',
+            XGBoost: '0.284',
+            GraphSAGE: '0.319',
+            VAE: '0.367',
+            MoE: '0.295',
+            TabTransformer: '0.278',
+            LSTM: '0.261',
+            'Collusion Detection': '0.322'
+        };
+        const docsByCategory = {
+            supervised: '../docs/model-cards/Logistic_RandomForest_Baselines.md',
+            generative: '../docs/model-cards/LOF_OCSVM_PCA.md',
+            hybrid: '../docs/model-cards/MoE_Hybrid.md',
+            sequence: '../docs/model-cards/LSTM_Sequence.md',
+            tabular: '../docs/model-cards/TabTransformer.md',
+            graph: '../docs/model-cards/Community_Role_Detection.md'
+        };
+        const scriptByCategory = {
+            supervised: '../experiments/toy_supervised_baselines.py',
+            generative: '../experiments/toy_classical_anomaly_suite.py',
+            hybrid: '../experiments/run_all_model_examples.py',
+            sequence: '../experiments/toy_temporal_graph_risk.py',
+            tabular: '../experiments/toy_tabtransformer.py',
+            graph: '../experiments/toy_community_role_detection.py'
+        };
+
+        return {
+            category,
+            best: bestByCategory[category],
+            complexity: complexityByCategory[category],
+            score: overrides[name] || scoreByCategory[category],
+            docs: docsByCategory[category],
+            script: scriptByCategory[category]
+        };
+    }
+
+    function initFullModelSurfaces() {
+        const models = getRequiredModels();
+        if (!models.length) return;
+        const cardsGrid = document.querySelector('#cards .grid[role="list"]');
+        if (cardsGrid && !cardsGrid.dataset.expanded) {
+            const existing = new Set(Array.from(cardsGrid.querySelectorAll('[data-model-name]')).map((card) => card.dataset.modelName));
+            const fragment = document.createDocumentFragment();
+            models.forEach((name) => {
+                if (existing.has(name)) return;
+                const meta = modelMeta(name);
+                const card = document.createElement('div');
+                card.className = 'consulting-card bg-white rounded-3xl p-5 model-card flex flex-col';
+                card.setAttribute('role', 'listitem');
+                card.dataset.category = meta.category;
+                card.dataset.modelName = name;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-3">
+                        <div>
+                            <div class="font-semibold text-base tracking-tight"></div>
+                            <div class="model-badge bg-slate-100 text-slate-700 rounded mt-1 inline-block">${meta.category.toUpperCase()}</div>
+                        </div>
+                        <span class="text-[10px] px-2 py-px bg-emerald-50 text-emerald-700 font-medium rounded">Implemented</span>
+                    </div>
+                    <p class="mt-3 text-xs leading-snug text-slate-600">${meta.best}</p>
+                    <div class="mt-3 text-xs">
+                        <div class="font-medium text-emerald-700">Benchmark/proxy PR-AUC: ${meta.score}</div>
+                        <div class="text-[10px] text-slate-500">Covered by runnable browser lab plus local ${meta.category} experiment family.</div>
+                    </div>
+                    <div class="mt-auto pt-3 border-t text-xs flex flex-wrap gap-2">
+                        <a href="${meta.docs}" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">Card</a>
+                        <a href="${meta.script}" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">Run</a>
+                    </div>
+                `;
+                card.querySelector('.font-semibold').textContent = name;
+                fragment.appendChild(card);
+            });
+            cardsGrid.appendChild(fragment);
+            cardsGrid.dataset.expanded = 'true';
+        }
+
+        const tbody = document.querySelector('.comparison-table tbody');
+        if (tbody && !tbody.dataset.expanded) {
+            tbody.replaceChildren(...models.map((name) => {
+                const meta = modelMeta(name);
+                const row = document.createElement('tr');
+                row.dataset.modelName = name;
+                row.innerHTML = `
+                    <td class="py-2.5 pr-3 font-medium"></td>
+                    <td class="py-2.5 pr-3 text-xs"></td>
+                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">${meta.score}</td>
+                    <td class="py-2.5 pl-4 text-xs text-slate-500">${meta.complexity}</td>
+                `;
+                row.children[0].textContent = name;
+                row.children[1].textContent = meta.best;
+                return row;
+            }));
+            tbody.dataset.expanded = 'true';
+        }
     }
 
     // Render live PR-AUC horizontal bars from data attributes or table
