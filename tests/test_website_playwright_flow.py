@@ -59,6 +59,9 @@ def test_primary_website_flows_with_playwright():
         assert page.locator(".consulting-card").count() == 74
         assert page.locator("#cards [data-card-model-visible]").count() == 74
         assert page.locator("#cards .consulting-card").filter(has_text="Runnable example").count() == 74
+        assert page.locator("#cards .runner-status-badge").count() == 74
+        assert page.locator("#cards .runner-status-badge").filter(has_text="Model-specific educational runner").count() > 0
+        assert page.locator("#cards .runner-status-badge").filter(has_text="Exact lightweight JS runner").count() > 0
         page.locator('[data-model-name="Isolation Forest"] a').filter(has_text="Card").first.click()
         page.wait_for_function("location.hash === '#model-workspace'")
         assert page.locator("#workspace-model-name").text_content() == "Isolation Forest"
@@ -66,8 +69,12 @@ def test_primary_website_flows_with_playwright():
 
         page.locator('[data-model-name="Isolation Forest"] a').filter(has_text="Run").first.click()
         page.wait_for_function("location.hash === '#browser-lab'")
-        assert page.locator("#lab-model-select").input_value() == "iforest"
-        assert page.locator("#lab-chart").get_by_text("Isolation Forest proxy").is_visible()
+        assert page.locator("#lab-model-select").input_value() == "Isolation Forest"
+        assert page.locator("#lab-model-select option").count() == 75
+        assert page.locator('#lab-model-select option[value="all"]').text_content() == "All models"
+        assert page.locator("#lab-chart").get_by_text("Isolation Forest").is_visible()
+        assert page.locator("#lab-explain").get_by_text("isolation-style feature attribution").is_visible()
+        assert page.locator("#lab-representation svg").is_visible()
         assert not page.url.endswith(".py")
         assert not page.url.endswith(".md")
 
@@ -92,8 +99,9 @@ def test_primary_website_flows_with_playwright():
         page.get_by_role("button", name="Run inference").click()
         assert page.locator("#lab-chart").get_by_text("PR-AUC").first.is_visible()
         assert page.locator("#lab-alerts").get_by_text("TXN").first.is_visible()
-        page.locator("#lab-model-select").select_option("graph")
-        assert page.locator("#lab-chart").get_by_text("Graph risk proxy").is_visible()
+        page.locator("#lab-model-select").select_option("GraphSAGE")
+        assert page.locator("#lab-chart").get_by_text("GraphSAGE").is_visible()
+        assert page.locator("#lab-explain").get_by_text("graph-neighborhood evidence").is_visible()
 
         page.get_by_role("button", name="ES").click()
         page.wait_for_function("document.documentElement.lang === 'es-419'")
@@ -109,12 +117,19 @@ def test_primary_website_flows_with_playwright():
         assert page.locator(".consulting-card").count() == 74
         assert page.locator("#cards [data-card-model-visible]").count() == 74
         assert page.locator("#cards .consulting-card").filter(has_text="Ejemplo ejecutable").count() == 74
+        assert page.locator("#cards .runner-status-badge").count() == 74
+        assert page.locator("#cards .runner-status-badge").filter(has_text="Ejecutor educativo específico").count() > 0
+        assert page.locator("#cards .runner-status-badge").filter(has_text="Ejecutor JS ligero exacto").count() > 0
         assert page.locator(".comparison-table tbody tr").count() == 74
+        assert page.locator('#lab-model-select option[value="all"]').text_content() == "Todos los modelos"
         assert graph_card.is_visible()
         assert xgb_card.is_hidden()
         assert page.locator('#cards [data-generated-model-card="true"]').filter(has_text="Ejemplo ejecutable").count() > 0
         assert page.locator(".comparison-table tbody tr").filter(has_text="Anomalías nuevas").count() > 0
         assert page.locator("#lab-status").get_by_text("Completadas").is_visible()
+        page.locator("#lab-model-select").select_option("GraphSAGE")
+        assert page.locator("#lab-chart").get_by_text("GraphSAGE").is_visible()
+        assert page.locator("#lab-explain").get_by_text("evidencia de vecindario de grafo").is_visible()
 
         english_page = browser.new_page(viewport={"width": 1200, "height": 900})
         english_page.goto(f"{url}?lang=en#cards", wait_until="networkidle")

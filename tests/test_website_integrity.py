@@ -197,6 +197,27 @@ def test_required_user_model_inventory_is_visible_on_website():
     assert sorted(required_models - covered) == []
 
 
+def test_browser_lab_exposes_model_specific_runner_contract():
+    html = (WEBSITE / "index.html").read_text(encoding="utf-8")
+    js = (WEBSITE / "js" / "main.js").read_text(encoding="utf-8")
+    translations = (WEBSITE / "translations.json").read_text(encoding="utf-8")
+    covered = set(re.findall(r'data-model-covered="([^"]+)"', html))
+
+    assert "lab-explain" in html
+    assert "lab-representation" in html
+    assert "runner-status-badge" in js
+    assert "runnerSpec(name)" in js
+    assert "scoreModel(name, rows, baseScores)" in js
+    assert "new Option(name, name)" in js
+    assert "select.value = name" in js
+    assert "explanationFor(spec, alert)" in js
+    assert "renderRepresentation(topModel.spec, rows, topModel.scores)" in js
+    assert "74 model-specific JavaScript runners" not in translations
+    assert "74 selecciones específicas por modelo" in translations
+    for model in covered:
+        assert model in js or model in html
+
+
 def test_core_sections_follow_guided_narrative_order():
     html = (WEBSITE / "index.html").read_text(encoding="utf-8")
     ordered_ids = [

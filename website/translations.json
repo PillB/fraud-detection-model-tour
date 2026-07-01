@@ -636,16 +636,16 @@
     "es": "Ejecuta modelos antifraude en el sitio"
   },
   "lab.desc": {
-    "en": "Generate synthetic transactions, run lightweight JavaScript model proxies, compute PR-AUC and Recall@K, and inspect the highest-risk alerts without leaving the page. Python remains the source of truth; this browser lab makes execution part of the website flow.",
-    "es": "Genera transacciones sintéticas, ejecuta proxies ligeros de modelos en JavaScript, calcula PR-AUC y Recall@K, e inspecciona las alertas de mayor riesgo sin salir de la página. Python sigue siendo la fuente de verdad; este lab en navegador integra la ejecución al flujo del sitio."
+    "en": "Generate synthetic transactions, choose any of the 74 model-specific browser selections, compute PR-AUC and Recall@K, and inspect alerts, explanation bars, and a compact representation plot without leaving the page. Heavy production models remain linked through Python; the browser lab clearly labels exact lightweight runners versus educational approximations.",
+    "es": "Genera transacciones sintéticas, elige cualquiera de las 74 selecciones específicas por modelo en el navegador, calcula PR-AUC y Recall@K, e inspecciona alertas, barras de explicación y una visualización compacta de representación sin salir de la página. Los modelos pesados de producción siguen vinculados mediante Python; el laboratorio distingue claramente ejecutores ligeros exactos y aproximaciones educativas."
   },
   "lab.controls": {
     "en": "Controls",
     "es": "Controles"
   },
   "lab.model": {
-    "en": "Model family",
-    "es": "Familia de modelos"
+    "en": "Model or runner",
+    "es": "Modelo o ejecutor"
   },
   "lab.model.all": {
     "en": "All models",
@@ -692,8 +692,8 @@
     "es": "Listo. Se ejecuta localmente en tu navegador."
   },
   "lab.note": {
-    "en": "Educational JavaScript proxies avoid heavy downloads. Production implementations use Python, PyOD, XGBoost/LightGBM/CatBoost, PyG/DGL, TensorFlow, or PyTorch.",
-    "es": "Los proxies educativos en JavaScript evitan descargas pesadas. Las implementaciones de producción usan Python, PyOD, XGBoost/LightGBM/CatBoost, PyG/DGL, TensorFlow o PyTorch."
+    "en": "Exact lightweight runners are used where the math is small enough for the browser. Deep trees, neural networks, GNNs, TGNNs, and generative models use model-specific educational runners plus links to Python implementations.",
+    "es": "Se usan ejecutores ligeros exactos cuando la matemática cabe bien en el navegador. Árboles profundos, redes neuronales, GNN, TGNN y modelos generativos usan ejecutores educativos específicos por modelo más enlaces a implementaciones Python."
   },
   "lab.metrics": {
     "en": "Metrics",
@@ -706,6 +706,14 @@
   "lab.alerts": {
     "en": "Top risk alerts",
     "es": "Alertas de mayor riesgo"
+  },
+  "lab.explain": {
+    "en": "Explainability companion",
+    "es": "Explicabilidad complementaria"
+  },
+  "lab.representation": {
+    "en": "Representation view",
+    "es": "Vista de representación"
   },
   "pipeline.badge": {
     "en": "Production-Style End-to-End",
@@ -1808,8 +1816,8 @@
     "es": "Inspecciona un modelo y ejecuta su proxy en el navegador"
   },
   "workspace.desc": {
-    "en": "Every Card and Run action now stays inside the website. Use Card to inspect model-specific guidance; use Run to execute the matching browser lab proxy and inspect metrics without opening raw source files.",
-    "es": "Cada acción de Ficha y Ejemplo ejecutable ahora permanece dentro del sitio. Usa Ficha para revisar la guía del modelo; usa Ejemplo ejecutable para ejecutar el proxy correspondiente del laboratorio y ver métricas sin abrir archivos fuente."
+    "en": "Every Card and Run action now stays inside the website. Use Card to inspect model-specific guidance; use Run to execute the matching browser selection, with exact/educational status, metrics, explanation bars, and a representation view.",
+    "es": "Cada acción de Ficha y Ejemplo ejecutable ahora permanece dentro del sitio. Usa Ficha para revisar la guía del modelo; usa Ejemplo ejecutable para ejecutar la selección correspondiente del navegador, con estado exacto/educativo, métricas, barras de explicación y vista de representación."
   },
   "workspace.selected": {
     "en": "Selected model",
@@ -1840,7 +1848,7 @@
     "es": "Precauciones"
   },
   "workspace.note": {
-    "en": "Choose any model card above. The Run action maps specialized models to the closest lightweight browser proxy.",
-    "es": "Elige cualquier tarjeta de modelo arriba. La acción de ejecución asigna modelos especializados al proxy ligero más cercano del navegador."
+    "en": "Choose any model card above. The Run action selects that exact model name in the browser lab and labels whether the runner is exact or educational.",
+    "es": "Elige cualquier tarjeta de modelo arriba. La acción de ejecución selecciona ese nombre exacto de modelo en el laboratorio del navegador e indica si el ejecutor es exacto o educativo."
   }
 }

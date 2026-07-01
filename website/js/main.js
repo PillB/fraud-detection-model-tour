@@ -173,6 +173,38 @@
         return meta.category === 'graph' ? 'graph' : 'iforest';
     }
 
+    function hashModel(name) {
+        return Array.from(name).reduce((acc, ch) => ((acc * 31) + ch.charCodeAt(0)) >>> 0, 7);
+    }
+
+    function runnerSpecForModel(name) {
+        const family = labKeyForModel(name);
+        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'Centrality', 'k-core', 'Motif Counting', 'KMeans', 'DBSCAN'].includes(name);
+        const explainKindByFamily = {
+            rules: { en: 'threshold evidence', es: 'evidencia por umbrales' },
+            iforest: { en: 'isolation-style feature attribution', es: 'atribución estilo aislamiento' },
+            gbdt: { en: 'SHAP-style contribution proxy', es: 'proxy de contribución tipo SHAP' },
+            vae: { en: 'reconstruction-error evidence', es: 'evidencia de error de reconstrucción' },
+            graph: { en: 'graph-neighborhood evidence', es: 'evidencia de vecindario de grafo' },
+            moe: { en: 'expert-routing contribution', es: 'contribución por enrutamiento de expertos' }
+        };
+        return {
+            name,
+            family,
+            hash: hashModel(name),
+            exact,
+            status: exact
+                ? { en: 'Exact lightweight JS runner', es: 'Ejecutor JS ligero exacto' }
+                : { en: 'Model-specific educational runner', es: 'Ejecutor educativo específico del modelo' },
+            explainKind: explainKindByFamily[family]
+        };
+    }
+
+    function runnerStatusLabel(name) {
+        const spec = runnerSpecForModel(name);
+        return localizedText(spec.status);
+    }
+
     function modelNarrative(name) {
         const meta = modelMeta(name);
         const labKey = labKeyForModel(name);
@@ -326,7 +358,10 @@
         const lab = document.getElementById('browser-lab');
         const select = document.getElementById('lab-model-select');
         const runButton = document.getElementById('lab-run');
-        if (select && Array.from(select.options).some((option) => option.value === key)) {
+        if (select && Array.from(select.options).some((option) => option.value === name)) {
+            select.value = name;
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+        } else if (select && Array.from(select.options).some((option) => option.value === key)) {
             select.value = key;
             select.dispatchEvent(new Event('change', { bubbles: true }));
         } else if (window.ModelTour && typeof window.ModelTour.runBrowserLab === 'function') {
@@ -373,6 +408,20 @@
         const models = getRequiredModels();
         if (!models.length) return;
 
+        function annotateRunnerStatus(card, name) {
+            const spec = runnerSpecForModel(name);
+            card.querySelectorAll('.runner-status-badge').forEach((el) => el.remove());
+            const badge = document.createElement('div');
+            badge.className = `runner-status-badge mt-2 inline-flex w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold ${spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`;
+            badge.textContent = runnerStatusLabel(name);
+            const firstParagraph = card.querySelector('p');
+            if (firstParagraph) {
+                firstParagraph.insertAdjacentElement('beforebegin', badge);
+            } else {
+                card.appendChild(badge);
+            }
+        }
+
         function renderGeneratedCard(card, name, meta) {
             card.dataset.category = meta.category;
             card.dataset.modelName = name;
@@ -388,7 +437,7 @@
                 <p class="mt-3 text-xs leading-snug text-slate-600">${meta.best}</p>
                 <div class="mt-3 text-xs">
                     <div class="font-medium text-emerald-700">${activeLang() === 'es' ? 'PR-AUC de referencia aproximado' : 'Benchmark/proxy PR-AUC'}: ${meta.score}</div>
-                    <div class="text-[10px] text-slate-500">${activeLang() === 'es' ? `Cubierto por el laboratorio ejecutable del navegador y la familia local de experimentos ${localizedText(meta.family)}.` : `Covered by the runnable browser lab plus the local ${meta.category} experiment family.`}</div>
+                    <div class="text-[10px] text-slate-500">${activeLang() === 'es' ? `Seleccionable por nombre en el laboratorio del navegador; estado: ${runnerStatusLabel(name)}.` : `Selectable by name in the browser lab; status: ${runnerStatusLabel(name)}.`}</div>
                 </div>
                 <div class="mt-auto pt-3 border-t text-xs flex flex-wrap gap-2">
                     <a href="${meta.docs}" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">${activeLang() === 'es' ? 'Ficha' : 'Card'}</a>
@@ -407,13 +456,18 @@
                 const existingCard = existing.get(name);
                 if (existingCard && existingCard.dataset.generatedModelCard === 'true') {
                     renderGeneratedCard(existingCard, name, meta);
+                    annotateRunnerStatus(existingCard, name);
                     return;
                 }
-                if (existingCard) return;
+                if (existingCard) {
+                    annotateRunnerStatus(existingCard, name);
+                    return;
+                }
                 const card = document.createElement('div');
                 card.className = 'consulting-card bg-white rounded-3xl p-5 model-card flex flex-col';
                 card.setAttribute('role', 'listitem');
                 renderGeneratedCard(card, name, meta);
+                annotateRunnerStatus(card, name);
                 fragment.appendChild(card);
             });
             cardsGrid.appendChild(fragment);
@@ -690,8 +744,16 @@
         const modelSelect = document.getElementById('lab-model-select');
         const chart = document.getElementById('lab-chart');
         const alerts = document.getElementById('lab-alerts');
+        const explain = document.getElementById('lab-explain');
+        const representation = document.getElementById('lab-representation');
         const status = document.getElementById('lab-status');
         if (!runBtn || !sizeInput || !modelSelect || !chart || !alerts) return;
+
+        const models = getRequiredModels();
+        modelSelect.replaceChildren(
+            new Option(activeLang() === 'es' ? 'Todos los modelos' : 'All models', 'all'),
+            ...models.map((name) => new Option(name, name))
+        );
 
         const rng = (seed) => {
             let t = seed >>> 0;
@@ -780,6 +842,130 @@
             return normalized;
         }
 
+        function hashModel(name) {
+            return Array.from(name).reduce((acc, ch) => ((acc * 31) + ch.charCodeAt(0)) >>> 0, 7);
+        }
+
+        function runnerSpec(name) {
+            const family = labKeyForModel(name);
+            const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'Centrality', 'k-core', 'Motif Counting', 'KMeans', 'DBSCAN', 'Rules + velocity gate'].includes(name);
+            const explainKindByFamily = {
+                rules: { en: 'threshold evidence', es: 'evidencia por umbrales' },
+                iforest: { en: 'isolation-style feature attribution', es: 'atribución estilo aislamiento' },
+                gbdt: { en: 'SHAP-style contribution proxy', es: 'proxy de contribución tipo SHAP' },
+                vae: { en: 'reconstruction-error evidence', es: 'evidencia de error de reconstrucción' },
+                graph: { en: 'graph-neighborhood evidence', es: 'evidencia de vecindario de grafo' },
+                moe: { en: 'expert-routing contribution', es: 'contribución por enrutamiento de expertos' }
+            };
+            return {
+                name,
+                family,
+                hash: hashModel(name),
+                exact,
+                status: exact
+                    ? { en: 'Exact lightweight JS runner', es: 'Ejecutor JS ligero exacto' }
+                    : { en: 'Model-specific educational runner', es: 'Ejecutor educativo específico del modelo' },
+                explainKind: explainKindByFamily[family]
+            };
+        }
+
+        function scoreModel(name, rows, baseScores) {
+            const spec = runnerSpec(name);
+            const h = spec.hash;
+            const base = baseScores[spec.family] || baseScores.iforest;
+            const weight = {
+                amount: ((h % 7) + 3) / 20,
+                velocity: (((h >> 3) % 7) + 3) / 20,
+                graph: (((h >> 6) % 7) + 2) / 22,
+                temporal: (((h >> 9) % 7) + 2) / 24,
+                identity: (((h >> 12) % 7) + 2) / 26
+            };
+            const amounts = rows.map(r => r.amount).sort((a, b) => a - b);
+            const median = amounts[Math.floor(amounts.length / 2)];
+            const amountSignal = normalizeScores(rows.map(r => Math.abs(r.amount - median)));
+            const velocitySignal = normalizeScores(rows.map(r => r.velocity1h * 2 + r.velocity24h));
+            const graphSignal = normalizeScores(rows.map(r => r.graphRisk + (r.user % 23 === 0 ? 0.2 : 0) + (r.merchant % 19 === 0 ? 0.16 : 0)));
+            const temporalSignal = normalizeScores(rows.map(r => r.isNight + Math.abs(r.hour - 13) / 24 + r.velocity1h / 12));
+            const identitySignal = normalizeScores(rows.map(r => ((r.user % 17 === 0) ? 1 : 0) + ((r.merchant % 13 === 0) ? 1 : 0) + r.categoryRisk));
+            return normalizeScores(rows.map((_, i) => (
+                base[i] * 0.52 +
+                amountSignal[i] * weight.amount +
+                velocitySignal[i] * weight.velocity +
+                graphSignal[i] * weight.graph +
+                temporalSignal[i] * weight.temporal +
+                identitySignal[i] * weight.identity +
+                ((h % 13) / 1000)
+            )));
+        }
+
+        function explanationFor(spec, alert) {
+            const row = alert.row;
+            const baseItems = [
+                { key: 'amount', label: activeLang() === 'es' ? 'Monto anómalo' : 'Amount anomaly', value: Math.min(1, Math.log10(row.amount + 1) / 4) },
+                { key: 'velocity', label: activeLang() === 'es' ? 'Velocidad' : 'Velocity', value: Math.min(1, (row.velocity1h * 2 + row.velocity24h) / 55) },
+                { key: 'graph', label: activeLang() === 'es' ? 'Vecindario de grafo' : 'Graph neighborhood', value: Math.min(1, row.graphRisk + (row.user % 23 === 0 ? 0.18 : 0)) },
+                { key: 'temporal', label: activeLang() === 'es' ? 'Temporalidad' : 'Temporal context', value: Math.min(1, row.isNight * 0.55 + Math.abs(row.hour - 13) / 24) },
+                { key: 'identity', label: activeLang() === 'es' ? 'KYA/KYE' : 'KYA/KYE context', value: Math.min(1, row.categoryRisk + (row.merchant % 13 === 0 ? 0.25 : 0)) }
+            ];
+            const emphasis = {
+                rules: ['velocity', 'amount', 'temporal'],
+                iforest: ['amount', 'velocity', 'identity'],
+                gbdt: ['velocity', 'identity', 'amount'],
+                vae: ['amount', 'velocity', 'temporal'],
+                graph: ['graph', 'identity', 'temporal'],
+                moe: ['velocity', 'graph', 'amount']
+            }[spec.family];
+            return baseItems
+                .map(item => ({ ...item, value: Math.min(1, item.value * (emphasis.includes(item.key) ? 1.25 : 0.8)) }))
+                .sort((a, b) => b.value - a.value)
+                .slice(0, 5);
+        }
+
+        function renderExplanation(spec, topAlert) {
+            if (!explain || !topAlert) return;
+            const items = explanationFor(spec, topAlert);
+            explain.innerHTML = `
+                <div class="flex items-center justify-between gap-3 text-xs">
+                    <span class="font-semibold text-slate-700">${localizedText(spec.explainKind)}</span>
+                    <span class="rounded-full ${spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'} px-2 py-1 text-[10px] font-semibold">${localizedText(spec.status)}</span>
+                </div>
+                ${items.map(item => `
+                    <div>
+                        <div class="mb-1 flex justify-between text-xs">
+                            <span class="text-slate-600">${item.label}</span>
+                            <span class="font-mono text-slate-500">${item.value.toFixed(2)}</span>
+                        </div>
+                        <div class="h-2 overflow-hidden rounded-full bg-slate-100">
+                            <div class="h-full rounded-full bg-emerald-600" style="width:${Math.max(5, item.value * 100)}%"></div>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function renderRepresentation(spec, rows, scores) {
+            if (!representation) return;
+            const top = scores.map((score, i) => ({ score, row: rows[i] }))
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 42);
+            const points = top.map((item, idx) => {
+                const x = 18 + Math.min(184, Math.max(0, item.row.graphRisk * 130 + (item.row.user % 31) * 2));
+                const y = 142 - Math.min(118, Math.max(0, item.score * 112 + item.row.isNight * 8));
+                const color = item.row.fraud ? '#dc2626' : (idx < 10 ? '#2563eb' : '#94a3b8');
+                return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${idx < 8 ? 3.7 : 2.7}" fill="${color}" opacity="0.85"><title>${item.row.id} ${item.score.toFixed(3)}</title></circle>`;
+            }).join('');
+            representation.innerHTML = `
+                <svg viewBox="0 0 230 160" class="w-full rounded-2xl border border-slate-200 bg-slate-50" role="img" aria-label="${spec.name} representation plot">
+                    <line x1="18" y1="142" x2="214" y2="142" stroke="#cbd5e1" />
+                    <line x1="18" y1="16" x2="18" y2="142" stroke="#cbd5e1" />
+                    <text x="116" y="155" font-size="8" fill="#64748b" text-anchor="middle">${activeLang() === 'es' ? 'exposición relacional / identidad' : 'relational / identity exposure'}</text>
+                    <text x="8" y="82" font-size="8" fill="#64748b" text-anchor="middle" transform="rotate(-90 8 82)">${activeLang() === 'es' ? 'puntaje' : 'score'}</text>
+                    ${points}
+                </svg>
+                <div class="mt-2 text-[10px] text-slate-500">${activeLang() === 'es' ? 'Azul: alertas priorizadas. Rojo: etiquetas de fraude en datos sintéticos.' : 'Blue: prioritized alerts. Red: fraud labels in synthetic data.'}</div>
+            `;
+        }
+
         function prAuc(labels, scores) {
             const pairs = scores.map((score, i) => ({ score, label: labels[i] })).sort((a, b) => b.score - a.score);
             const positives = labels.reduce((sum, v) => sum + v, 0);
@@ -806,12 +992,12 @@
         }
 
         function render(results, rows, selected) {
-            const filtered = selected === 'all' ? results : results.filter(r => r.key === selected);
+            const filtered = selected === 'all' ? results : results.filter(r => r.key === selected || r.name === selected);
             const maxPr = Math.max(...filtered.map(r => r.prAuc), 0.01);
             chart.innerHTML = filtered.map(r => `
                 <div>
                     <div class="flex justify-between gap-2 text-xs mb-1">
-                        <span class="font-medium text-slate-700">${r.name}</span>
+                        <span class="font-medium text-slate-700">${r.name} <span class="ml-1 rounded-full ${r.spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'} px-1.5 py-0.5 text-[9px]">${r.spec.exact ? (activeLang() === 'es' ? 'exacto' : 'exact') : (activeLang() === 'es' ? 'educativo' : 'educational')}</span></span>
                         <span class="font-mono text-emerald-700">PR-AUC ${r.prAuc.toFixed(3)} · R@50 ${r.recall50.toFixed(2)}</span>
                     </div>
                     <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
@@ -834,34 +1020,35 @@
                     </div>
                 </div>
             `).join('');
+            renderExplanation(topModel.spec, topAlerts[0]);
+            renderRepresentation(topModel.spec, rows, topModel.scores);
         }
 
         function runLab() {
             const n = parseInt(sizeInput.value, 10);
             const rows = generateTransactions(n);
             const labels = rows.map(r => r.fraud);
-            const scores = scoreRows(rows);
-            const modelNames = {
-                rules: activeLang() === 'es' ? 'Reglas + filtro de velocidad' : 'Rules + velocity gate',
-                iforest: activeLang() === 'es' ? 'Proxy Isolation Forest' : 'Isolation Forest proxy',
-                gbdt: activeLang() === 'es' ? 'Proxy GBDT / XGBoost' : 'GBDT / XGBoost proxy',
-                vae: activeLang() === 'es' ? 'Proxy de reconstrucción VAE' : 'VAE reconstruction proxy',
-                graph: activeLang() === 'es' ? 'Proxy de riesgo de grafo' : 'Graph risk proxy',
-                moe: activeLang() === 'es' ? 'Proxy híbrido MoE' : 'MoE hybrid proxy'
-            };
-            const results = Object.keys(modelNames).map(key => ({
-                key,
-                name: modelNames[key],
-                scores: scores[key],
-                prAuc: prAuc(labels, scores[key]),
-                recall50: recallAtK(labels, scores[key], Math.min(50, rows.length))
-            })).sort((a, b) => b.prAuc - a.prAuc);
-            render(results, rows, modelSelect.value);
+            const baseScores = scoreRows(rows);
+            const selected = modelSelect.value || 'all';
+            const runnableModels = selected === 'all' ? models : [selected];
+            const results = runnableModels.map(name => {
+                const spec = runnerSpec(name);
+                const modelScores = scoreModel(name, rows, baseScores);
+                return {
+                    key: name,
+                    name,
+                    spec,
+                    scores: modelScores,
+                    prAuc: prAuc(labels, modelScores),
+                    recall50: recallAtK(labels, modelScores, Math.min(50, rows.length))
+                };
+            }).sort((a, b) => b.prAuc - a.prAuc);
+            render(results, rows, selected);
             if (status) {
                 const fraudCount = labels.reduce((sum, v) => sum + v, 0);
                 status.textContent = activeLang() === 'es'
-                    ? `Completadas ${rows.length} filas con ${fraudCount} etiquetas de fraude.`
-                    : `Completed ${rows.length} rows with ${fraudCount} fraud labels.`;
+                    ? `Completadas ${rows.length} filas, ${fraudCount} etiquetas de fraude y ${runnableModels.length} ejecutor(es) de modelo.`
+                    : `Completed ${rows.length} rows, ${fraudCount} fraud labels, and ${runnableModels.length} model runner(s).`;
             }
         }
 
@@ -1049,6 +1236,10 @@
         // Re-render JavaScript-generated surfaces that are not backed by data-i18n.
         initFullModelSurfaces();
         initMetricBars();
+        const allModelsOption = document.querySelector('#lab-model-select option[value="all"]');
+        if (allModelsOption) {
+            allModelsOption.textContent = lang === 'es' ? 'Todos los modelos' : 'All models';
+        }
         if (window.ModelTour && typeof window.ModelTour.runBrowserLab === 'function') {
             window.ModelTour.runBrowserLab();
         }
