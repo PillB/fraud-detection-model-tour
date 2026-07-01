@@ -179,7 +179,7 @@
 
     function runnerSpecForModel(name) {
         const family = labKeyForModel(name);
-        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'Isolation Forest', 'LOF', 'One-Class SVM', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Deep Isolation Forest', 'XGBoost', 'LightGBM', 'CatBoost', 'Random Forest', 'Logistic Regression', 'Decision Trees', 'ExtraTrees', 'Gradient Boosting', 'Autoencoder', 'VAE', 'Centrality', 'Community Detection', 'Collusion Detection', 'k-core', 'Motif Counting', 'Link Prediction'].includes(name);
+        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'Isolation Forest', 'LOF', 'One-Class SVM', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Deep Isolation Forest', 'XGBoost', 'LightGBM', 'CatBoost', 'Random Forest', 'Logistic Regression', 'Decision Trees', 'ExtraTrees', 'Gradient Boosting', 'Cost-Sensitive Ensembles', 'Balanced Random Forest', 'EasyEnsemble', 'RUSBoost', 'Stacking', 'Autoencoder', 'VAE', 'Centrality', 'Community Detection', 'Collusion Detection', 'Louvain', 'Leiden', 'k-core', 'Motif Counting', 'Link Prediction', 'GCN', 'GraphSAGE', 'GAT'].includes(name);
         const explainKindByFamily = {
             rules: { en: 'threshold evidence', es: 'evidencia por umbrales' },
             iforest: { en: 'isolation-style feature attribution', es: 'atribución estilo aislamiento' },
@@ -1130,22 +1130,23 @@
         }
 
         function directSupervisedScores(name, rows) {
-            if (!['XGBoost', 'LightGBM', 'CatBoost', 'Random Forest', 'Logistic Regression', 'Decision Trees', 'ExtraTrees', 'Gradient Boosting'].includes(name)) return null;
+            if (!['XGBoost', 'LightGBM', 'CatBoost', 'Random Forest', 'Logistic Regression', 'Decision Trees', 'ExtraTrees', 'Gradient Boosting', 'Cost-Sensitive Ensembles', 'Balanced Random Forest', 'EasyEnsemble', 'RUSBoost', 'Stacking'].includes(name)) return null;
             const features = standardizedFeatures(rows);
             const labels = rows.map(row => row.fraud);
             const positives = Math.max(1, labels.reduce((sum, value) => sum + value, 0));
             const negatives = Math.max(1, labels.length - positives);
             const sampleWeights = labels.map(label => label ? negatives / positives : 1);
-            if (name === 'Logistic Regression') {
+            const logitFromFeatures = (costMultiplier = 1) => {
                 const weights = Array.from({ length: features[0].length }, () => 0);
                 let bias = -2.5;
                 const rate = 0.04;
+                const effectiveWeights = labels.map(label => label ? (negatives / positives) * costMultiplier : 1);
                 for (let iter = 0; iter < 90; iter += 1) {
                     const gradients = weights.map(() => 0);
                     let biasGradient = 0;
                     features.forEach((row, index) => {
                         const prediction = sigmoid(bias + row.reduce((sum, value, featureIndex) => sum + value * weights[featureIndex], 0));
-                        const error = (prediction - labels[index]) * sampleWeights[index];
+                        const error = (prediction - labels[index]) * effectiveWeights[index];
                         row.forEach((value, featureIndex) => {
                             gradients[featureIndex] += error * value;
                         });
@@ -1156,7 +1157,16 @@
                     });
                     bias -= rate * biasGradient / features.length;
                 }
-                return normalizeScores(features.map(row => sigmoid(bias + row.reduce((sum, value, index) => sum + value * weights[index], 0))));
+                return features.map(row => sigmoid(bias + row.reduce((sum, value, index) => sum + value * weights[index], 0)));
+            };
+            if (name === 'Logistic Regression') {
+                return normalizeScores(logitFromFeatures(1));
+            }
+            if (name === 'Cost-Sensitive Ensembles') {
+                const logistic = logitFromFeatures(1.8);
+                const stump = trainBestStump(features, labels, labels.map(label => label ? negatives / positives * 2.2 : 1));
+                const stumpScores = features.map(row => row[stump.feature] <= stump.threshold ? stump.leftValue : stump.rightValue);
+                return normalizeScores(logistic.map((score, index) => score * 0.62 + stumpScores[index] * 0.38));
             }
             if (name === 'Decision Trees') {
                 const root = trainBestStump(features, labels, sampleWeights);
@@ -1184,11 +1194,15 @@
                         : branchScore(rightChild, row, root.rightValue)
                 )));
             }
-            if (name === 'Random Forest' || name === 'ExtraTrees') {
-                const treeCount = 18;
+            if (name === 'Random Forest' || name === 'ExtraTrees' || name === 'Balanced Random Forest') {
+                const treeCount = name === 'Balanced Random Forest' ? 22 : 18;
                 const predictions = rows.map(() => 0);
+                const positiveIndices = labels.map((label, index) => label ? index : -1).filter(index => index >= 0);
+                const negativeIndices = labels.map((label, index) => label ? -1 : index).filter(index => index >= 0);
                 for (let tree = 0; tree < treeCount; tree += 1) {
-                    const chosen = features.map((_, index) => index).filter((_, index) => name === 'ExtraTrees' ? (index + tree) % 3 !== 0 : (index * 17 + tree * 11) % 5 !== 0);
+                    const chosen = name === 'Balanced Random Forest'
+                        ? positiveIndices.concat(negativeIndices.filter((_, index) => index % Math.max(2, Math.floor(negativeIndices.length / Math.max(positiveIndices.length, 1))) === tree % 3).slice(0, Math.max(positiveIndices.length * 2, 8)))
+                        : features.map((_, index) => index).filter((_, index) => name === 'ExtraTrees' ? (index + tree) % 3 !== 0 : (index * 17 + tree * 11) % 5 !== 0);
                     const subsetFeatures = chosen.map(index => features[index]);
                     const subsetLabels = chosen.map(index => labels[index]);
                     const subsetWeights = chosen.map(index => sampleWeights[index]);
@@ -1200,6 +1214,58 @@
                     });
                 }
                 return normalizeScores(predictions.map(value => value / treeCount));
+            }
+            if (name === 'EasyEnsemble') {
+                const positiveIndices = labels.map((label, index) => label ? index : -1).filter(index => index >= 0);
+                const negativeIndices = labels.map((label, index) => label ? -1 : index).filter(index => index >= 0);
+                const predictions = rows.map(() => 0);
+                const ensembleCount = 8;
+                for (let group = 0; group < ensembleCount; group += 1) {
+                    const sampledNegatives = negativeIndices.filter((_, index) => index % ensembleCount === group || index % 11 === group % 11).slice(0, Math.max(positiveIndices.length * 3, 12));
+                    const chosen = positiveIndices.concat(sampledNegatives);
+                    const stump = trainBestStump(
+                        chosen.map(index => features[index]),
+                        chosen.map(index => labels[index]),
+                        chosen.map(index => labels[index] ? 1.8 : 1)
+                    );
+                    features.forEach((row, index) => {
+                        predictions[index] += row[stump.feature] <= stump.threshold ? stump.leftValue : stump.rightValue;
+                    });
+                }
+                return normalizeScores(predictions.map(value => value / ensembleCount));
+            }
+            if (name === 'RUSBoost') {
+                const additive = rows.map(() => 0);
+                const positiveIndices = labels.map((label, index) => label ? index : -1).filter(index => index >= 0);
+                const negativeIndices = labels.map((label, index) => label ? -1 : index).filter(index => index >= 0);
+                for (let stage = 0; stage < 12; stage += 1) {
+                    const probabilities = additive.map(sigmoid);
+                    const residuals = labels.map((label, index) => label - probabilities[index]);
+                    const sampledNegatives = negativeIndices.filter((_, index) => (index + stage) % 5 === 0).slice(0, Math.max(positiveIndices.length * 4, 16));
+                    const chosen = positiveIndices.concat(sampledNegatives);
+                    const stump = trainBestStump(
+                        chosen.map(index => features[index]),
+                        chosen.map(index => residuals[index]),
+                        chosen.map(index => labels[index] ? sampleWeights[index] : 1)
+                    );
+                    features.forEach((row, index) => {
+                        additive[index] += 0.5 * (row[stump.feature] <= stump.threshold ? stump.leftValue : stump.rightValue);
+                    });
+                }
+                return normalizeScores(additive.map(sigmoid));
+            }
+            if (name === 'Stacking') {
+                const logistic = logitFromFeatures(1);
+                const boosted = directSupervisedScores('Gradient Boosting', rows);
+                const isolation = directClassicalAnomalyScores('Isolation Forest', rows);
+                const graph = rows.map(row => row.graphRisk + (row.user % 23 === 0 ? 0.18 : 0) + (row.merchant % 19 === 0 ? 0.14 : 0));
+                const graphScores = normalizeScores(graph);
+                return normalizeScores(logistic.map((score, index) => (
+                    score * 0.32 +
+                    boosted[index] * 0.34 +
+                    isolation[index] * 0.18 +
+                    graphScores[index] * 0.16
+                )));
             }
             if (name === 'CatBoost') {
                 const merchantStats = new Map();
@@ -1402,12 +1468,37 @@
                 return adamic;
             };
 
-            return { degree, core, component, componentStats, userMerchants, merchantUsers, motifCount, linkScore };
+            return { adjacency, degree, core, component, componentStats, userMerchants, merchantUsers, motifCount, linkScore };
         }
 
         function directGraphAnalyticsScores(name, rows) {
-            if (!['Centrality', 'Community Detection', 'Collusion Detection', 'k-core', 'Motif Counting', 'Link Prediction'].includes(name)) return null;
+            if (!['Centrality', 'Community Detection', 'Collusion Detection', 'Louvain', 'Leiden', 'k-core', 'Motif Counting', 'Link Prediction', 'GCN', 'GraphSAGE', 'GAT'].includes(name)) return null;
             const graph = graphAnalytics(rows);
+            const nodeRisk = (node) => {
+                const [kind, rawId] = node.split(':');
+                const id = Number(rawId);
+                if (kind === 'u') {
+                    const merchants = graph.userMerchants.get(id) || new Set();
+                    const merchantExposure = Array.from(merchants).reduce((sum, merchant) => sum + ((graph.merchantUsers.get(merchant) || new Set()).size), 0) / Math.max(1, merchants.size);
+                    return Math.log1p(merchants.size) + merchantExposure / 20 + (id % 23 === 0 ? 0.55 : 0);
+                }
+                const users = graph.merchantUsers.get(id) || new Set();
+                const userExposure = Array.from(users).reduce((sum, user) => sum + ((graph.userMerchants.get(user) || new Set()).size), 0) / Math.max(1, users.size);
+                return Math.log1p(users.size) + userExposure / 20 + (id % 19 === 0 ? 0.45 : 0);
+            };
+            const neighborAggregate = (node, attention = false) => {
+                const neighbors = Array.from((graph.adjacency && graph.adjacency.get(node)) || []);
+                if (!neighbors.length) return nodeRisk(node);
+                let weightSum = 0;
+                let scoreSum = 0;
+                neighbors.forEach((neighbor) => {
+                    const risk = nodeRisk(neighbor);
+                    const weight = attention ? 0.6 + Math.min(1.8, risk) : 1;
+                    weightSum += weight;
+                    scoreSum += weight * risk;
+                });
+                return scoreSum / Math.max(weightSum, 1);
+            };
             const values = rows.map(row => {
                 const userNode = `u:${row.user}`;
                 const merchantNode = `m:${row.merchant}`;
@@ -1420,6 +1511,11 @@
                 if (name === 'Motif Counting') return graph.motifCount(row) + row.velocity1h * 0.5 + row.graphRisk * 3;
                 if (name === 'Link Prediction') return graph.linkScore(row) + row.categoryRisk + row.graphRisk;
                 if (name === 'Community Detection') return community.avgRisk + community.density * 2 + Math.log1p(community.nodes) / 5;
+                if (name === 'Louvain') return community.avgRisk + community.density * 2.4 + graph.motifCount(row) / 14 + row.graphRisk;
+                if (name === 'Leiden') return community.avgRisk + community.density * 2.1 + Math.log1p(community.nodes) / 4 + graph.linkScore(row) / 3;
+                if (name === 'GCN') return (nodeRisk(userNode) + nodeRisk(merchantNode) + neighborAggregate(userNode) + neighborAggregate(merchantNode)) / 4 + row.categoryRisk;
+                if (name === 'GraphSAGE') return neighborAggregate(userNode) * 0.45 + neighborAggregate(merchantNode) * 0.45 + row.velocity1h / 18 + row.graphRisk;
+                if (name === 'GAT') return neighborAggregate(userNode, true) * 0.42 + neighborAggregate(merchantNode, true) * 0.42 + graph.linkScore(row) / 3 + row.categoryRisk;
                 const merchantUsers = (graph.merchantUsers.get(row.merchant) || new Set()).size;
                 const userMerchants = (graph.userMerchants.get(row.user) || new Set()).size;
                 return community.avgRisk + row.graphRisk * 2 + Math.log1p(merchantUsers * userMerchants) + graph.motifCount(row) / 10;
@@ -1740,7 +1836,11 @@
             `;
         }
 
-        function render(results, rows, selected) {
+        let lastLabState = null;
+
+        function render(results, rows, selected, runId = pendingRun) {
+            chart.dataset.labRunId = String(runId);
+            chart.dataset.labSelected = selected;
             const filtered = selected === 'all' ? results : results.filter(r => r.key === selected || r.name === selected);
             const maxPr = Math.max(...filtered.map(r => r.prAuc), 0.01);
             chart.innerHTML = filtered.map(r => `
@@ -1780,18 +1880,29 @@
             renderRepresentation(topModel.spec, rows, topModel.scores);
             renderTimeline(topModel.spec, rows, topModel.diagnostics);
             renderValidation(topModel.spec, topModel.diagnostics);
+            lastLabState = { results, rows, selected, runId };
         }
 
         let pendingRun = 0;
+        let loadingTimers = [];
 
         function setLoading(isLoading, selected = null) {
             if (!loading) return;
+            loadingTimers.forEach(timer => window.clearTimeout(timer));
+            loadingTimers = [];
             loading.classList.toggle('hidden', !isLoading);
             runBtn.disabled = isLoading;
             modelSelect.disabled = isLoading;
             sizeInput.disabled = isLoading;
             if (loadingBar) {
-                loadingBar.style.width = isLoading ? (selected === 'all' ? '82%' : '58%') : '100%';
+                loadingBar.style.width = isLoading ? '12%' : '100%';
+                if (isLoading) {
+                    [28, 46, 67, selected === 'all' ? 86 : 78].forEach((width, index) => {
+                        loadingTimers.push(window.setTimeout(() => {
+                            loadingBar.style.width = `${width}%`;
+                        }, 120 + index * 230));
+                    });
+                }
             }
             if (status && isLoading) {
                 status.textContent = activeLang() === 'es'
@@ -1800,7 +1911,7 @@
             }
         }
 
-        function runLabCore() {
+        function runLabCore(runId = pendingRun) {
             const n = parseInt(sizeInput.value, 10);
             const rows = generateTransactions(n);
             const labels = rows.map(r => r.fraud);
@@ -1820,7 +1931,8 @@
                     diagnostics: foldDiagnostics(labels, modelScores)
                 };
             }).sort((a, b) => b.prAuc - a.prAuc);
-            render(results, rows, selected);
+            if (runId !== pendingRun) return;
+            render(results, rows, selected, runId);
             if (status) {
                 const fraudCount = labels.reduce((sum, v) => sum + v, 0);
                 status.textContent = activeLang() === 'es'
@@ -1838,9 +1950,26 @@
             window.requestAnimationFrame(() => {
                 window.setTimeout(() => {
                     if (runId !== pendingRun) return;
-                    runLabCore();
+                    runLabCore(runId);
                 }, 30);
             });
+        }
+
+        function refreshLabLanguage() {
+            const allModelsOption = document.querySelector('#lab-model-select option[value="all"]');
+            if (allModelsOption) {
+                allModelsOption.textContent = activeLang() === 'es' ? 'Todos los modelos' : 'All models';
+            }
+            if (lastLabState) {
+                render(lastLabState.results, lastLabState.rows, lastLabState.selected, lastLabState.runId);
+                if (status) {
+                    const fraudCount = lastLabState.rows.reduce((sum, row) => sum + row.fraud, 0);
+                    const runnerCount = lastLabState.selected === 'all' ? models.length : 1;
+                    status.textContent = activeLang() === 'es'
+                        ? `Completadas ${lastLabState.rows.length} filas, ${fraudCount} etiquetas de fraude y ${runnerCount} ejecutor(es) de modelo.`
+                        : `Completed ${lastLabState.rows.length} rows, ${fraudCount} fraud labels, and ${runnerCount} model runner(s).`;
+                }
+            }
         }
 
         sizeInput.addEventListener('input', () => {
@@ -1850,6 +1979,7 @@
         modelSelect.addEventListener('change', runLab);
         window.ModelTour = window.ModelTour || {};
         window.ModelTour.runBrowserLab = runLab;
+        window.ModelTour.refreshBrowserLabLanguage = refreshLabLanguage;
         runLab();
     }
 
@@ -1857,6 +1987,7 @@
     window.ModelTour = {
         refreshBars: initMetricBars,
         runBrowserLab: window.ModelTour ? window.ModelTour.runBrowserLab : null,
+        refreshBrowserLabLanguage: window.ModelTour ? window.ModelTour.refreshBrowserLabLanguage : null,
         filterModels: (cat) => {
             const chip = document.querySelector(`.filter-chip[data-filter="${cat}"]`);
             if (chip) chip.click();
@@ -1936,7 +2067,7 @@
 
     async function loadTranslations() {
         try {
-            const res = await fetch('translations.json?v=20260701-direct-classical', { cache: 'no-store' });
+            const res = await fetch('translations.json?v=20260701-direct-graph-ensemble', { cache: 'no-store' });
             translations = await res.json();
         } catch (e) {
             console.warn('Could not load translations.json, using fallback English');
@@ -2031,8 +2162,8 @@
         if (allModelsOption) {
             allModelsOption.textContent = lang === 'es' ? 'Todos los modelos' : 'All models';
         }
-        if (window.ModelTour && typeof window.ModelTour.runBrowserLab === 'function') {
-            window.ModelTour.runBrowserLab();
+        if (window.ModelTour && typeof window.ModelTour.refreshBrowserLabLanguage === 'function') {
+            window.ModelTour.refreshBrowserLabLanguage();
         }
 
         // Optional: update URL without reload

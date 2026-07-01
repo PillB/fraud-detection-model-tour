@@ -217,6 +217,9 @@ def test_browser_lab_exposes_model_specific_runner_contract():
     assert "renderRepresentation(topModel.spec, rows, topModel.scores)" in js
     assert "foldDiagnostics(labels, modelScores)" in js
     assert "hydrateWorkbench(topModel.spec, alert)" in js
+    assert "data-lab-result-name" in js
+    assert "dataset.labSelected" in js
+    assert "refreshBrowserLabLanguage" in js
     for direct_model in [
         "Z-Score",
         "IQR",
@@ -242,14 +245,24 @@ def test_browser_lab_exposes_model_specific_runner_contract():
         "Decision Trees",
         "ExtraTrees",
         "Gradient Boosting",
+        "Cost-Sensitive Ensembles",
+        "Balanced Random Forest",
+        "EasyEnsemble",
+        "RUSBoost",
+        "Stacking",
         "Autoencoder",
         "VAE",
         "Centrality",
         "Community Detection",
         "Collusion Detection",
+        "Louvain",
+        "Leiden",
         "k-core",
         "Motif Counting",
         "Link Prediction",
+        "GCN",
+        "GraphSAGE",
+        "GAT",
     ]:
         assert direct_model in js
     assert "directStatisticalScores(name, rows)" in js

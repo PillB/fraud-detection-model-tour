@@ -37,14 +37,24 @@ DIRECT_BROWSER_MODELS = {
     "Decision Trees",
     "ExtraTrees",
     "Gradient Boosting",
+    "Cost-Sensitive Ensembles",
+    "Balanced Random Forest",
+    "EasyEnsemble",
+    "RUSBoost",
+    "Stacking",
     "Autoencoder",
     "VAE",
     "Centrality",
     "Community Detection",
     "Collusion Detection",
+    "Louvain",
+    "Leiden",
     "k-core",
     "Motif Counting",
     "Link Prediction",
+    "GCN",
+    "GraphSAGE",
+    "GAT",
 }
 
 
@@ -52,8 +62,9 @@ def wait_for_lab_result(page, model):
     page.wait_for_function(
         """(name) => {
             const done = document.querySelector('#lab-loading')?.classList.contains('hidden');
+            const chart = document.querySelector('#lab-chart');
             const rows = [...document.querySelectorAll('#lab-chart [data-lab-result-name]')];
-            return done && rows.some((row) => row.dataset.labResultName === name);
+            return done && chart?.dataset.labSelected === name && rows.some((row) => row.dataset.labResultName === name);
         }""",
         arg=model,
     )
@@ -123,6 +134,7 @@ def test_primary_website_flows_with_playwright():
         page.wait_for_function("location.hash === '#browser-lab'")
         assert page.locator("#lab-model-select").input_value() == "Isolation Forest"
         wait_for_lab_result(page, "Isolation Forest")
+        assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
         assert page.locator("#lab-model-select option").count() == 75
         assert page.locator('#lab-model-select option[value="all"]').text_content() == "All models"
         assert lab_result(page, "Isolation Forest").is_visible()
@@ -164,25 +176,28 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-alerts").get_by_text("TXN").first.is_visible()
         page.locator("#lab-model-select").select_option("GraphSAGE")
         wait_for_lab_result(page, "GraphSAGE")
+        assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
         assert lab_result(page, "GraphSAGE").is_visible()
         assert page.locator("#lab-explain").get_by_text("graph-neighborhood evidence").is_visible()
         assert page.locator("#lab-validation").get_by_text("Browser validation for GraphSAGE").is_visible()
-        assert page.locator("#lab-validation").get_by_text("Model-specific educational approximation: GraphSAGE").is_visible()
-        assert page.locator("#lab-validation").get_by_text("Simulated training/cross-validation trace").is_visible()
-        assert page.locator("#lab-timeline").get_by_text("Simulated training trace").is_visible()
+        assert page.locator("#lab-validation").get_by_text("Direct in-browser implementation: GraphSAGE").is_visible()
+        assert page.locator("#lab-timeline").get_by_text("Actual browser training trace").is_visible()
         assert page.locator("#lab-timeline svg").count() >= 1
         for direct_model in sorted(DIRECT_BROWSER_MODELS):
             page.locator("#lab-model-select").select_option(direct_model)
             wait_for_lab_result(page, direct_model)
+            assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
             assert lab_result(page, direct_model).is_visible()
             assert page.locator("#lab-validation").get_by_text(f"Direct in-browser implementation: {direct_model}").is_visible()
             assert page.locator("#lab-timeline").get_by_text("Actual browser training trace").is_visible()
         page.locator("#lab-model-select").select_option("R-GCN")
         wait_for_lab_result(page, "R-GCN")
+        assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
         assert page.locator("#lab-validation").get_by_text("Model-specific educational approximation: R-GCN").is_visible()
         page.locator("#lab-model-select").select_option("LOF")
         assert page.locator("#lab-loading").is_visible()
         wait_for_lab_result(page, "LOF")
+        assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
         assert page.locator("#lab-validation").get_by_text("Direct in-browser implementation: LOF").is_visible()
 
         page.get_by_role("button", name="ES").click()
@@ -211,6 +226,7 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-status").get_by_text("Completadas").is_visible()
         page.locator("#lab-model-select").select_option("GraphSAGE")
         wait_for_lab_result(page, "GraphSAGE")
+        assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
         assert lab_result(page, "GraphSAGE").is_visible()
         assert page.locator("#lab-explain").get_by_text("evidencia de vecindario de grafo").is_visible()
         assert page.locator("#lab-timeline").get_by_text("CV temporal").is_visible()
@@ -255,6 +271,7 @@ def test_every_model_selection_runs_browser_outputs():
         for model in options:
             page.locator("#lab-model-select").select_option(model)
             wait_for_lab_result(page, model)
+            assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
             assert lab_result(page, model).is_visible()
             assert page.locator("#lab-chart").get_by_text("PR-AUC").first.is_visible()
             assert page.locator("#lab-alerts").get_by_text("TXN").first.is_visible()
@@ -297,6 +314,7 @@ def test_every_model_card_runnable_example_button_runs_exact_model():
                 arg=model,
             )
             wait_for_lab_result(page, model)
+            assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
             assert lab_result(page, model).is_visible()
             assert page.locator("#lab-chart").get_by_text("PR-AUC").first.is_visible()
             assert page.locator("#lab-alerts").get_by_text("TXN").first.is_visible()
