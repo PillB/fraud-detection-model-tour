@@ -1794,5 +1794,53 @@
   "decision.evidence.desc": {
     "en": "Combine SHAP, reconstruction evidence, graph neighborhoods, and GraphRAG-style case packets.",
     "es": "Combina SHAP, evidencia de reconstrucción, vecindarios de grafo y paquetes de caso estilo GraphRAG."
+  },
+  "workspace.badge": {
+    "en": "MODEL CARD WORKSPACE",
+    "es": "ESPACIO DE TRABAJO DEL MODELO"
+  },
+  "workspace.nav": {
+    "en": "Model Workspace",
+    "es": "Espacio del modelo"
+  },
+  "workspace.title": {
+    "en": "Inspect a Model, Then Run Its Browser Proxy",
+    "es": "Inspecciona un modelo y ejecuta su proxy en el navegador"
+  },
+  "workspace.desc": {
+    "en": "Every Card and Run action now stays inside the website. Use Card to inspect model-specific guidance; use Run to execute the matching browser lab proxy and inspect metrics without opening raw source files.",
+    "es": "Cada acción de Ficha y Ejemplo ejecutable ahora permanece dentro del sitio. Usa Ficha para revisar la guía del modelo; usa Ejemplo ejecutable para ejecutar el proxy correspondiente del laboratorio y ver métricas sin abrir archivos fuente."
+  },
+  "workspace.selected": {
+    "en": "Selected model",
+    "es": "Modelo seleccionado"
+  },
+  "workspace.run": {
+    "en": "Run this model",
+    "es": "Ejecutar este modelo"
+  },
+  "workspace.source": {
+    "en": "Open source card",
+    "es": "Abrir ficha fuente"
+  },
+  "workspace.inputs": {
+    "en": "Inputs",
+    "es": "Entradas"
+  },
+  "workspace.outputs": {
+    "en": "Outputs",
+    "es": "Salidas"
+  },
+  "workspace.when": {
+    "en": "Best fit",
+    "es": "Mejor uso"
+  },
+  "workspace.limits": {
+    "en": "Watch-outs",
+    "es": "Precauciones"
+  },
+  "workspace.note": {
+    "en": "Choose any model card above. The Run action maps specialized models to the closest lightweight browser proxy.",
+    "es": "Elige cualquier tarjeta de modelo arriba. La acción de ejecución asigna modelos especializados al proxy ligero más cercano del navegador."
   }
 }

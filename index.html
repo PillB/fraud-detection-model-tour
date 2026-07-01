@@ -229,6 +229,7 @@
                 <option value="#architecture" data-i18n="nav.architecture">Architecture</option>
                 <option value="#tradeoffs" data-i18n="nav.tradeoffs">Trade-offs</option>
                 <option value="#cards" data-i18n="nav.cards">Model Cards</option>
+                <option value="#model-workspace" data-i18n="workspace.nav">Model Workspace</option>
                 <option value="#metrics" data-i18n="nav.metrics">Metrics</option>
                 <option value="#experiments" data-i18n="nav.experiments">Experiments</option>
                 <option value="#browser-lab" data-i18n="nav.lab">Lab</option>
@@ -810,6 +811,50 @@
                 <div id="cards-coverage-matrix" class="mt-3 flex flex-wrap gap-1.5 text-[10px] leading-none" aria-label="All model cards coverage matrix"></div>
             </div>
         </div>
+
+        <!-- Model Workspace -->
+        <section id="model-workspace" class="mb-16">
+            <div class="mb-5">
+                <div class="uppercase tracking-[1.5px] text-xs font-semibold text-blue-700" data-i18n="workspace.badge">MODEL CARD WORKSPACE</div>
+                <h3 class="section-title" data-i18n="workspace.title">Inspect a Model, Then Run Its Browser Proxy</h3>
+                <p class="text-sm text-slate-500 mt-1 max-w-3xl" data-i18n="workspace.desc">Every Card and Run action now stays inside the website. Use Card to inspect model-specific guidance; use Run to execute the matching browser lab proxy and inspect metrics without opening raw source files.</p>
+            </div>
+            <div class="bg-white border rounded-3xl overflow-hidden">
+                <div class="grid lg:grid-cols-12">
+                    <div class="lg:col-span-4 p-6 border-b lg:border-b-0 lg:border-r">
+                        <div class="text-xs font-semibold text-slate-500" data-i18n="workspace.selected">Selected model</div>
+                        <h4 id="workspace-model-name" class="mt-2 text-2xl font-semibold tracking-tight">XGBoost</h4>
+                        <div id="workspace-model-label" class="mt-2 inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">SUPERVISED</div>
+                        <p id="workspace-model-summary" class="mt-4 text-sm leading-relaxed text-slate-600">Known labeled fraud patterns, calibrated risk scoring, and engineered tabular features.</p>
+                        <div class="mt-5 flex flex-wrap gap-2">
+                            <button id="workspace-run" type="button" class="rounded-2xl bg-slate-900 px-4 py-2 text-xs font-semibold text-white hover:bg-black" data-i18n="workspace.run">Run this model</button>
+                            <a id="workspace-source" href="../docs/model-cards/XGBoost_Supervised.md" class="rounded-2xl border border-slate-200 px-4 py-2 text-xs font-semibold hover:bg-slate-50" data-i18n="workspace.source">Open source card</a>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-8 p-6">
+                        <div class="grid md:grid-cols-2 gap-4 text-sm">
+                            <div class="rounded-2xl border border-slate-200 p-4">
+                                <div class="text-xs font-semibold text-slate-500" data-i18n="workspace.inputs">Inputs</div>
+                                <div id="workspace-inputs" class="mt-2 text-slate-700 leading-relaxed"></div>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 p-4">
+                                <div class="text-xs font-semibold text-slate-500" data-i18n="workspace.outputs">Outputs</div>
+                                <div id="workspace-outputs" class="mt-2 text-slate-700 leading-relaxed"></div>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 p-4">
+                                <div class="text-xs font-semibold text-slate-500" data-i18n="workspace.when">Best fit</div>
+                                <div id="workspace-fit" class="mt-2 text-slate-700 leading-relaxed"></div>
+                            </div>
+                            <div class="rounded-2xl border border-slate-200 p-4">
+                                <div class="text-xs font-semibold text-slate-500" data-i18n="workspace.limits">Watch-outs</div>
+                                <div id="workspace-limits" class="mt-2 text-slate-700 leading-relaxed"></div>
+                            </div>
+                        </div>
+                        <div id="workspace-run-note" class="mt-4 rounded-2xl bg-blue-50 px-4 py-3 text-xs text-blue-800" aria-live="polite" data-i18n="workspace.note">Choose any model card above. The Run action maps specialized models to the closest lightweight browser proxy.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Metrics for Fraud in Practice (P0 from reviews) -->
         <div id="metrics" class="mb-12 bg-white border rounded-3xl p-7">
