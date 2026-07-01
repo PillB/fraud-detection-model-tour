@@ -674,7 +674,7 @@
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.xgboost.title">XGBoost</div>
                             <div class="model-badge bg-emerald-100 text-emerald-700 rounded mt-1 inline-block" data-i18n="cards.xgboost.badge">SUPERVISED BASELINE</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-emerald-50 text-emerald-700 font-medium rounded" data-i18n="cards.xgboost.tier">Tier 1</span>
+                        <span class="text-[10px] px-2 py-px bg-emerald-50 text-emerald-700 font-medium rounded" data-i18n="cards.xgboost.tier">Runnable example</span>
                     </div>
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.xgboost.desc">Gradient-boosted trees constitute the production standard for labeled tabular fraud. Strong feature engineering—velocity, amount deviation, KYA aggregates—yields high PR-AUC on known patterns while delivering native feature importances and SHAP explanations.</p>
 
@@ -685,7 +685,7 @@
 
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
                         <a href="../docs/model-cards/XGBoost_Supervised.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.xgboost.full">Inspect</a>
-                        <a href="../experiments/toy_xgboost.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.xgboost.run">Run Script</a>
+                        <a href="../experiments/toy_xgboost.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.xgboost.run">Run</a>
                     </div>
                 </div>
 
@@ -696,7 +696,7 @@
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.vae.title">VAE</div>
                             <div class="model-badge bg-sky-100 text-sky-700 rounded mt-1 inline-block" data-i18n="cards.vae.badge">GENERATIVE ANOMALY</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-sky-50 text-sky-700 font-medium rounded" data-i18n="cards.vae.tier">Tier 3</span>
+                        <span class="text-[10px] px-2 py-px bg-sky-50 text-sky-700 font-medium rounded" data-i18n="cards.vae.tier">Runnable example</span>
                     </div>
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.vae.desc">VAE trained exclusively on legitimate transactions learns a probabilistic manifold of normal behavior. Per An &amp; Cho (2015), reconstruction probability provides a calibrated anomaly score that surfaces novel and zero-day fraud where labels are absent. Latent representations also serve as high-value features for downstream supervised models.</p>
 
@@ -707,7 +707,7 @@
 
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
                         <a href="../docs/model-cards/VAE.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.vae.full">Inspect</a>
-                        <a href="../experiments/toy_vae.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.vae.run">Run Script (PyTorch)</a>
+                        <a href="../experiments/toy_vae.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.vae.run">Run</a>
                     </div>
                 </div>
 
@@ -718,7 +718,7 @@
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.moe.title">MoE Hybrid</div>
                             <div class="model-badge bg-amber-100 text-amber-700 rounded mt-1 inline-block" data-i18n="cards.moe.badge">ADVANCED HYBRID</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-amber-50 text-amber-700 font-medium rounded" data-i18n="cards.moe.tier">Tier 5–6</span>
+                        <span class="text-[10px] px-2 py-px bg-amber-50 text-amber-700 font-medium rounded" data-i18n="cards.moe.tier">Runnable example</span>
                     </div>
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.moe.desc">Mixture-of-Experts architecture routes inputs to specialized experts (sequence / RNN for behavior, transformer / MLP for high-order KYA interactions, autoencoder for reconstruction anomalies). Learned or heuristic gating enables adaptive coverage across fraud archetypes. Vallarino 2025 demonstrated strong results on high-fidelity synthetic credit card data.</p>
 
@@ -729,7 +729,7 @@
 
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
                         <a href="../docs/model-cards/MoE_Hybrid.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.moe.full">Inspect</a>
-                        <a href="../experiments/toy_moe_hybrid.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.moe.run">Run Script</a>
+                        <a href="../experiments/toy_moe_hybrid.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.moe.run">Run</a>
                     </div>
                 </div>
 
@@ -740,7 +740,7 @@
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.lstm.title">LSTM Sequence</div>
                             <div class="model-badge bg-violet-100 text-violet-700 rounded mt-1 inline-block" data-i18n="cards.lstm.badge">BEHAVIORAL</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-violet-50 text-violet-700 font-medium rounded" data-i18n="cards.lstm.tier">Tier 5</span>
+                        <span class="text-[10px] px-2 py-px bg-violet-50 text-violet-700 font-medium rounded" data-i18n="cards.lstm.tier">Runnable example</span>
                     </div>
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.lstm.desc">Recurrent models capture temporal dependencies across a user’s transaction history. Sudden deviations in velocity, amount patterns, or merchant sequences become detectable even when individual transactions appear benign. Essential for modeling drift and behavioral fraud.</p>
 
@@ -751,7 +751,7 @@
 
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
                         <a href="../docs/model-cards/LSTM_Sequence.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.lstm.full">Inspect</a>
-                        <a href="../experiments/toy_lstm_seq.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.lstm.run">Run Script</a>
+                        <a href="../experiments/toy_lstm_seq.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.lstm.run">Run</a>
                     </div>
                 </div>
 
@@ -762,7 +762,7 @@
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.tab.title">TabTransformer</div>
                             <div class="model-badge bg-cyan-100 text-cyan-700 rounded mt-1 inline-block" data-i18n="cards.tab.badge">TABULAR DL</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-cyan-50 text-cyan-700 font-medium rounded" data-i18n="cards.tab.tier">Tier 4</span>
+                        <span class="text-[10px] px-2 py-px bg-cyan-50 text-cyan-700 font-medium rounded" data-i18n="cards.tab.tier">Runnable example</span>
                     </div>
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.tab.desc">Self-attention applied to categorical features (merchant type, KYA risk buckets, time-of-day) produces contextual embeddings. Captures complex interactions that tree models require explicit cross-features to detect. Highly effective when tabular data includes rich categorical signals from KYA/KYE profiles.</p>
 
@@ -773,7 +773,7 @@
 
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
                         <a href="../docs/model-cards/TabTransformer.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.tab.full">Inspect</a>
-                        <a href="../experiments/toy_tabtransformer.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.tab.run">Run Script</a>
+                        <a href="../experiments/toy_tabtransformer.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.tab.run">Run</a>
                     </div>
                 </div>
 
@@ -784,7 +784,7 @@
                             <div class="font-semibold text-xl tracking-tight" data-i18n="cards.graph.title">GraphSAGE</div>
                             <div class="model-badge bg-indigo-100 text-indigo-700 rounded mt-1 inline-block" data-i18n="cards.graph.badge">GRAPH / RELATIONAL</div>
                         </div>
-                        <span class="text-[10px] px-2 py-px bg-indigo-50 text-indigo-700 font-medium rounded" data-i18n="cards.graph.tier">Tier 4</span>
+                        <span class="text-[10px] px-2 py-px bg-indigo-50 text-indigo-700 font-medium rounded" data-i18n="cards.graph.tier">Runnable example</span>
                     </div>
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.graph.desc">Inductive graph neural network that learns node embeddings via neighbor sampling and aggregation. Critical for detecting collusion rings, mule networks, and shared-device or KYA-linked fraud that is invisible to purely tabular models. Naturally handles new entities at inference time.</p>
 
@@ -795,7 +795,7 @@
 
                     <div class="mt-4 pt-3 border-t text-xs flex gap-2">
                         <a href="../docs/model-cards/GraphSAGE.md" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition" data-i18n="cards.graph.full">Inspect</a>
-                        <a href="../experiments/toy_graphsage.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.graph.run">Run Script</a>
+                        <a href="../experiments/toy_graphsage.py" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition" data-i18n="cards.graph.run">Run</a>
                     </div>
                 </div>
             </div>
@@ -1056,6 +1056,16 @@
                         <div class="text-xs text-slate-500"><span id="lab-size-label">1500</span> <span data-i18n="lab.rows">rows</span></div>
                         <button id="lab-run" type="button" class="mt-5 w-full rounded-2xl bg-slate-900 text-white px-4 py-2.5 text-sm font-semibold hover:bg-black" data-i18n="lab.run">Run inference</button>
                         <div id="lab-status" class="mt-3 text-xs text-slate-500" data-i18n="lab.status.ready">Ready. Runs locally in your browser.</div>
+                        <div id="lab-loading" class="mt-3 hidden rounded-2xl border border-blue-100 bg-blue-50 p-3 text-xs text-blue-900" role="status" aria-live="polite">
+                            <div class="flex items-center gap-2">
+                                <span class="h-3 w-3 animate-pulse rounded-full bg-blue-700"></span>
+                                <span data-i18n="lab.loading.title">Fitting browser model...</span>
+                            </div>
+                            <div class="mt-2 h-2 overflow-hidden rounded-full bg-white">
+                                <div id="lab-loading-bar" class="h-full w-1/3 rounded-full bg-blue-700 transition-all duration-700"></div>
+                            </div>
+                            <div class="mt-1 text-[10px] text-blue-700" data-i18n="lab.loading.note">Preparing data, training, validating, and rendering evidence.</div>
+                        </div>
                         <div class="mt-4 text-[10px] text-slate-400 leading-relaxed" data-i18n="lab.note">Direct lightweight runners are used for simple rules/statistics where the browser implementation matches the intended calculation. Heavier models use educational runners plus Python implementation links.</div>
                         <div class="mt-5 border-t pt-4">
                             <div class="text-xs font-semibold text-slate-500 mb-3" data-i18n="lab.timeline">Training timeline</div>
@@ -1401,6 +1411,6 @@
     </main>
 
     <!-- Professional interactivity and enhancements (BCG/McKinsey UX) -->
-    <script src="js/main.js?v=20260701-direct-anomaly-batch"></script>
+    <script src="js/main.js?v=20260701-tree-loading-viz"></script>
 </body>
 </html>
