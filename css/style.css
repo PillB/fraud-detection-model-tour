@@ -11,6 +11,11 @@ body {
     font-feature-settings: "tnum" 1, "ss01" 1; /* tabular nums for metrics */
 }
 
+html,
+body {
+    overflow-x: clip;
+}
+
 /* Enhanced Cards */
 .model-card {
     border-left: 4px solid var(--bcg-light);

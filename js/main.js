@@ -7,6 +7,62 @@
 (function() {
     'use strict';
 
+    const LAB_CACHE_KEY = '20260701-lab-pca-progress';
+    const SYNTHETIC_SEED_BASE = 20260701;
+    const BENCHMARK_RESULTS = {
+        categoryProxy: {
+            supervised: '0.24',
+            generative: '0.21',
+            hybrid: '0.30',
+            sequence: '0.26',
+            tabular: '0.28',
+            graph: '0.31'
+        },
+        modelProxy: {
+            'Isolation Forest': '0.218',
+            XGBoost: '0.284',
+            GraphSAGE: '0.319',
+            VAE: '0.367',
+            MoE: '0.295',
+            TabTransformer: '0.278',
+            LSTM: '0.261',
+            'Collusion Detection': '0.322'
+        }
+    };
+    const TRUSTED_HTML_I18N_KEYS = new Set([
+        'hero.title',
+        'hero.subtitle',
+        'overview.p1',
+        'newto.terms',
+        'exp.note',
+        'footer.text1',
+        'footer.clone',
+        'metrics.p1',
+        'metrics.p2',
+        'glossary.pr-auc',
+        'glossary.velocity',
+        'glossary.kya',
+        'glossary.recall',
+        'glossary.cascades',
+        'glossary.hybrid'
+    ]);
+
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function decodeHtmlEntities(value) {
+        if (!value || !/[&][a-zA-Z#0-9]+;/.test(value)) return value;
+        const textarea = document.createElement('textarea');
+        textarea.innerHTML = value;
+        return textarea.value;
+    }
+
     // Initialize on DOM ready
     function init() {
         initFullModelSurfaces();
@@ -94,24 +150,6 @@
             tabular: { en: 'Medium', es: 'Media' },
             graph: { en: 'Medium-High', es: 'Media-alta' }
         };
-        const scoreByCategory = {
-            supervised: '0.24',
-            generative: '0.21',
-            hybrid: '0.30',
-            sequence: '0.26',
-            tabular: '0.28',
-            graph: '0.31'
-        };
-        const overrides = {
-            'Isolation Forest': '0.218',
-            XGBoost: '0.284',
-            GraphSAGE: '0.319',
-            VAE: '0.367',
-            MoE: '0.295',
-            TabTransformer: '0.278',
-            LSTM: '0.261',
-            'Collusion Detection': '0.322'
-        };
         const docsByCategory = {
             supervised: '../docs/model-cards/Logistic_RandomForest_Baselines.md',
             generative: '../docs/model-cards/LOF_OCSVM_PCA.md',
@@ -155,7 +193,7 @@
             },
             best: localizedText(bestByCategory[category]),
             complexity: localizedText(complexityByCategory[category]),
-            score: overrides[name] || scoreByCategory[category],
+            score: BENCHMARK_RESULTS.modelProxy[name] || BENCHMARK_RESULTS.categoryProxy[category],
             docs: docsByCategory[category],
             script: scriptByCategory[category]
         };
@@ -435,18 +473,18 @@
                 <div class="flex justify-between items-start gap-3">
                     <div>
                         <div class="font-semibold text-base tracking-tight"></div>
-                        <div class="model-badge bg-slate-100 text-slate-700 rounded mt-1 inline-block">${localizedText(meta.label)}</div>
+                        <div class="model-badge bg-slate-100 text-slate-700 rounded mt-1 inline-block">${escapeHtml(localizedText(meta.label))}</div>
                     </div>
                     <span class="text-[10px] px-2 py-px bg-emerald-50 text-emerald-700 font-medium rounded">${activeLang() === 'es' ? 'Ejemplo ejecutable' : 'Runnable example'}</span>
                 </div>
-                <p class="mt-3 text-xs leading-snug text-slate-600">${meta.best}</p>
+                <p class="mt-3 text-xs leading-snug text-slate-600">${escapeHtml(meta.best)}</p>
                 <div class="mt-3 text-xs">
-                    <div class="font-medium text-emerald-700">${activeLang() === 'es' ? 'PR-AUC de referencia aproximado' : 'Benchmark/proxy PR-AUC'}: ${meta.score}</div>
-                    <div class="text-[10px] text-slate-500">${activeLang() === 'es' ? `Seleccionable por nombre en el laboratorio del navegador; estado: ${runnerStatusLabel(name)}.` : `Selectable by name in the browser lab; status: ${runnerStatusLabel(name)}.`}</div>
+                        <div class="font-medium text-emerald-700">${activeLang() === 'es' ? 'PR-AUC ilustrativo previo' : 'Illustrative prior PR-AUC'}: ${escapeHtml(meta.score)}</div>
+                    <div class="text-[10px] text-slate-500">${escapeHtml(activeLang() === 'es' ? `Seleccionable por nombre en el laboratorio del navegador; estado: ${runnerStatusLabel(name)}.` : `Selectable by name in the browser lab; status: ${runnerStatusLabel(name)}.`)}</div>
                 </div>
                 <div class="mt-auto pt-3 border-t text-xs flex flex-wrap gap-2">
-                    <a href="${meta.docs}" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">${activeLang() === 'es' ? 'Inspeccionar' : 'Inspect'}</a>
-                    <a href="${meta.script}" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">${activeLang() === 'es' ? 'Ejecutar' : 'Run'}</a>
+                    <a href="${escapeHtml(meta.docs)}" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">${activeLang() === 'es' ? 'Inspeccionar' : 'Inspect'}</a>
+                    <a href="${escapeHtml(meta.script)}" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">${activeLang() === 'es' ? 'Ejecutar' : 'Run'}</a>
                 </div>
             `;
             card.querySelector('.font-semibold').textContent = name;
@@ -487,8 +525,8 @@
                 row.innerHTML = `
                     <td class="py-2.5 pr-3 font-medium"></td>
                     <td class="py-2.5 pr-3 text-xs"></td>
-                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">${meta.score}</td>
-                    <td class="py-2.5 pl-4 text-xs text-slate-500">${meta.complexity}</td>
+                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold" title="${activeLang() === 'es' ? 'Valor proxy ilustrativo; ejecuta el lab para métricas actuales.' : 'Illustrative proxy value; run the lab for current metrics.'}">${escapeHtml(meta.score)}</td>
+                    <td class="py-2.5 pl-4 text-xs text-slate-500">${escapeHtml(meta.complexity)}</td>
                 `;
                 row.children[0].textContent = name;
                 row.children[1].textContent = meta.best;
@@ -784,7 +822,7 @@
         };
 
         function generateTransactions(n) {
-            const random = rng(20260630 + n);
+            const random = rng(SYNTHETIC_SEED_BASE + n);
             const rows = [];
             const ringUsers = new Set([3, 17, 34, 51, 68, 85, 102, 119, 136, 153, 170, 187]);
             const ringMerchants = new Set([7, 13, 26, 39, 52, 65]);
@@ -1030,9 +1068,11 @@
             }
             if (name === 'kNN Outlier') {
                 const k = 8;
+                const step = Math.max(1, Math.ceil(norm.length / 900));
+                const reference = norm.filter((_, index) => index % step === 0);
                 return normalizeScores(norm.map((row, i) => {
-                    const distances = norm.map((other, j) => i === j ? Infinity : Math.hypot(row[0] - other[0], row[1] - other[1])).sort((a, b) => a - b);
-                    return distances.slice(0, k).reduce((sum, value) => sum + value, 0) / k;
+                    const distances = reference.map((other) => other === row ? Infinity : Math.hypot(row[0] - other[0], row[1] - other[1])).sort((a, b) => a - b);
+                    return distances.slice(0, Math.min(k, distances.length)).reduce((sum, value) => sum + value, 0) / Math.min(k, distances.length);
                 }));
             }
             if (name === 'KMeans') {
@@ -1062,11 +1102,13 @@
             if (name === 'DBSCAN') {
                 const eps = 0.42;
                 const minPts = 6;
+                const step = Math.max(1, Math.ceil(norm.length / 900));
+                const reference = norm.filter((_, index) => index % step === 0);
                 return normalizeScores(norm.map((row, i) => {
                     let neighbors = 0;
                     let nearest = Infinity;
-                    norm.forEach((other, j) => {
-                        if (i === j) return;
+                    reference.forEach((other) => {
+                        if (other === row) return;
                         const distance = Math.hypot(row[0] - other[0], row[1] - other[1]);
                         if (distance <= eps) neighbors += 1;
                         if (distance < nearest) nearest = distance;
@@ -1110,11 +1152,23 @@
                 });
                 return normalizeScores(raw);
             }
-            const distances = features.map((row, i) => features.map((other, j) => ({
-                index: j,
-                distance: i === j ? Infinity : Math.hypot(...row.map((value, f) => value - other[f]))
-            })).sort((a, b) => a.distance - b.distance));
             if (name === 'LOF') {
+                if (features.length > 1200) {
+                    const step = Math.max(1, Math.ceil(features.length / 900));
+                    const reference = features.map((row, index) => ({ row, index })).filter((_, index) => index % step === 0);
+                    const k = 10;
+                    return normalizeScores(features.map((row, i) => {
+                        const distances = reference
+                            .map(item => item.index === i ? Infinity : Math.hypot(...row.map((value, f) => value - item.row[f])))
+                            .sort((a, b) => a - b);
+                        const local = distances.slice(0, Math.min(k, distances.length));
+                        return local.reduce((sum, value) => sum + value, 0) / Math.max(1, local.length);
+                    }));
+                }
+                const distances = features.map((row, i) => features.map((other, j) => ({
+                    index: j,
+                    distance: i === j ? Infinity : Math.hypot(...row.map((value, f) => value - other[f]))
+                })).sort((a, b) => a.distance - b.distance));
                 const k = 10;
                 const kDistance = distances.map(items => items[k - 1]?.distance || 1);
                 const lrd = features.map((_, i) => {
@@ -1671,13 +1725,13 @@
             const items = explanationFor(spec, topAlert);
             explain.innerHTML = `
                 <div class="flex items-center justify-between gap-3 text-xs">
-                    <span class="font-semibold text-slate-700">${localizedText(spec.explainKind)}</span>
-                    <span class="rounded-full ${spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'} px-2 py-1 text-[10px] font-semibold">${localizedText(spec.status)}</span>
+                    <span class="font-semibold text-slate-700">${escapeHtml(localizedText(spec.explainKind))}</span>
+                    <span class="rounded-full ${spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'} px-2 py-1 text-[10px] font-semibold">${escapeHtml(localizedText(spec.status))}</span>
                 </div>
                 ${items.map(item => `
                     <div>
                         <div class="mb-1 flex justify-between text-xs">
-                            <span class="text-slate-600">${item.label}</span>
+                            <span class="text-slate-600">${escapeHtml(item.label)}</span>
                             <span class="font-mono text-slate-500">${item.value.toFixed(2)}</span>
                         </div>
                         <div class="h-2 overflow-hidden rounded-full bg-slate-100">
@@ -1686,6 +1740,76 @@
                     </div>
                 `).join('')}
             `;
+        }
+
+        function pcaProjection(rows) {
+            const features = standardizedFeatures(rows);
+            const dim = features[0]?.length || 0;
+            if (!features.length || !dim) return [];
+            const covariance = Array.from({ length: dim }, (_, i) => Array.from({ length: dim }, (_, j) => mean(features.map(row => row[i] * row[j]))));
+            const multiply = (vector, matrix = covariance) => matrix.map(row => row.reduce((sum, value, index) => sum + value * vector[index], 0));
+            const normalizeVector = (vector) => {
+                const length = Math.hypot(...vector) || 1;
+                return vector.map(value => value / length);
+            };
+            let pc1 = normalizeVector(Array.from({ length: dim }, (_, index) => index === 0 ? 1 : 0.15));
+            for (let iter = 0; iter < 18; iter += 1) pc1 = normalizeVector(multiply(pc1));
+            const lambda1 = pc1.reduce((sum, value, index) => sum + value * multiply(pc1)[index], 0);
+            const deflated = covariance.map((row, i) => row.map((value, j) => value - lambda1 * pc1[i] * pc1[j]));
+            let pc2 = normalizeVector(Array.from({ length: dim }, (_, index) => index === 1 ? 1 : 0.11));
+            for (let iter = 0; iter < 18; iter += 1) {
+                const projected = multiply(pc2, deflated);
+                const dot = projected.reduce((sum, value, index) => sum + value * pc1[index], 0);
+                pc2 = normalizeVector(projected.map((value, index) => value - dot * pc1[index]));
+            }
+            const raw = features.map(row => ({
+                x: row.reduce((sum, value, index) => sum + value * pc1[index], 0),
+                y: row.reduce((sum, value, index) => sum + value * pc2[index], 0)
+            }));
+            const xs = raw.map(point => point.x).sort((a, b) => a - b);
+            const ys = raw.map(point => point.y).sort((a, b) => a - b);
+            const xLo = quantile(xs, 0.03);
+            const xHi = quantile(xs, 0.97);
+            const yLo = quantile(ys, 0.03);
+            const yHi = quantile(ys, 0.97);
+            const scale = (value, lo, hi, min, max) => min + Math.max(0, Math.min(1, (value - lo) / (hi - lo || 1))) * (max - min);
+            return raw.map(point => ({
+                x: scale(point.x, xLo, xHi, 22, 212),
+                y: 142 - scale(point.y, yLo, yHi, 0, 124),
+                pc1: point.x,
+                pc2: point.y
+            }));
+        }
+
+        function convexHull(points) {
+            const unique = Array.from(new Map(points.map(point => [`${point.x.toFixed(1)},${point.y.toFixed(1)}`, point])).values())
+                .sort((a, b) => a.x === b.x ? a.y - b.y : a.x - b.x);
+            if (unique.length < 3) return unique;
+            const cross = (o, a, b) => (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+            const lower = [];
+            unique.forEach(point => {
+                while (lower.length >= 2 && cross(lower[lower.length - 2], lower[lower.length - 1], point) <= 0) lower.pop();
+                lower.push(point);
+            });
+            const upper = [];
+            unique.slice().reverse().forEach(point => {
+                while (upper.length >= 2 && cross(upper[upper.length - 2], upper[upper.length - 1], point) <= 0) upper.pop();
+                upper.push(point);
+            });
+            return lower.slice(0, -1).concat(upper.slice(0, -1));
+        }
+
+        function paddedHull(points, pad = 7) {
+            const hull = convexHull(points);
+            if (hull.length < 3) return '';
+            const cx = mean(hull.map(point => point.x));
+            const cy = mean(hull.map(point => point.y));
+            return hull.map(point => {
+                const dx = point.x - cx;
+                const dy = point.y - cy;
+                const length = Math.hypot(dx, dy) || 1;
+                return `${(point.x + dx / length * pad).toFixed(1)},${(point.y + dy / length * pad).toFixed(1)}`;
+            }).join(' ');
         }
 
         function renderRepresentation(spec, rows, scores) {
@@ -1718,46 +1842,54 @@
                 });
                 const nodeList = Array.from(nodes.values()).slice(0, 34);
                 const nodeById = new Map(nodeList.map(node => [node.id, node]));
+                const priorityNodes = nodeList.filter(node => node.color === '#16a34a' || node.color === '#2563eb');
+                const graphDecisionRegion = paddedHull(priorityNodes, 11);
                 const edgeSvg = edges
                     .filter(edge => nodeById.has(edge.a) && nodeById.has(edge.b))
                     .map(edge => {
                         const a = nodeById.get(edge.a);
                         const b = nodeById.get(edge.b);
-                        return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${edge.color}" stroke-width="${edge.width}" opacity="0.52"><title>${edge.label}</title></line>`;
+                        return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${edge.color}" stroke-width="${edge.width}" opacity="0.52"><title>${escapeHtml(edge.label)}</title></line>`;
                     }).join('');
                 const nodeSvg = nodeList.map(node => `
                     <g>
-                        <circle cx="${node.x}" cy="${node.y}" r="${node.kind === 'merchant' ? 4.2 : node.kind === 'user' ? 3.8 : 3.1}" fill="${node.color}" opacity="0.9"><title>${node.kind} ${node.label}</title></circle>
-                        <text x="${node.x}" y="${node.y - 5.2}" font-size="6.2" fill="#475569" text-anchor="middle">${node.label}</text>
+                        <circle cx="${node.x}" cy="${node.y}" r="${node.kind === 'merchant' ? 4.2 : node.kind === 'user' ? 3.8 : 3.1}" fill="${node.color}" opacity="0.9"><title>${escapeHtml(`${node.kind} ${node.label}`)}</title></circle>
+                        <text x="${node.x}" y="${node.y - 5.2}" font-size="6.2" fill="#475569" text-anchor="middle">${escapeHtml(node.label)}</text>
                     </g>
                 `).join('');
                 representation.innerHTML = `
-                    <svg viewBox="0 0 230 160" class="w-full rounded-2xl border border-slate-200 bg-slate-50" role="img" aria-label="${spec.name} graph representation">
+                    <svg viewBox="0 0 230 160" class="w-full rounded-2xl border border-slate-200 bg-slate-50" role="img" aria-label="${escapeHtml(spec.name)} graph representation">
                         <rect x="12" y="12" width="206" height="132" rx="12" fill="#eff6ff" opacity="0.65" />
+                        ${graphDecisionRegion ? `<polygon points="${graphDecisionRegion}" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.42"><title>${activeLang() === 'es' ? 'Región de decisión priorizada' : 'Prioritized decision region'}</title></polygon>` : ''}
                         <text x="115" y="154" font-size="8" fill="#64748b" text-anchor="middle">${activeLang() === 'es' ? 'subgrafo de usuarios, comercios, dispositivos e IP' : 'user, merchant, device, and IP subgraph'}</text>
                         ${edgeSvg}
                         ${nodeSvg}
                     </svg>
-                    <div class="mt-2 text-[10px] text-slate-500">${activeLang() === 'es' ? 'Azul: alertas priorizadas. Verde: fraude priorizado correctamente. Rojo: fraude etiquetado no priorizado. Las aristas comparten el color de la transacción que conectan.' : 'Blue: prioritized alerts. Green: correctly prioritized fraud. Red: labeled fraud not prioritized. Edges inherit the color of the transaction they connect.'}</div>
+                    <div class="mt-2 text-[10px] text-slate-500">${activeLang() === 'es' ? 'Azul: alertas priorizadas. Verde: fraude priorizado correctamente. Rojo: fraude etiquetado no priorizado. Halo azul: región de decisión. Las aristas comparten el color de la transacción que conectan.' : 'Blue: prioritized alerts. Green: correctly prioritized fraud. Red: labeled fraud not prioritized. Blue halo: decision region. Edges inherit the color of the transaction they connect.'}</div>
                 `;
                 return;
             }
-            const points = top.map((item, idx) => {
-                const x = 18 + Math.min(184, Math.max(0, item.row.graphRisk * 130 + (item.row.user % 31) * 2));
-                const y = 142 - Math.min(118, Math.max(0, item.score * 112 + item.row.isNight * 8));
+            const projected = pcaProjection(rows);
+            const pointData = top.map((item, idx) => {
+                const rowIndex = rows.indexOf(item.row);
+                const point = projected[rowIndex] || { x: 22 + idx * 4, y: 142 - item.score * 112 };
                 const prioritized = item.score >= threshold;
                 const color = item.row.fraud && prioritized ? '#16a34a' : item.row.fraud ? '#dc2626' : prioritized ? '#2563eb' : '#94a3b8';
-                return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${idx < 8 ? 3.7 : 2.7}" fill="${color}" opacity="0.85"><title>${item.row.id} ${item.score.toFixed(3)}</title></circle>`;
-            }).join('');
-            const boundaryY = 142 - Math.min(118, Math.max(0, threshold * 112));
+                return { x: point.x, y: point.y, color, item, idx, prioritized };
+            });
+            const decisionRegion = paddedHull(pointData.filter(point => point.prioritized), 8);
+            const points = pointData.map(point => `
+                <circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${point.idx < 8 ? 3.7 : 2.7}" fill="${point.color}" opacity="0.86">
+                    <title>${escapeHtml(`${point.item.row.id} score ${point.item.score.toFixed(3)} PC1 ${point.x.toFixed(1)} PC2 ${point.y.toFixed(1)}`)}</title>
+                </circle>
+            `).join('');
             representation.innerHTML = `
-                <svg viewBox="0 0 230 160" class="w-full rounded-2xl border border-slate-200 bg-slate-50" role="img" aria-label="${spec.name} representation plot">
-                    <polygon points="18,16 214,16 214,${boundaryY.toFixed(1)} 18,${boundaryY.toFixed(1)}" fill="#dbeafe" opacity="0.75" />
-                    <path d="M 18 ${boundaryY.toFixed(1)} C 68 ${(boundaryY - 10).toFixed(1)}, 112 ${(boundaryY + 8).toFixed(1)}, 214 ${(boundaryY - 2).toFixed(1)}" fill="none" stroke="#2563eb" stroke-width="1.4" stroke-dasharray="4 3" />
+                <svg viewBox="0 0 230 160" class="w-full rounded-2xl border border-slate-200 bg-slate-50" role="img" aria-label="${escapeHtml(spec.name)} PCA representation plot">
+                    ${decisionRegion ? `<polygon points="${decisionRegion}" fill="#dbeafe" stroke="#2563eb" stroke-width="1.3" stroke-dasharray="4 3" opacity="0.78"><title>${activeLang() === 'es' ? 'Región de decisión priorizada' : 'Prioritized decision region'}</title></polygon>` : ''}
                     <line x1="18" y1="142" x2="214" y2="142" stroke="#cbd5e1" />
                     <line x1="18" y1="16" x2="18" y2="142" stroke="#cbd5e1" />
-                    <text x="116" y="155" font-size="8" fill="#64748b" text-anchor="middle">${activeLang() === 'es' ? 'exposición relacional / identidad' : 'relational / identity exposure'}</text>
-                    <text x="8" y="82" font-size="8" fill="#64748b" text-anchor="middle" transform="rotate(-90 8 82)">${activeLang() === 'es' ? 'puntaje' : 'score'}</text>
+                    <text x="116" y="155" font-size="8" fill="#64748b" text-anchor="middle">${activeLang() === 'es' ? 'PC1: mezcla de anomalía transaccional' : 'PC1: transaction anomaly mix'}</text>
+                    <text x="8" y="82" font-size="8" fill="#64748b" text-anchor="middle" transform="rotate(-90 8 82)">${activeLang() === 'es' ? 'PC2: riesgo relacional / temporal' : 'PC2: relational / temporal risk'}</text>
                     ${points}
                 </svg>
                 <div class="mt-2 text-[10px] text-slate-500">${activeLang() === 'es' ? 'Azul: alertas priorizadas. Verde: fraude priorizado correctamente. Rojo: fraude etiquetado no priorizado. Área azul: región de decisión.' : 'Blue: prioritized alerts. Green: correctly prioritized fraud. Red: labeled fraud not prioritized. Blue area: decision region.'}</div>
@@ -1859,7 +1991,7 @@
                 return { progress, loss, val };
             });
             const pathFor = (key) => curve.map((point, index) => {
-                const x = 10 + point.progress * 180;
+                const x = 18 + point.progress * 180;
                 const y = 70 - point[key] * 58;
                 return `${index ? 'L' : 'M'} ${x.toFixed(1)} ${y.toFixed(1)}`;
             }).join(' ');
@@ -1886,12 +2018,18 @@
                         <span class="font-semibold text-slate-600">${spec.exact ? (activeLang() === 'es' ? 'Traza real de entrenamiento' : 'Actual browser training trace') : (activeLang() === 'es' ? 'Traza simulada de entrenamiento' : 'Simulated training trace')}</span>
                         <span class="font-mono text-slate-400">${activeLang() === 'es' ? 'pérdida / validación' : 'loss / validation'}</span>
                     </div>
-                    <svg viewBox="0 0 200 78" class="h-24 w-full" role="img" aria-label="${spec.name} training timeline">
-                        <line x1="10" y1="70" x2="190" y2="70" stroke="#e2e8f0" />
-                        <line x1="10" y1="10" x2="10" y2="70" stroke="#e2e8f0" />
+                    <svg viewBox="0 0 220 92" class="h-28 w-full" role="img" aria-label="${escapeHtml(spec.name)} training timeline">
+                        <line x1="18" y1="70" x2="198" y2="70" stroke="#e2e8f0" />
+                        <line x1="18" y1="10" x2="18" y2="70" stroke="#e2e8f0" />
+                        <text x="108" y="88" font-size="7.5" fill="#64748b" text-anchor="middle">${activeLang() === 'es' ? 'paso de ajuste / fold de validación' : 'fit step / validation fold'}</text>
+                        <text x="7" y="43" font-size="7.5" fill="#64748b" text-anchor="middle" transform="rotate(-90 7 43)">${activeLang() === 'es' ? 'error / pérdida de validación' : 'error / validation loss'}</text>
+                        <text x="158" y="14" font-size="6.8" fill="#0f172a">${activeLang() === 'es' ? 'entrenamiento' : 'train'}</text>
+                        <line x1="144" y1="12" x2="154" y2="12" stroke="#0f172a" stroke-width="2" />
+                        <text x="158" y="23" font-size="6.8" fill="#2563eb">${activeLang() === 'es' ? 'validación' : 'validation'}</text>
+                        <line x1="144" y1="21" x2="154" y2="21" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="4 3" />
                         <path d="${pathFor('loss')}" fill="none" stroke="#0f172a" stroke-width="2.4" stroke-linecap="round" />
                         <path d="${pathFor('val')}" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="4 3" stroke-linecap="round" />
-                        ${curve.map((point, index) => `<circle cx="${(10 + point.progress * 180).toFixed(1)}" cy="${(70 - point.loss * 58).toFixed(1)}" r="${index === curve.length - 1 ? 3 : 2}" fill="#0f172a" />`).join('')}
+                        ${curve.map((point, index) => `<circle cx="${(18 + point.progress * 180).toFixed(1)}" cy="${(70 - point.loss * 58).toFixed(1)}" r="${index === curve.length - 1 ? 3 : 2}" fill="#0f172a" />`).join('')}
                     </svg>
                 </div>
                 <div class="rounded-2xl bg-slate-50 p-3 text-[10px] leading-relaxed text-slate-500">
@@ -1950,9 +2088,9 @@
             const filtered = selected === 'all' ? results : results.filter(r => r.key === selected || r.name === selected);
             const maxPr = Math.max(...filtered.map(r => r.prAuc), 0.01);
             chart.innerHTML = filtered.map(r => `
-                <div data-lab-result-name="${r.name}">
+                <div data-lab-result-name="${escapeHtml(r.name)}">
                     <div class="flex justify-between gap-2 text-xs mb-1">
-                        <span class="font-medium text-slate-700">${r.name} <span class="ml-1 rounded-full ${r.spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'} px-1.5 py-0.5 text-[9px]">${r.spec.exact ? (activeLang() === 'es' ? 'exacto' : 'exact') : (activeLang() === 'es' ? 'educativo' : 'educational')}</span></span>
+                        <span class="font-medium text-slate-700">${escapeHtml(r.name)} <span class="ml-1 rounded-full ${r.spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'} px-1.5 py-0.5 text-[9px]">${r.spec.exact ? (activeLang() === 'es' ? 'exacto' : 'exact') : (activeLang() === 'es' ? 'educativo' : 'educational')}</span></span>
                         <span class="font-mono text-emerald-700">PR-AUC ${r.prAuc.toFixed(3)} · R@50 ${r.recall50.toFixed(2)}</span>
                     </div>
                     <div class="h-2 rounded-full bg-slate-100 overflow-hidden">
@@ -1966,7 +2104,7 @@
             alerts.innerHTML = topAlerts.map((item, index) => `
                 <div class="rounded-2xl border border-slate-200 p-3 flex justify-between gap-3">
                     <div>
-                        <div class="font-mono text-slate-800">${item.row.id}</div>
+                        <div class="font-mono text-slate-800">${escapeHtml(item.row.id)}</div>
                         <div class="text-slate-500">${activeLang() === 'es' ? 'monto' : 'amount'} $${item.row.amount.toFixed(2)} · v1h ${item.row.velocity1h} · ${activeLang() === 'es' ? 'grafo' : 'graph'} ${item.row.graphRisk.toFixed(2)}</div>
                         <button type="button" class="open-workbench mt-2 rounded-full border border-slate-200 px-2.5 py-1 text-[10px] font-semibold hover:bg-slate-50" data-alert-index="${index}">${activeLang() === 'es' ? 'Abrir en workbench' : 'Open in workbench'}</button>
                     </div>
@@ -1990,44 +2128,77 @@
         }
 
         let pendingRun = 0;
-        let loadingTimers = [];
+        let loadingStartedAt = 0;
+
+        function nextFrame() {
+            return new Promise(resolve => window.requestAnimationFrame(() => resolve()));
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => window.setTimeout(resolve, ms));
+        }
+
+        function updateLoadingProgress(percent, message) {
+            if (loadingBar) {
+                loadingBar.style.width = `${Math.max(8, Math.min(100, percent))}%`;
+                loadingBar.setAttribute('aria-valuenow', String(Math.round(percent)));
+            }
+            if (status && message) status.textContent = message;
+        }
 
         function setLoading(isLoading, selected = null) {
             if (!loading) return;
-            loadingTimers.forEach(timer => window.clearTimeout(timer));
-            loadingTimers = [];
             loading.classList.toggle('hidden', !isLoading);
             runBtn.disabled = isLoading;
             modelSelect.disabled = isLoading;
             sizeInput.disabled = isLoading;
             if (loadingBar) {
-                loadingBar.style.width = isLoading ? '12%' : '100%';
-                if (isLoading) {
-                    [28, 46, 67, selected === 'all' ? 86 : 78].forEach((width, index) => {
-                        loadingTimers.push(window.setTimeout(() => {
-                            loadingBar.style.width = `${width}%`;
-                        }, 120 + index * 230));
-                    });
-                }
+                loadingBar.style.width = isLoading ? '8%' : '100%';
+                loadingBar.setAttribute('role', 'progressbar');
+                loadingBar.setAttribute('aria-valuemin', '0');
+                loadingBar.setAttribute('aria-valuemax', '100');
+                loadingBar.setAttribute('aria-valuenow', isLoading ? '8' : '100');
             }
             if (status && isLoading) {
+                loadingStartedAt = performance.now();
                 status.textContent = activeLang() === 'es'
                     ? `Ajustando ${selected === 'all' ? 'todos los modelos' : selected} en el navegador...`
                     : `Fitting ${selected === 'all' ? 'all models' : selected} in the browser...`;
             }
         }
 
-        function runLabCore(runId = pendingRun) {
+        async function finishLoading(selected) {
+            updateLoadingProgress(100, status ? status.textContent : '');
+            const elapsed = performance.now() - loadingStartedAt;
+            if (elapsed < 520) await sleep(520 - elapsed);
+            setLoading(false, selected);
+        }
+
+        async function runLabCore(runId = pendingRun) {
             const n = parseInt(sizeInput.value, 10);
+            const selected = modelSelect.value || 'all';
+            updateLoadingProgress(14, activeLang() === 'es' ? 'Generando transacciones sintéticas...' : 'Generating synthetic transactions...');
+            await nextFrame();
+            if (runId !== pendingRun) return;
             const rows = generateTransactions(n);
+            updateLoadingProgress(24, activeLang() === 'es' ? 'Construyendo variables y etiquetas...' : 'Building features and labels...');
+            await nextFrame();
+            if (runId !== pendingRun) return;
             const labels = rows.map(r => r.fraud);
             const baseScores = scoreRows(rows);
-            const selected = modelSelect.value || 'all';
             const runnableModels = selected === 'all' ? models : [selected];
-            const results = runnableModels.map(name => {
+            const results = [];
+            for (let index = 0; index < runnableModels.length; index += 1) {
+                const name = runnableModels[index];
+                const progress = 30 + (index / Math.max(1, runnableModels.length)) * 48;
+                updateLoadingProgress(progress, activeLang() === 'es'
+                    ? `Ejecutando ${name} (${index + 1}/${runnableModels.length})...`
+                    : `Running ${name} (${index + 1}/${runnableModels.length})...`);
+                await nextFrame();
+                if (runId !== pendingRun) return;
                 const spec = runnerSpec(name);
                 const modelScores = scoreModel(name, rows, baseScores);
-                return {
+                results.push({
                     key: name,
                     name,
                     spec,
@@ -2035,9 +2206,14 @@
                     prAuc: prAuc(labels, modelScores),
                     recall50: recallAtK(labels, modelScores, Math.min(50, rows.length)),
                     diagnostics: foldDiagnostics(labels, modelScores)
-                };
-            }).sort((a, b) => b.prAuc - a.prAuc);
+                });
+            }
+            updateLoadingProgress(84, activeLang() === 'es' ? 'Ordenando métricas y preparando visualizaciones...' : 'Ranking metrics and preparing visualizations...');
+            await nextFrame();
+            results.sort((a, b) => b.prAuc - a.prAuc);
             if (runId !== pendingRun) return;
+            updateLoadingProgress(93, activeLang() === 'es' ? 'Renderizando evidencia, PCA/grafo y validación...' : 'Rendering evidence, PCA/graph view, and validation...');
+            await nextFrame();
             render(results, rows, selected, runId);
             if (status) {
                 const fraudCount = labels.reduce((sum, v) => sum + v, 0);
@@ -2045,7 +2221,7 @@
                     ? `Completadas ${rows.length} filas, ${fraudCount} etiquetas de fraude y ${runnableModels.length} ejecutor(es) de modelo.`
                     : `Completed ${rows.length} rows, ${fraudCount} fraud labels, and ${runnableModels.length} model runner(s).`;
             }
-            setLoading(false, selected);
+            await finishLoading(selected);
         }
 
         function runLab() {
@@ -2056,7 +2232,15 @@
             window.requestAnimationFrame(() => {
                 window.setTimeout(() => {
                     if (runId !== pendingRun) return;
-                    runLabCore(runId);
+                    runLabCore(runId).catch((error) => {
+                        console.error('[Model Tour] Browser lab failed', error);
+                        if (status) {
+                            status.textContent = activeLang() === 'es'
+                                ? 'El laboratorio encontró un error; intenta de nuevo con menos filas.'
+                                : 'The lab hit an error; try again with fewer rows.';
+                        }
+                        setLoading(false, selected);
+                    });
                 }, 30);
             });
         }
@@ -2173,7 +2357,7 @@
 
     async function loadTranslations() {
         try {
-            const res = await fetch('translations.json?v=20260701-scenario-graph-data', { cache: 'no-store' });
+            const res = await fetch(`translations.json?v=${LAB_CACHE_KEY}`, { cache: 'no-store' });
             translations = await res.json();
         } catch (e) {
             console.warn('Could not load translations.json, using fallback English');
@@ -2198,10 +2382,10 @@
                     el.placeholder = translated;
                 } else {
                     // For text or HTML content
-                    if (translated.includes('<') && translated.includes('>')) {
+                    if (TRUSTED_HTML_I18N_KEYS.has(key) && translated.includes('<') && translated.includes('>')) {
                         el.innerHTML = translated;
                     } else {
-                        el.textContent = translated;
+                        el.textContent = decodeHtmlEntities(translated);
                     }
                 }
             }

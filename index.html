@@ -901,7 +901,7 @@
                                 <tr class="text-left text-xs border-b">
                                     <th class="py-2 pr-3 font-semibold text-slate-600" data-i18n="exp.table.model">Model</th>
                                     <th class="py-2 pr-3 font-semibold text-slate-600" data-i18n="exp.table.best">Best For</th>
-                                    <th class="py-2 text-right font-semibold text-slate-600" data-i18n="exp.table.pr">Benchmark PR-AUC (synthetic data)</th>
+                                    <th class="py-2 text-right font-semibold text-slate-600" data-i18n="exp.table.pr">Illustrative prior PR-AUC</th>
                                     <th class="py-2 pl-4 font-semibold text-slate-600" data-i18n="exp.table.complex">Complexity</th>
                                 </tr>
                             </thead>
@@ -909,25 +909,25 @@
                                 <tr>
                                     <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.if.model">Isolation Forest</td>
                                     <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.if.best">Novel anomalies; fast gate</td>
-                                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.218</td>
+                                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">Run lab</td>
                                     <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.if.complex">Low</td>
                                 </tr>
                                 <tr>
                                     <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.xgb.model">XGBoost</td>
                                     <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.xgb.best">Known patterns with rich feature engineering</td>
-                                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.284</td>
+                                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">Run lab</td>
                                     <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.xgb.complex">Low</td>
                                 </tr>
                                 <tr>
                                     <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.graph.model">GraphSAGE</td>
                                     <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.graph.best">KYA/KYE collusion rings and relational signals</td>
-                                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.319</td>
+                                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">Run lab</td>
                                     <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.graph.complex">Medium-High</td>
                                 </tr>
                                 <tr>
                                     <td class="py-2.5 pr-3 font-medium" data-i18n="exp.row.vae.model">VAE + IF Hybrid</td>
                                     <td class="py-2.5 pr-3 text-xs" data-i18n="exp.row.vae.best">Novel and zero-day fraud patterns</td>
-                                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">0.367</td>
+                                    <td class="py-2.5 text-right font-mono text-emerald-700 font-semibold">Run lab</td>
                                     <td class="py-2.5 pl-4 text-xs text-slate-500" data-i18n="exp.row.vae.complex">Medium</td>
                                 </tr>
                                 <tr>
@@ -991,40 +991,40 @@
                         <text x="42" y="192" font-size="8" fill="#64748b" text-anchor="end">0.00</text>
 
                         <!-- Bars (incl. Isolation Forest baseline) -->
-                        <!-- IF 0.218 -->
+                        <!-- hydrated by js/main.js -->
                         <rect x="45" y="125" width="26" height="63" rx="3" fill="url(#barGrad)"/>
                         <text x="58" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.if">IF</text>
-                        <text x="58" y="122" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.22</text>
+                        <text x="58" y="122" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">run</text>
 
-                        <!-- XGB 0.284 -->
+                        <!-- hydrated by js/main.js -->
                         <rect x="78" y="115" width="26" height="73" rx="3" fill="url(#barGrad)"/>
                         <text x="91" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.xgb">XGB</text>
-                        <text x="91" y="112" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.28</text>
+                        <text x="91" y="112" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">run</text>
 
-                        <!-- GraphSAGE 0.319 -->
+                        <!-- hydrated by js/main.js -->
                         <rect x="111" y="98" width="26" height="90" rx="3" fill="url(#barGrad)"/>
                         <text x="124" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.graph">Graph</text>
-                        <text x="124" y="95" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.32</text>
+                        <text x="124" y="95" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">run</text>
 
-                        <!-- VAE 0.367 -->
+                        <!-- hydrated by js/main.js -->
                         <rect x="144" y="72" width="26" height="116" rx="3" fill="#0f172a"/>
                         <text x="157" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.vae">VAE</text>
-                        <text x="157" y="69" font-size="8" font-weight="700" fill="#0f172a" text-anchor="middle">0.37</text>
+                        <text x="157" y="69" font-size="8" font-weight="700" fill="#0f172a" text-anchor="middle">run</text>
 
-                        <!-- MoE 0.295 -->
+                        <!-- hydrated by js/main.js -->
                         <rect x="177" y="109" width="26" height="79" rx="3" fill="url(#barGrad)"/>
                         <text x="190" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.moe">MoE</text>
-                        <text x="190" y="106" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.30</text>
+                        <text x="190" y="106" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">run</text>
 
-                        <!-- TabTrans 0.278 -->
+                        <!-- hydrated by js/main.js -->
                         <rect x="210" y="117" width="26" height="71" rx="3" fill="url(#barGrad)"/>
                         <text x="223" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.tab">TabT</text>
-                        <text x="223" y="114" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.28</text>
+                        <text x="223" y="114" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">run</text>
 
-                        <!-- LSTM 0.261 -->
+                        <!-- hydrated by js/main.js -->
                         <rect x="243" y="126" width="26" height="62" rx="3" fill="url(#barGrad)"/>
                         <text x="256" y="205" font-size="7" fill="#475569" text-anchor="middle" data-i18n="bar.lstm">LSTM</text>
-                        <text x="256" y="123" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">0.26</text>
+                        <text x="256" y="123" font-size="8" font-weight="600" fill="#1e40af" text-anchor="middle">run</text>
                     </svg>
 
                     <div class="text-[10px] text-slate-500 mt-auto pt-1" data-i18n="exp.bar.note">Representative values from reproducible runs on synthetic benchmark data (seeds and hyperparameters affect results). Execute the comparison script locally for current outputs.</div>
@@ -1411,6 +1411,6 @@
     </main>
 
     <!-- Professional interactivity and enhancements (BCG/McKinsey UX) -->
-    <script src="js/main.js?v=20260701-scenario-graph-data"></script>
+    <script src="js/main.js?v=20260701-lab-pca-progress"></script>
 </body>
 </html>
