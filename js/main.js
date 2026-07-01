@@ -174,7 +174,7 @@
                         <div class="font-semibold text-base tracking-tight"></div>
                         <div class="model-badge bg-slate-100 text-slate-700 rounded mt-1 inline-block">${localizedText(meta.label)}</div>
                     </div>
-                    <span class="text-[10px] px-2 py-px bg-emerald-50 text-emerald-700 font-medium rounded">${activeLang() === 'es' ? 'Implementado' : 'Implemented'}</span>
+                    <span class="text-[10px] px-2 py-px bg-emerald-50 text-emerald-700 font-medium rounded">${activeLang() === 'es' ? 'Ejemplo ejecutable' : 'Runnable example'}</span>
                 </div>
                 <p class="mt-3 text-xs leading-snug text-slate-600">${meta.best}</p>
                 <div class="mt-3 text-xs">
@@ -749,7 +749,7 @@
 
     async function loadTranslations() {
         try {
-            const res = await fetch('translations.json?v=20260630-bilingual2', { cache: 'no-store' });
+            const res = await fetch('translations.json?v=20260630-flow', { cache: 'no-store' });
             translations = await res.json();
         } catch (e) {
             console.warn('Could not load translations.json, using fallback English');
@@ -828,6 +828,10 @@
             const isActive = btn.dataset.lang === lang;
             btn.classList.toggle('active', isActive);
             btn.setAttribute('aria-pressed', isActive);
+            btn.classList.toggle('bg-[#0f172a]', isActive);
+            btn.classList.toggle('text-white', isActive);
+            btn.classList.toggle('hover:bg-slate-100', !isActive);
+            btn.classList.toggle('text-slate-700', !isActive);
         });
 
         // Persist

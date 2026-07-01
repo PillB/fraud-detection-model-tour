@@ -4,8 +4,8 @@
     "es": "Técnicas de ML para detección de fraude | Model Tour - PillB"
   },
   "meta.description": {
-    "en": "Professional guide to fraud detection ML techniques: classical baselines, anomaly detection, graph models, temporal analysis, and SOTA hybrids. Includes model cards, runnable experiments, analyst workflows, and guided learning. PillB.",
-    "es": "Guía profesional de técnicas de ML para detección de fraude: baselines clásicos, detección de anomalías, modelos de grafos, análisis temporal e híbridos de última generación. Incluye tarjetas de modelo, experimentos ejecutables, flujos de analista y aprendizaje guiado. PillB."
+    "en": "Professional guide to fraud detection ML techniques: classical baselines, anomaly detection, graph models, temporal analysis, and advanced hybrids. Includes model cards, runnable examples, analyst workflows, and guided learning. PillB.",
+    "es": "Guía profesional de técnicas de ML para detección de fraude: líneas base clásicas, detección de anomalías, modelos de grafos, análisis temporal e híbridos avanzados. Incluye tarjetas de modelo, ejemplos ejecutables, flujos de analista y aprendizaje guiado. PillB."
   },
   "nav.overview": {
     "en": "Overview",
@@ -44,28 +44,28 @@
     "es": "Ver pruebas comparativas"
   },
   "hero.badge": {
-    "en": "RESEARCH-BACKED • REGRESSION-GATED SCRIPTS • 2024-2026 LITERATURE",
-    "es": "RESPALDADO POR INVESTIGACIÓN • SCRIPTS CON PRUEBAS DE REGRESIÓN • LITERATURA 2024-2026"
+    "en": "RESEARCH-BACKED • REGRESSION-GATED EXAMPLES • 2024-2026 SURVEYS",
+    "es": "RESPALDADO POR INVESTIGACIÓN • EJEMPLOS CON PRUEBAS DE REGRESIÓN • SURVEYS 2024-2026"
   },
   "hero.title": {
     "en": "Fraud Detection<br>ML Techniques",
     "es": "Técnicas de ML para<br>Detección de Fraude"
   },
   "hero.subtitle": {
-    "en": "Classical baselines to state-of-the-art hybrids.<br>A practitioner reference for structured financial data, behavioral signals, and relational fraud networks.",
-    "es": "De baselines clásicos a híbridos de última generación.<br>Una referencia práctica para datos financieros estructurados, señales de comportamiento y redes relacionales de fraude."
+    "en": "Classical baselines to advanced hybrids.<br>A practitioner reference for structured financial data, behavioral signals, and relational fraud networks.",
+    "es": "De líneas base clásicas a híbridos avanzados.<br>Una referencia práctica para datos financieros estructurados, señales de comportamiento y redes relacionales de fraude."
   },
   "hero.exploreCards": {
-    "en": "Explore Cards + Catalog",
-    "es": "Explorar tarjetas + catálogo"
+    "en": "Start with the challenge",
+    "es": "Empezar por el desafío"
   },
   "hero.viewPipeline": {
-    "en": "View Full Pipeline",
-    "es": "Ver pipeline completo"
+    "en": "Run the browser lab",
+    "es": "Ejecutar el laboratorio"
   },
   "hero.runOnline": {
-    "en": "Run Examples Online",
-    "es": "Ejecutar ejemplos en línea"
+    "en": "Browse 74-model catalog",
+    "es": "Explorar catálogo de 74 modelos"
   },
   "hero.viewSource": {
     "en": "View source on GitHub →",
@@ -88,16 +88,16 @@
     "es": "EL DESAFÍO"
   },
   "overview.title": {
-    "en": "Why standard ML fails at fraud",
-    "es": "Por qué el ML estándar falla en fraude"
+    "en": "Why one model is not enough for fraud",
+    "es": "Por qué un solo modelo no basta para fraude"
   },
   "overview.p1": {
     "en": "Fraud in financial transactions is usually rare, often around <strong>0.01% to 2%</strong>. A trivial “all legitimate” classifier can exceed 99% accuracy while catching no fraud at all.",
     "es": "El fraude en transacciones financieras suele ser poco frecuente, a menudo alrededor de <strong>0.01% a 2%</strong>. Un clasificador trivial que marque todo como “legítimo” puede superar 99% de exactitud sin detectar ningún fraude."
   },
   "overview.p2": {
-    "en": "Production-grade systems must detect <strong>known patterns</strong> such as velocity bursts and mule accounts, while also surfacing <strong>novel attacks</strong>. They must handle severe class imbalance, concept drift, low-latency decisions, and auditable explanations.",
-    "es": "Los sistemas de producción deben detectar <strong>patrones conocidos</strong>, como ráfagas de actividad y cuentas mula, y también sacar a la superficie <strong>ataques nuevos</strong>. Deben manejar fuerte desbalance de clases, deriva de concepto, decisiones de baja latencia y explicaciones auditables."
+    "en": "Production-style fraud systems need a portfolio: cheap gates for obvious risk, supervised models for known patterns, anomaly models for novel behavior, temporal models for drift, graph models for collusion, and analyst evidence for defensible decisions.",
+    "es": "Los sistemas antifraude de estilo productivo necesitan un portafolio: filtros baratos para riesgo obvio, modelos supervisados para patrones conocidos, modelos de anomalía para comportamiento nuevo, modelos temporales para deriva, grafos para colusión y evidencia para decisiones defendibles."
   },
   "insight.metric.title": {
     "en": "METRIC OF CHOICE",
@@ -108,8 +108,8 @@
     "es": "PR-AUC"
   },
   "insight.metric.desc": {
-    "en": "Focuses on the rare positive class. ROC-AUC is misleading on imbalanced data.",
-    "es": "Se enfoca en la clase positiva rara. ROC-AUC es engañoso en datos desequilibrados."
+    "en": "Focuses on the rare positive class. ROC-AUC can look strong even when the review queue is poor.",
+    "es": "Se enfoca en la clase positiva rara. ROC-AUC puede verse alto incluso cuando la cola de revisión es débil."
   },
   "insight.cascades.title": {
     "en": "PRODUCTION PATTERN",
@@ -184,20 +184,20 @@
     "es": "La mayoría de transacciones son normales. El fraude es raro, muchas veces por debajo de 1-2%. Un modelo que siempre diga “legítimo” puede parecer preciso, pero ser inútil. El objetivo es ordenar los casos realmente sospechosos arriba, para que los investigadores revisen las alertas principales sin ahogarse en falsos positivos."
   },
   "newto.p3": {
-    "en": "This site walks through the main techniques banks and fintechs actually use: velocity rules, tree models, anomaly detection, representation learning, graphs for collusion rings, temporal models, and hybrids. Every major idea is tied to runnable code and fraud-appropriate metrics.",
-    "es": "Este sitio recorre las principales técnicas que bancos y fintechs usan en la práctica: reglas de velocidad, modelos de árboles, detección de anomalías, aprendizaje de representaciones, grafos para anillos de colusión, modelos temporales e híbridos. Cada idea central se conecta con código ejecutable y métricas apropiadas para fraude."
+    "en": "This site walks through the main techniques banks and fintechs actually use: velocity rules, tree models, anomaly detection, representation learning, graphs for collusion rings, temporal models, and hybrids. The tour below adds one signal family at a time so the 74-model catalog feels organized, not overwhelming.",
+    "es": "Este sitio recorre las principales técnicas que bancos y fintechs usan en la práctica: reglas de velocidad, modelos de árboles, detección de anomalías, aprendizaje de representaciones, grafos para anillos de colusión, modelos temporales e híbridos. La ruta de abajo agrega una familia de señales a la vez para que el catálogo de 74 modelos se sienta organizado, no abrumador."
   },
   "newto.terms": {
     "en": "Key terms: <strong>PR-AUC</strong> measures how well the model ranks rare bad cases; random guessing scores roughly the fraud rate. <strong>Velocity</strong> means how quickly activity is happening. <strong>KYA/KYE</strong> captures know-your-account and know-your-entity signals about the people, businesses, devices, and workers involved.",
-    "es": "Términos clave: <strong>PR-AUC</strong> mide qué tan bien el modelo ordena los casos malos y poco frecuentes; adivinar al azar puntúa aproximadamente como la tasa de fraude. <strong>Velocidad</strong> indica qué tan rápido ocurre la actividad. <strong>KYA/KYE</strong> captura señales de conocimiento de la cuenta y de la entidad sobre personas, negocios, dispositivos y empleados involucrados."
+    "es": "Términos clave: <strong>PR-AUC</strong> mide qué tan bien el modelo ordena casos malos y poco frecuentes; adivinar al azar puntúa aproximadamente como la tasa de fraude. <strong>Velocidad</strong> indica qué tan rápido ocurre la actividad. <strong>KYA/KYE</strong> resume señales de cuenta y entidad: personas, comercios, dispositivos, empresas, empleados y vínculos entre ellos."
   },
   "roadmap.badge": {
     "en": "STRUCTURED LEARNING PATH",
     "es": "RUTA DE APRENDIZAJE ESTRUCTURADA"
   },
   "roadmap.title": {
-    "en": "Roadmap: Classical to State of the Art",
-    "es": "Hoja de ruta: de lo clásico al estado del arte"
+    "en": "Roadmap: Classical to Advanced",
+    "es": "Hoja de ruta: de lo clásico a lo avanzado"
   },
   "roadmap.full": {
     "en": "Full roadmap document ->",
@@ -296,8 +296,8 @@
     "es": "Flujo conceptual usado en las tarjetas y el pipeline"
   },
   "arch.caption": {
-    "en": "All six model families feed the ensemble. Classical gates protect latency; generative and graph layers address coverage gaps.",
-    "es": "Las seis familias de modelos alimentan el ensamble. Los filtros clásicos protegen la latencia; las capas generativas y de grafo abordan brechas de cobertura."
+    "en": "The diagram shows the six flagship families that organize the broader 74-entry catalog. Production-style systems start with cheap gates and route selected cases to heavier graph, temporal, generative, or hybrid layers.",
+    "es": "El diagrama muestra las seis familias principales que organizan el catálogo más amplio de 74 entradas. Los sistemas de estilo productivo empiezan con filtros baratos y envían casos seleccionados a capas más pesadas de grafos, temporalidad, modelos generativos o híbridos."
   },
   "cards.badge": {
     "en": "FLAGSHIP CARDS + PRODUCTION MODEL LIBRARY",
@@ -312,8 +312,8 @@
     "es": "Resúmenes concisos de nivel ejecutivo con mecanismo, rendimiento, ajuste al problema de fraude, limitaciones e implementaciones ejecutables vinculadas a documentación fuente."
   },
   "cards.badge2": {
-    "en": "All implementations validated • PR-AUC measured",
-    "es": "Todas las implementaciones validadas • PR-AUC medido"
+    "en": "Validated examples • PR-AUC measured",
+    "es": "Ejemplos validados • PR-AUC medido"
   },
   "cards.xgboost.title": {
     "en": "XGBoost",
@@ -776,8 +776,8 @@
     "es": "Ruta guiada para principiantes"
   },
   "tour.desc": {
-    "en": "A progressive curriculum. Run the scripts locally to internalize concepts.",
-    "es": "Un currículo progresivo. Ejecuta los scripts localmente para internalizar conceptos."
+    "en": "A progressive curriculum: start with a reliable baseline, add one signal family at a time, then compare lift, cost, and explainability. Run the scripts locally to connect each concept to evidence.",
+    "es": "Un currículo progresivo: empieza con una línea base confiable, agrega una familia de señales a la vez y compara mejora, costo y explicabilidad. Ejecuta los scripts localmente para conectar cada concepto con evidencia."
   },
   "tour.01.title": {
     "en": "Start with a supervised baseline.",
@@ -832,8 +832,8 @@
     "es": "• La ingeniería de variables (velocidad + agregados de entidad) suele aportar más que cambiar de familia de modelo."
   },
   "insights.core.2": {
-    "en": "• Hybrids dominate because anomaly models surface novel behavior while supervised models capture known fraud patterns.",
-    "es": "• Los híbridos dominan porque los modelos de anomalía detectan comportamiento nuevo, mientras los supervisados capturan patrones conocidos."
+    "en": "• Hybrids often perform best in this benchmark because anomaly models surface novel behavior while supervised models capture known fraud patterns. Validate on production data before generalizing.",
+    "es": "• Los híbridos suelen rendir mejor en este benchmark porque los modelos de anomalía detectan comportamiento nuevo, mientras los supervisados capturan patrones conocidos. Valida con datos de producción antes de generalizar."
   },
   "insights.core.3": {
     "en": "• Graph layers become essential once KYA/KYE data exists; they close coverage gaps that flat tabular models cannot see.",
@@ -908,8 +908,8 @@
     "es": "Clona → <span class=\"font-mono\">pip install -r requirements.txt</span> → ejecuta experimentos y pipeline"
   },
   "footer.complete": {
-    "en": "Self-contained static site (Tailwind CDN + local CSS/JS). Synthesized from model cards, roadmap, pipeline runs, tests, and sub-agent research. Ready for GitHub Pages and professional review. PillB 2026.",
-    "es": "Sitio estático autocontenido (Tailwind CDN + CSS/JS local). Sintetizado a partir de tarjetas de modelo, hoja de ruta, ejecuciones del pipeline, pruebas e investigación de sub-agentes. Listo para GitHub Pages y revisión profesional. PillB 2026."
+    "en": "Self-contained static site (Tailwind CDN + local CSS/JS). Synthesized from model cards, roadmap, pipeline runs, tests, and practitioner review. Ready for GitHub Pages and professional review. PillB 2026.",
+    "es": "Sitio estático autocontenido (Tailwind CDN + CSS/JS local). Sintetizado a partir de tarjetas de modelo, hoja de ruta, ejecuciones del pipeline, pruebas y revisión práctica. Listo para GitHub Pages y revisión profesional. PillB 2026."
   },
   "lang.toggle.en": {
     "en": "EN",
@@ -992,12 +992,12 @@
     "es": "Medio"
   },
   "tradeoffs.intro": {
-    "en": "Key dimensions for real deployments, drawn from research and practitioner review. Latency and scale depend on hardware, feature stores, graph stores, and review workflows; always validate on your own stack.",
-    "es": "Dimensiones clave para despliegues reales, derivadas de investigación y revisión práctica. Latencia y escala dependen del hardware, feature stores, graph stores y flujos de revisión; valida siempre en tu propio stack."
+    "en": "Key dimensions for real deployments, synthesized from model-card evidence, experiment runs, and practitioner review. Latency and scale depend on hardware, feature stores, graph stores, and review workflows; always validate on your own stack.",
+    "es": "Dimensiones clave para despliegues reales, sintetizadas a partir de tarjetas de modelo, ejecuciones experimentales y revisión práctica. La latencia y la escala dependen del hardware, los repositorios de variables, los almacenes de grafos y los flujos de revisión; valida siempre en tu propio stack."
   },
   "tradeoffs.note": {
-    "en": "Full caveats live in the sub-agent research notes. Always measure on your volume and infrastructure. False-positive cost depends on review queue size, analyst time, and customer friction.",
-    "es": "Las advertencias completas están en las notas de investigación de sub-agentes. Mide siempre en tu volumen e infraestructura. El costo de falsos positivos depende del tamaño de la cola, tiempo de analistas y fricción con clientes."
+    "en": "Always measure on your volume and infrastructure. False-positive cost depends on review queue size, analyst time, customer friction, and escalation policy.",
+    "es": "Mide siempre en tu volumen e infraestructura. El costo de falsos positivos depende del tamaño de la cola de revisión, tiempo de analistas, fricción con clientes y política de escalamiento."
   },
   "trade.row.if.family": {
     "en": "Rules + IF",
@@ -1528,16 +1528,16 @@
     "es": "Checklist de completitud"
   },
   "catalog.success": {
-    "en": "Success condition for this layer: every model named in experiments, cascades, or tradeoffs has a visible model card, runnable local example or dependency-light proxy, and production upgrade guidance.",
-    "es": "Condición de éxito de esta capa: cada modelo nombrado en experimentos, cascadas o compensaciones técnicas tiene una tarjeta visible, un ejemplo local ejecutable o proxy ligero, y guía para llevarlo a producción."
+    "en": "Every model family named in experiments, cascades, or trade-offs has a visible reference entry, runnable local example or dependency-light proxy, and production upgrade guidance.",
+    "es": "Cada familia de modelos nombrada en experimentos, cascadas o compensaciones tiene una entrada visible de referencia, un ejemplo local ejecutable o proxy ligero, y guía para llevarla a producción."
   },
   "catalog.coverage.title": {
     "en": "Required Model Coverage Matrix",
     "es": "Matriz de cobertura de modelos requeridos"
   },
   "catalog.coverage.desc": {
-    "en": "Discrete model and technique entries counted from the requested fraud, anomaly, graph, temporal, and criminal-network inventory.",
-    "es": "Entradas discretas de modelos y técnicas contadas desde el inventario solicitado de fraude, anomalías, grafos, temporalidad y redes criminales."
+    "en": "This matrix confirms 74 visible model and technique entries across fraud rules, anomaly detection, supervised learning, graphs, temporal models, hybrids, and analyst workflows. The six flagship cards are the guided path; the full matrix is the broader reference library.",
+    "es": "Esta matriz confirma 74 entradas visibles de modelos y técnicas en reglas antifraude, detección de anomalías, aprendizaje supervisado, grafos, modelos temporales, híbridos y flujos de analista. Las seis tarjetas principales son la ruta guiada; la matriz completa es la biblioteca de referencia."
   },
   "catalog.coverage.count": {
     "en": "74 required • 74 visible",
@@ -1714,5 +1714,85 @@
   "svg.worker": {
     "en": "Worker",
     "es": "Empleado"
+  },
+  "nav.architecture": {
+    "en": "Architecture",
+    "es": "Arquitectura"
+  },
+  "nav.tradeoffs": {
+    "en": "Trade-offs",
+    "es": "Compensaciones"
+  },
+  "nav.metrics": {
+    "en": "Metrics",
+    "es": "Métricas"
+  },
+  "tradeoffs.badge": {
+    "en": "Production Considerations",
+    "es": "Consideraciones de producción"
+  },
+  "tradeoffs.title": {
+    "en": "Model Family Trade-offs",
+    "es": "Compensaciones entre familias de modelos"
+  },
+  "decision.badge": {
+    "en": "MODEL SELECTION GUIDE",
+    "es": "GUÍA DE SELECCIÓN DE MODELOS"
+  },
+  "decision.title": {
+    "en": "Which family should you try first?",
+    "es": "¿Qué familia deberías probar primero?"
+  },
+  "decision.desc": {
+    "en": "Use this bridge before the model cards: start from the signal you actually have, then choose the lowest-cost model family that can see it.",
+    "es": "Usa este puente antes de las tarjetas: parte de la señal que realmente tienes y elige la familia de menor costo que puede verla."
+  },
+  "decision.labels.title": {
+    "en": "Labels and engineered features",
+    "es": "Etiquetas y variables construidas"
+  },
+  "decision.labels.desc": {
+    "en": "Start with XGBoost, LightGBM, CatBoost, logistic scorecards, and calibrated thresholds.",
+    "es": "Empieza con XGBoost, LightGBM, CatBoost, scorecards logísticos y umbrales calibrados."
+  },
+  "decision.novel.title": {
+    "en": "Unknown or weakly labeled fraud",
+    "es": "Fraude desconocido o con pocas etiquetas"
+  },
+  "decision.novel.desc": {
+    "en": "Use Isolation Forest, LOF, VAE, Deep SVDD, and anomaly-score hybrids for triage.",
+    "es": "Usa Isolation Forest, LOF, VAE, Deep SVDD e híbridos con puntajes de anomalía para priorizar casos."
+  },
+  "decision.graph.title": {
+    "en": "Shared entities or collusion",
+    "es": "Entidades compartidas o colusión"
+  },
+  "decision.graph.desc": {
+    "en": "Use community detection, GraphSAGE, GAT, R-GCN, and link prediction on user-device-merchant graphs.",
+    "es": "Usa detección de comunidades, GraphSAGE, GAT, R-GCN y predicción de enlaces en grafos usuario-dispositivo-comercio."
+  },
+  "decision.temporal.title": {
+    "en": "Sequences, drift, and account takeover",
+    "es": "Secuencias, deriva y toma de cuentas"
+  },
+  "decision.temporal.desc": {
+    "en": "Use LSTM/GRU, temporal validation, TGN/TGAT/JODIE, and behavior-window features.",
+    "es": "Usa LSTM/GRU, validación temporal, TGN/TGAT/JODIE y variables de ventanas de comportamiento."
+  },
+  "decision.latency.title": {
+    "en": "Strict latency or review budget",
+    "es": "Latencia estricta o presupuesto de revisión"
+  },
+  "decision.latency.desc": {
+    "en": "Gate cheaply with rules, robust statistics, Isolation Forest, and boosted trees before heavier specialists.",
+    "es": "Filtra barato con reglas, estadísticas robustas, Isolation Forest y árboles potenciados antes de especialistas más pesados."
+  },
+  "decision.evidence.title": {
+    "en": "Analyst explanation required",
+    "es": "Explicación para analista requerida"
+  },
+  "decision.evidence.desc": {
+    "en": "Combine SHAP, reconstruction evidence, graph neighborhoods, and GraphRAG-style case packets.",
+    "es": "Combina SHAP, evidencia de reconstrucción, vecindarios de grafo y paquetes de caso estilo GraphRAG."
   }
 }
