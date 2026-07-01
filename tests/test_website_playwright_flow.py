@@ -110,6 +110,11 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-chart").get_by_text("GraphSAGE").is_visible()
         assert page.locator("#lab-explain").get_by_text("graph-neighborhood evidence").is_visible()
         assert page.locator("#lab-validation").get_by_text("Browser validation for GraphSAGE").is_visible()
+        assert page.locator("#lab-validation").get_by_text("Model-specific educational approximation: GraphSAGE").is_visible()
+        for direct_model in ["Z-Score", "HBOS", "ECOD", "COPOD", "PCA Reconstruction", "Robust Covariance", "kNN Outlier", "KMeans", "DBSCAN"]:
+            page.locator("#lab-model-select").select_option(direct_model)
+            assert page.locator("#lab-chart").get_by_text(direct_model).is_visible()
+            assert page.locator("#lab-validation").get_by_text(f"Direct in-browser implementation: {direct_model}").is_visible()
 
         page.get_by_role("button", name="ES").click()
         page.wait_for_function("document.documentElement.lang === 'es-419'")

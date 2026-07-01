@@ -217,6 +217,24 @@ def test_browser_lab_exposes_model_specific_runner_contract():
     assert "renderRepresentation(topModel.spec, rows, topModel.scores)" in js
     assert "foldDiagnostics(labels, modelScores)" in js
     assert "hydrateWorkbench(topModel.spec, alert)" in js
+    for direct_model in [
+        "Z-Score",
+        "IQR",
+        "MAD",
+        "Modified Z-Score",
+        "HBOS",
+        "ECOD",
+        "COPOD",
+        "PCA Reconstruction",
+        "Robust Covariance",
+        "kNN Outlier",
+        "KMeans",
+        "DBSCAN",
+    ]:
+        assert direct_model in js
+    assert "directStatisticalScores(name, rows)" in js
+    assert "directDensityScores(name, rows)" in js
+    assert "directGeometryScores(name, rows)" in js
     assert "74 model-specific JavaScript runners" not in translations
     assert "74 tarjetas de modelo conectadas" in translations
     for model in covered:

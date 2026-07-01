@@ -179,7 +179,7 @@
 
     function runnerSpecForModel(name) {
         const family = labKeyForModel(name);
-        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'Centrality', 'k-core', 'Motif Counting', 'KMeans', 'DBSCAN'].includes(name);
+        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Centrality', 'k-core', 'Motif Counting'].includes(name);
         const explainKindByFamily = {
             rules: { en: 'threshold evidence', es: 'evidencia por umbrales' },
             iforest: { en: 'isolation-style feature attribution', es: 'atribución estilo aislamiento' },
@@ -826,6 +826,200 @@
             return values.map(v => (v - min) / (max - min || 1));
         }
 
+        function quantile(sorted, q) {
+            const pos = (sorted.length - 1) * q;
+            const base = Math.floor(pos);
+            const rest = pos - base;
+            return sorted[base + 1] === undefined ? sorted[base] : sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+        }
+
+        function featureRows(rows) {
+            return rows.map(r => [
+                Math.log1p(r.amount),
+                r.velocity1h,
+                r.velocity24h,
+                r.graphRisk,
+                r.categoryRisk,
+                r.isNight
+            ]);
+        }
+
+        function column(features, index) {
+            return features.map(row => row[index]);
+        }
+
+        function mean(values) {
+            return values.reduce((sum, value) => sum + value, 0) / Math.max(values.length, 1);
+        }
+
+        function std(values) {
+            const avg = mean(values);
+            return Math.sqrt(mean(values.map(value => Math.pow(value - avg, 2)))) || 1;
+        }
+
+        function median(values) {
+            const sorted = values.slice().sort((a, b) => a - b);
+            return sorted[Math.floor(sorted.length / 2)] || 0;
+        }
+
+        function directStatisticalScores(name, rows) {
+            const features = featureRows(rows);
+            const logAmount = column(features, 0);
+            const velocity = rows.map(r => r.velocity1h * 2 + r.velocity24h);
+            const scoreByRobustDeviation = (values, scale = 1) => {
+                const med = median(values);
+                const dev = values.map(value => Math.abs(value - med));
+                const mad = median(dev) || 1;
+                return values.map(value => Math.abs(value - med) / (mad * scale));
+            };
+            if (name === 'Z-Score') {
+                const amountMean = mean(logAmount);
+                const amountStd = std(logAmount);
+                const velocityMean = mean(velocity);
+                const velocityStd = std(velocity);
+                return normalizeScores(rows.map((_, i) => Math.abs(logAmount[i] - amountMean) / amountStd + Math.abs(velocity[i] - velocityMean) / velocityStd));
+            }
+            if (name === 'IQR') {
+                const sortedAmount = logAmount.slice().sort((a, b) => a - b);
+                const sortedVelocity = velocity.slice().sort((a, b) => a - b);
+                const q1a = quantile(sortedAmount, 0.25);
+                const q3a = quantile(sortedAmount, 0.75);
+                const q1v = quantile(sortedVelocity, 0.25);
+                const q3v = quantile(sortedVelocity, 0.75);
+                const iqra = Math.max(q3a - q1a, 1e-6);
+                const iqrv = Math.max(q3v - q1v, 1e-6);
+                return normalizeScores(rows.map((_, i) => (
+                    Math.max(0, logAmount[i] - (q3a + 1.5 * iqra), (q1a - 1.5 * iqra) - logAmount[i]) / iqra +
+                    Math.max(0, velocity[i] - (q3v + 1.5 * iqrv), (q1v - 1.5 * iqrv) - velocity[i]) / iqrv
+                )));
+            }
+            if (name === 'MAD' || name === 'Modified Z-Score') {
+                const scale = name === 'Modified Z-Score' ? 1 / 0.6745 : 1;
+                const amount = scoreByRobustDeviation(logAmount, scale);
+                const vel = scoreByRobustDeviation(velocity, scale);
+                return normalizeScores(rows.map((_, i) => amount[i] + vel[i]));
+            }
+            return null;
+        }
+
+        function directDensityScores(name, rows) {
+            const features = featureRows(rows);
+            if (name === 'HBOS') {
+                const bins = 12;
+                const histograms = [0, 1, 2].map(index => {
+                    const values = column(features, index);
+                    const min = Math.min(...values);
+                    const max = Math.max(...values);
+                    const width = (max - min || 1) / bins;
+                    const counts = Array.from({ length: bins }, () => 0);
+                    values.forEach(value => {
+                        counts[Math.min(bins - 1, Math.floor((value - min) / width))] += 1;
+                    });
+                    return { min, width, counts };
+                });
+                return normalizeScores(features.map(feature => histograms.reduce((score, hist, index) => {
+                    const bin = Math.min(bins - 1, Math.max(0, Math.floor((feature[index] - hist.min) / hist.width)));
+                    return score + -Math.log((hist.counts[bin] + 1) / (rows.length + bins));
+                }, 0)));
+            }
+            if (name === 'ECOD' || name === 'COPOD') {
+                const sortedColumns = [0, 1, 2, 3].map(index => column(features, index).slice().sort((a, b) => a - b));
+                return normalizeScores(features.map(feature => sortedColumns.reduce((score, sorted, index) => {
+                    let less = 0;
+                    while (less < sorted.length && sorted[less] <= feature[index]) less += 1;
+                    const left = less / sorted.length;
+                    const right = 1 - left;
+                    const tail = Math.max(1 / sorted.length, Math.min(left, right));
+                    const copulaBoost = name === 'COPOD' ? (index === 3 ? 1.25 : 1) : 1;
+                    return score + copulaBoost * -Math.log(tail);
+                }, 0)));
+            }
+            return null;
+        }
+
+        function directGeometryScores(name, rows) {
+            const features = featureRows(rows);
+            const x = column(features, 0);
+            const y = column(features, 1).map((value, i) => value + features[i][2] / 8);
+            const mx = mean(x);
+            const my = mean(y);
+            const sx = std(x);
+            const sy = std(y);
+            const norm = x.map((value, i) => [(value - mx) / sx, (y[i] - my) / sy]);
+            if (name === 'PCA Reconstruction') {
+                const covXX = mean(norm.map(row => row[0] * row[0]));
+                const covYY = mean(norm.map(row => row[1] * row[1]));
+                const covXY = mean(norm.map(row => row[0] * row[1]));
+                let vx = 1;
+                let vy = 1;
+                for (let i = 0; i < 12; i += 1) {
+                    const nx = covXX * vx + covXY * vy;
+                    const ny = covXY * vx + covYY * vy;
+                    const len = Math.sqrt(nx * nx + ny * ny) || 1;
+                    vx = nx / len;
+                    vy = ny / len;
+                }
+                return normalizeScores(norm.map(row => {
+                    const projection = row[0] * vx + row[1] * vy;
+                    const rx = row[0] - projection * vx;
+                    const ry = row[1] - projection * vy;
+                    return rx * rx + ry * ry;
+                }));
+            }
+            if (name === 'Robust Covariance') {
+                const radial = norm.map(row => Math.sqrt(row[0] * row[0] + row[1] * row[1])).sort((a, b) => a - b);
+                const robustScale = quantile(radial, 0.75) || 1;
+                return normalizeScores(norm.map(row => (row[0] * row[0] + row[1] * row[1]) / (robustScale * robustScale)));
+            }
+            if (name === 'kNN Outlier') {
+                const k = 8;
+                return normalizeScores(norm.map((row, i) => {
+                    const distances = norm.map((other, j) => i === j ? Infinity : Math.hypot(row[0] - other[0], row[1] - other[1])).sort((a, b) => a - b);
+                    return distances.slice(0, k).reduce((sum, value) => sum + value, 0) / k;
+                }));
+            }
+            if (name === 'KMeans') {
+                const centers = [[-1.1, -0.8], [0.1, 0.1], [1.2, 0.9]];
+                for (let iter = 0; iter < 8; iter += 1) {
+                    const groups = centers.map(() => []);
+                    norm.forEach(row => {
+                        let best = 0;
+                        let bestDistance = Infinity;
+                        centers.forEach((center, idx) => {
+                            const distance = Math.hypot(row[0] - center[0], row[1] - center[1]);
+                            if (distance < bestDistance) {
+                                best = idx;
+                                bestDistance = distance;
+                            }
+                        });
+                        groups[best].push(row);
+                    });
+                    groups.forEach((group, idx) => {
+                        if (group.length) {
+                            centers[idx] = [mean(group.map(row => row[0])), mean(group.map(row => row[1]))];
+                        }
+                    });
+                }
+                return normalizeScores(norm.map(row => Math.min(...centers.map(center => Math.hypot(row[0] - center[0], row[1] - center[1])))));
+            }
+            if (name === 'DBSCAN') {
+                const eps = 0.42;
+                const minPts = 6;
+                return normalizeScores(norm.map((row, i) => {
+                    let neighbors = 0;
+                    let nearest = Infinity;
+                    norm.forEach((other, j) => {
+                        if (i === j) return;
+                        const distance = Math.hypot(row[0] - other[0], row[1] - other[1]);
+                        if (distance <= eps) neighbors += 1;
+                        if (distance < nearest) nearest = distance;
+                    });
+                    return Math.max(0, minPts - neighbors) + nearest;
+                }));
+            }
+            return null;
+        }
+
         function scoreRows(rows) {
             const amounts = rows.map(r => r.amount).sort((a, b) => a - b);
             const median = amounts[Math.floor(amounts.length / 2)];
@@ -854,30 +1048,13 @@
         }
 
         function runnerSpec(name) {
-            const family = labKeyForModel(name);
-            const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'Centrality', 'k-core', 'Motif Counting', 'KMeans', 'DBSCAN', 'Rules + velocity gate'].includes(name);
-            const explainKindByFamily = {
-                rules: { en: 'threshold evidence', es: 'evidencia por umbrales' },
-                iforest: { en: 'isolation-style feature attribution', es: 'atribución estilo aislamiento' },
-                gbdt: { en: 'SHAP-style contribution proxy', es: 'proxy de contribución tipo SHAP' },
-                vae: { en: 'reconstruction-error evidence', es: 'evidencia de error de reconstrucción' },
-                graph: { en: 'graph-neighborhood evidence', es: 'evidencia de vecindario de grafo' },
-                moe: { en: 'expert-routing contribution', es: 'contribución por enrutamiento de expertos' }
-            };
-            return {
-                name,
-                family,
-                hash: hashModel(name),
-                exact,
-                status: exact
-                    ? { en: 'Exact lightweight JS runner', es: 'Ejecutor JS ligero exacto' }
-                    : { en: 'Model-specific educational runner', es: 'Ejecutor educativo específico del modelo' },
-                explainKind: explainKindByFamily[family]
-            };
+            return runnerSpecForModel(name);
         }
 
         function scoreModel(name, rows, baseScores) {
             const spec = runnerSpec(name);
+            const directScores = directStatisticalScores(name, rows) || directDensityScores(name, rows) || directGeometryScores(name, rows);
+            if (directScores) return directScores;
             const h = spec.hash;
             const base = baseScores[spec.family] || baseScores.iforest;
             const weight = {
@@ -1118,6 +1295,11 @@
                         ? `Validación de navegador para ${spec.name}: partición determinista en folds, sin fuga temporal simulada y chequeo de explicación/renderizado.`
                         : `Browser validation for ${spec.name}: deterministic fold split, simulated temporal-leakage guard, and explanation/render check.`}
                 </div>
+                <div class="rounded-2xl ${spec.exact ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'} p-3 text-[10px] leading-relaxed">
+                    ${spec.exact
+                        ? (activeLang() === 'es' ? `Implementación directa en navegador: ${spec.name}.` : `Direct in-browser implementation: ${spec.name}.`)
+                        : (activeLang() === 'es' ? `Aproximación educativa específica del modelo: ${spec.name}.` : `Model-specific educational approximation: ${spec.name}.`)}
+                </div>
             `;
         }
 
@@ -1285,7 +1467,7 @@
 
     async function loadTranslations() {
         try {
-            const res = await fetch('translations.json?v=20260701-validation', { cache: 'no-store' });
+            const res = await fetch('translations.json?v=20260701-direct-classical', { cache: 'no-store' });
             translations = await res.json();
         } catch (e) {
             console.warn('Could not load translations.json, using fallback English');
