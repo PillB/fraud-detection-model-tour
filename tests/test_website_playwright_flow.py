@@ -1,4 +1,5 @@
 import contextlib
+import re
 import socket
 import subprocess
 import sys
@@ -196,6 +197,47 @@ def test_every_model_selection_runs_browser_outputs():
             assert page.locator("#lab-explain > div").count() >= 6
             assert page.locator("#lab-representation svg circle").count() > 0
             assert page.locator("#lab-timeline").text_content()
+            assert page.locator("#lab-validation").get_by_text("Fold 1").is_visible()
+            assert page.locator("#lab-validation").get_by_text("CV mean PR-AUC").is_visible()
+        assert errors == []
+        browser.close()
+
+
+def test_every_model_card_runnable_example_button_runs_exact_model():
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        pytest.skip("playwright is not installed")
+
+    with local_server() as url, sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page(viewport={"width": 1366, "height": 950})
+        page.goto(f"{url}#cards", wait_until="networkidle")
+        page.wait_for_function("document.querySelectorAll('#cards .model-card[data-model-name]').length === 74")
+
+        models = page.locator("#cards .model-card[data-model-name]").evaluate_all(
+            "(cards) => cards.map((card) => card.dataset.modelName)"
+        )
+        assert len(models) == 74
+
+        errors = []
+        page.on("pageerror", lambda exc: errors.append(str(exc)))
+        for model in models:
+            page.locator('a[href="#cards"]').first.click()
+            page.wait_for_function("location.hash === '#cards'")
+            card = page.locator(f'#cards .model-card[data-model-name="{model}"]').first
+            assert card.is_visible()
+            card.locator("a").filter(has_text=re.compile("run", re.I)).first.click()
+            page.wait_for_function(
+                "(name) => location.hash === '#browser-lab' && document.querySelector('#lab-model-select')?.value === name",
+                arg=model,
+            )
+            assert page.locator("#lab-chart").get_by_text(model).is_visible()
+            assert page.locator("#lab-chart").get_by_text("PR-AUC").first.is_visible()
+            assert page.locator("#lab-alerts").get_by_text("TXN").first.is_visible()
+            assert page.locator("#lab-explain > div").count() >= 6
+            assert page.locator("#lab-representation svg circle").count() > 0
+            assert page.locator("#lab-timeline svg").count() >= 1
             assert page.locator("#lab-validation").get_by_text("Fold 1").is_visible()
             assert page.locator("#lab-validation").get_by_text("CV mean PR-AUC").is_visible()
         assert errors == []
