@@ -46,14 +46,13 @@ def test_primary_website_flows_with_playwright():
         page.goto(url, wait_until="networkidle")
 
         assert page.locator("h1").first.text_content()
-        page.get_by_text("Explore Cards + Catalog").click()
-        page.wait_for_function("location.hash === '#catalog'")
-        assert page.locator("#catalog").is_visible()
+        page.get_by_text("Start with the challenge").click()
+        page.wait_for_function("location.hash === '#overview'")
+        assert page.locator("#overview").is_visible()
 
-        page.get_by_text("Open workbench view").click()
-        page.wait_for_function("location.hash === '#workbench'")
-        assert page.locator("#workbench").is_visible()
-        assert page.get_by_text("Evidence-grounded summary").is_visible()
+        page.get_by_text("Go to guided tour").click()
+        page.wait_for_function("location.hash === '#tour'")
+        assert page.locator("#tour").is_visible()
 
         page.locator('a[href="#cards"]').first.click()
         page.wait_for_function("location.hash === '#cards'")
@@ -89,19 +88,20 @@ def test_primary_website_flows_with_playwright():
         assert "text-white" in page.locator("#lang-es").get_attribute("class")
         assert "text-white" not in page.locator("#lang-en").get_attribute("class")
         assert page.get_by_role("button", name="Ejecutar inferencia").is_visible()
+        assert page.get_by_text("Compensaciones entre familias de modelos").is_visible()
         assert page.locator(".consulting-card").count() == 74
         assert page.locator("#cards [data-card-model-visible]").count() == 74
         assert page.locator(".comparison-table tbody tr").count() == 74
         assert graph_card.is_visible()
         assert xgb_card.is_hidden()
-        assert page.locator('#cards [data-generated-model-card="true"]').filter(has_text="Implementado").count() > 0
+        assert page.locator('#cards [data-generated-model-card="true"]').filter(has_text="Ejemplo ejecutable").count() > 0
         assert page.locator(".comparison-table tbody tr").filter(has_text="Anomalías nuevas").count() > 0
         assert page.locator("#lab-status").get_by_text("Completadas").is_visible()
 
         english_page = browser.new_page(viewport={"width": 1200, "height": 900})
         english_page.goto(f"{url}?lang=en#cards", wait_until="networkidle")
         assert english_page.locator("html").get_attribute("lang") == "en"
-        assert english_page.locator('#cards [data-generated-model-card="true"]').filter(has_text="Implemented").count() > 0
+        assert english_page.locator('#cards [data-generated-model-card="true"]').filter(has_text="Runnable example").count() > 0
 
         mobile = browser.new_page(viewport={"width": 390, "height": 900}, is_mobile=True)
         mobile.goto(url, wait_until="networkidle")

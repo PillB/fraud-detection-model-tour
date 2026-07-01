@@ -195,3 +195,38 @@ def test_required_user_model_inventory_is_visible_on_website():
     assert len(required_models) == 74
     assert len(covered) >= len(required_models)
     assert sorted(required_models - covered) == []
+
+
+def test_core_sections_follow_guided_narrative_order():
+    html = (WEBSITE / "index.html").read_text(encoding="utf-8")
+    ordered_ids = [
+        "overview",
+        "tour",
+        "roadmap",
+        "architecture",
+        "tradeoffs",
+        "decision-matrix",
+        "cards",
+        "metrics",
+        "experiments",
+        "browser-lab",
+        "workbench",
+        "pipeline",
+        "catalog",
+    ]
+    positions = [html.index(f'id="{section_id}"') for section_id in ordered_ids]
+    assert positions == sorted(positions)
+
+
+def test_claims_and_internal_reviewer_language_are_scoped():
+    html = (WEBSITE / "index.html").read_text(encoding="utf-8")
+    translations = (WEBSITE / "translations.json").read_text(encoding="utf-8")
+    combined = f"{html}\n{translations}".lower()
+
+    assert "sub-agent" not in combined
+    assert "subagents" not in combined
+    assert "production-ready" not in combined
+    assert "all implementations validated" not in combined
+    assert "roc-auc is misleading" not in combined
+    assert "validated examples" in combined
+    assert "74 visible model and technique entries" in combined
