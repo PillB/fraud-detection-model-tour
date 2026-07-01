@@ -58,6 +58,7 @@ def test_primary_website_flows_with_playwright():
         page.wait_for_function("location.hash === '#cards'")
         assert page.locator(".consulting-card").count() == 74
         assert page.locator("#cards [data-card-model-visible]").count() == 74
+        assert page.locator("#cards .consulting-card").filter(has_text="Runnable example").count() == 74
         page.get_by_role("button", name="Graph / Network").click()
         graph_card = page.locator("#cards .model-card").filter(has_text="GraphSAGE")
         xgb_card = page.locator("#cards .model-card").filter(has_text="XGBoost")
@@ -85,12 +86,15 @@ def test_primary_website_flows_with_playwright():
         assert "es" in page.url
         assert page.locator("#lang-es").get_attribute("aria-pressed") == "true"
         assert page.locator("#lang-en").get_attribute("aria-pressed") == "false"
+        assert "bg-slate-900" in page.locator("#lang-es").get_attribute("class")
+        assert "bg-slate-900" not in page.locator("#lang-en").get_attribute("class")
         assert "text-white" in page.locator("#lang-es").get_attribute("class")
         assert "text-white" not in page.locator("#lang-en").get_attribute("class")
         assert page.get_by_role("button", name="Ejecutar inferencia").is_visible()
         assert page.get_by_text("Compensaciones entre familias de modelos").is_visible()
         assert page.locator(".consulting-card").count() == 74
         assert page.locator("#cards [data-card-model-visible]").count() == 74
+        assert page.locator("#cards .consulting-card").filter(has_text="Ejemplo ejecutable").count() == 74
         assert page.locator(".comparison-table tbody tr").count() == 74
         assert graph_card.is_visible()
         assert xgb_card.is_hidden()
@@ -101,7 +105,7 @@ def test_primary_website_flows_with_playwright():
         english_page = browser.new_page(viewport={"width": 1200, "height": 900})
         english_page.goto(f"{url}?lang=en#cards", wait_until="networkidle")
         assert english_page.locator("html").get_attribute("lang") == "en"
-        assert english_page.locator('#cards [data-generated-model-card="true"]').filter(has_text="Runnable example").count() > 0
+        assert english_page.locator("#cards .consulting-card").filter(has_text="Runnable example").count() == 74
 
         mobile = browser.new_page(viewport={"width": 390, "height": 900}, is_mobile=True)
         mobile.goto(url, wait_until="networkidle")

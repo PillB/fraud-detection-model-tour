@@ -828,7 +828,7 @@
             const isActive = btn.dataset.lang === lang;
             btn.classList.toggle('active', isActive);
             btn.setAttribute('aria-pressed', isActive);
-            btn.classList.toggle('bg-[#0f172a]', isActive);
+            btn.classList.toggle('bg-slate-900', isActive);
             btn.classList.toggle('text-white', isActive);
             btn.classList.toggle('hover:bg-slate-100', !isActive);
             btn.classList.toggle('text-slate-700', !isActive);

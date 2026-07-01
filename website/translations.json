@@ -344,8 +344,8 @@
     "es": "Tarjeta Completa"
   },
   "cards.xgboost.run": {
-    "en": "Run Script",
-    "es": "Ejecutar Script"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.vae.title": {
     "en": "VAE",
@@ -372,8 +372,8 @@
     "es": "Probabilidad de reconstrucción An &amp; Cho (2015). Los latentes se integran directamente en pipelines híbridos."
   },
   "cards.vae.run": {
-    "en": "Run Script (PyTorch)",
-    "es": "Ejecutar Script (PyTorch)"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.moe.title": {
     "en": "MoE Hybrid",
@@ -400,8 +400,8 @@
     "es": "El gating enruta casos pesados en secuencia o anómalos a expertos especializados. Mezcla insignia."
   },
   "cards.moe.run": {
-    "en": "Run Script",
-    "es": "Ejecutar Script"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.lstm.title": {
     "en": "LSTM Sequence",
@@ -428,8 +428,8 @@
     "es": "El proxy ejecutable usa rezagos y variables de velocidad; un LSTM de producción consume secuencias de eventos por usuario con padding."
   },
   "cards.lstm.run": {
-    "en": "Run Script",
-    "es": "Ejecutar Script"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.tab.title": {
     "en": "TabTransformer",
@@ -456,8 +456,8 @@
     "es": "La implementación ejecutable usa embeddings más un clasificador; en producción se usan variantes completas de Transformers tabulares con manejo cuidadoso del desbalance."
   },
   "cards.tab.run": {
-    "en": "Run Script",
-    "es": "Ejecutar Script"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.graph.title": {
     "en": "GraphSAGE",
@@ -484,8 +484,8 @@
     "es": "Usa NetworkX más agregación por promedio sobre el grafo sintético de transacciones/KYA. En producción se usa PyG o DGL con muestreo, cortes temporales y explicabilidad de grafos."
   },
   "cards.graph.run": {
-    "en": "Run Script",
-    "es": "Ejecutar Script"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.footer": {
     "en": "The six flagship cards teach the main path. The expanded catalog above covers every additional family used in experiments and production cascades, including Isolation Forest, LOF, OCSVM, density outlier models, R-GCN, GAT, link prediction, and entity resolution.",
