@@ -140,10 +140,15 @@ def test_primary_website_flows_with_playwright():
         assert lab_result(page, "Isolation Forest").is_visible()
         assert page.locator("#lab-explain").get_by_text("isolation-style feature attribution").is_visible()
         assert page.locator("#lab-representation svg").is_visible()
+        assert page.locator("#lab-representation").get_by_text("PC1: transaction anomaly mix").is_visible()
+        assert page.locator("#lab-representation").get_by_text("PC2: relational / temporal risk").is_visible()
         assert page.locator("#lab-representation").get_by_text("Green: correctly prioritized fraud").is_visible()
         assert page.locator("#lab-representation svg polygon").count() >= 1
         assert page.locator("#lab-timeline").get_by_text("Temporal CV").is_visible()
+        assert page.locator("#lab-timeline").get_by_text("fit step / validation fold").is_visible()
+        assert page.locator("#lab-timeline").get_by_text("error / validation loss").is_visible()
         assert page.locator("#lab-validation").get_by_text("CV mean PR-AUC").is_visible()
+        assert "&amp;" not in page.locator("body").inner_text()
         assert not page.url.endswith(".py")
         assert not page.url.endswith(".md")
         first_alert_id = page.locator("#lab-alerts .font-mono").first.text_content()
@@ -183,8 +188,10 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-validation").get_by_text("Direct in-browser implementation: GraphSAGE").is_visible()
         assert page.locator("#lab-timeline").get_by_text("Actual browser training trace").is_visible()
         assert page.locator("#lab-representation").get_by_text("user, merchant, device, and IP subgraph").is_visible()
+        assert page.locator("#lab-representation").get_by_text("Blue halo: decision region").is_visible()
         assert page.locator("#lab-representation svg line").count() > 0
         assert page.locator("#lab-representation svg circle").count() > 0
+        assert page.locator("#lab-representation svg polygon").count() >= 1
         assert page.locator("#lab-timeline svg").count() >= 1
         for direct_model in sorted(DIRECT_BROWSER_MODELS):
             page.locator("#lab-model-select").select_option(direct_model)
@@ -233,8 +240,11 @@ def test_primary_website_flows_with_playwright():
         assert lab_result(page, "GraphSAGE").is_visible()
         assert page.locator("#lab-explain").get_by_text("evidencia de vecindario de grafo").is_visible()
         assert page.locator("#lab-representation").get_by_text("subgrafo de usuarios, comercios, dispositivos e IP").is_visible()
+        assert page.locator("#lab-timeline").get_by_text("paso de ajuste / fold de validación").is_visible()
+        assert page.locator("#lab-timeline").get_by_text("error / pérdida de validación").is_visible()
         assert page.locator("#lab-timeline").get_by_text("CV temporal").is_visible()
         assert page.locator("#lab-validation").get_by_text("Validación de navegador para GraphSAGE").is_visible()
+        assert "&amp;" not in page.locator("body").inner_text()
 
         english_page = browser.new_page(viewport={"width": 1200, "height": 900})
         english_page.goto(f"{url}?lang=en#cards", wait_until="networkidle")
@@ -249,7 +259,48 @@ def test_primary_website_flows_with_playwright():
         mobile.locator("#mobile-section-jump").select_option("#browser-lab")
         mobile.wait_for_function("location.hash === '#browser-lab'")
         assert mobile.get_by_role("button", name="Run inference").is_visible()
+        assert mobile.evaluate("document.documentElement.scrollWidth <= document.documentElement.clientWidth + 1")
 
+        browser.close()
+
+
+def test_lab_progress_moves_and_stress_switches_cleanly():
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        pytest.skip("playwright is not installed")
+
+    with local_server() as url, sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page(viewport={"width": 1280, "height": 900})
+        errors = []
+        page.on("pageerror", lambda exc: errors.append(str(exc)))
+        page.on("console", lambda msg: errors.append(msg.text) if msg.type == "error" else None)
+        page.goto(f"{url}#browser-lab", wait_until="networkidle")
+        page.wait_for_function("document.querySelectorAll('#lab-model-select option').length === 75")
+        page.wait_for_function("document.querySelector('#lab-loading')?.classList.contains('hidden')")
+        page.locator("#lab-size").evaluate("(el) => { el.value = 900; el.dispatchEvent(new Event('input', { bubbles: true })); }")
+        page.locator("#lab-model-select").select_option("all")
+        widths = []
+        page.wait_for_selector("#lab-loading:not(.hidden)")
+        for _ in range(16):
+            widths.append(page.locator("#lab-loading-bar").evaluate("el => Math.round(el.getBoundingClientRect().width)"))
+            page.wait_for_timeout(90)
+            if page.locator("#lab-loading").evaluate("el => el.classList.contains('hidden')"):
+                break
+        assert len({width for width in widths if width > 0}) >= 3
+        page.wait_for_function("document.querySelector('#lab-loading')?.classList.contains('hidden')")
+
+        page.locator("#lab-model-select").select_option("all")
+        page.wait_for_selector("#lab-loading:not(.hidden)")
+        page.locator("#lab-model-select").evaluate("(el) => { el.value = 'GraphSAGE'; el.dispatchEvent(new Event('change', { bubbles: true })); }")
+        page.locator("#lab-model-select").evaluate("(el) => { el.value = 'Isolation Forest'; el.dispatchEvent(new Event('change', { bubbles: true })); }")
+        wait_for_lab_result(page, "Isolation Forest")
+        assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
+        assert lab_result(page, "Isolation Forest").is_visible()
+        assert page.locator("#lab-run").is_enabled()
+        assert page.locator("#lab-model-select").is_enabled()
+        assert errors == []
         browser.close()
 
 

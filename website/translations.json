@@ -528,8 +528,8 @@
     "es": "Mejor Para"
   },
   "exp.table.pr": {
-    "en": "Benchmark PR-AUC (synthetic data)",
-    "es": "PR-AUC de referencia (datos sintéticos)"
+    "en": "Illustrative prior PR-AUC",
+    "es": "PR-AUC previo ilustrativo"
   },
   "exp.table.complex": {
     "en": "Complexity",
@@ -748,7 +748,7 @@
     "es": "Totalmente comentado • Razonamiento paso a paso • Reproducible"
   },
   "pipeline.step1.title": {
-    "en": "1. Load &amp; Clean",
+    "en": "1. Load & Clean",
     "es": "1. Cargar y Limpiar"
   },
   "pipeline.step1.desc": {
@@ -848,7 +848,7 @@
     "es": "Todos los experimentos usan el mismo generador de datos. Ejecuta con diferentes semillas para explorar varianza y robustez."
   },
   "insights.core.title": {
-    "en": "Core Insights from Research &amp; Experiments",
+    "en": "Core Insights from Research & Experiments",
     "es": "Perspectivas Centrales de Investigación y Experimentos"
   },
   "insights.core.1": {
@@ -924,7 +924,7 @@
     "es": "Construido con rigor para profesionales, estudiantes y equipos de investigación.<br>Todas las implementaciones de ejemplo pasan las pruebas de regresión del proyecto. Las tarjetas de modelo citan trabajos fundacionales y recientes, incluidos An &amp; Cho, Hamilton et al., Vallarino, Chen y literatura amplia de grafos/fraude."
   },
   "footer.pillb": {
-    "en": "PillB • Educational &amp; research use",
+    "en": "PillB • Educational & research use",
     "es": "PillB • Uso educativo e investigativo"
   },
   "footer.clone": {
