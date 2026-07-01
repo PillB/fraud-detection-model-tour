@@ -179,7 +179,7 @@
 
     function runnerSpecForModel(name) {
         const family = labKeyForModel(name);
-        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Logistic Regression', 'Decision Trees', 'Gradient Boosting', 'Centrality', 'k-core', 'Motif Counting'].includes(name);
+        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Logistic Regression', 'Decision Trees', 'Gradient Boosting', 'Autoencoder', 'VAE', 'Centrality', 'Community Detection', 'Collusion Detection', 'k-core', 'Motif Counting', 'Link Prediction'].includes(name);
         const explainKindByFamily = {
             rules: { en: 'threshold evidence', es: 'evidencia por umbrales' },
             iforest: { en: 'isolation-style feature attribution', es: 'atribución estilo aislamiento' },
@@ -1135,6 +1135,195 @@
             return normalizeScores(additive.map(sigmoid));
         }
 
+        function directDeepAnomalyScores(name, rows) {
+            if (!['Autoencoder', 'VAE'].includes(name)) return null;
+            const features = standardizedFeatures(rows);
+            const inputDim = features[0].length;
+            const latentDim = 2;
+            const seed = name === 'VAE' ? 0.031 : 0.047;
+            const init = (i, j) => Math.sin((i + 1) * 17.7 + (j + 1) * 9.3 + seed) * 0.08;
+            const enc = Array.from({ length: inputDim }, (_, i) => Array.from({ length: latentDim }, (_, j) => init(i, j)));
+            const logv = Array.from({ length: inputDim }, (_, i) => Array.from({ length: latentDim }, (_, j) => init(i + 7, j + 3)));
+            const dec = Array.from({ length: latentDim }, (_, i) => Array.from({ length: inputDim }, (_, j) => init(i + 13, j + 5)));
+            const bMu = Array.from({ length: latentDim }, () => 0);
+            const bLogv = Array.from({ length: latentDim }, () => -0.2);
+            const bDec = Array.from({ length: inputDim }, () => 0);
+            const beta = name === 'VAE' ? 0.035 : 0;
+            const rate = name === 'VAE' ? 0.018 : 0.026;
+            const epochs = name === 'VAE' ? 80 : 70;
+            for (let epoch = 0; epoch < epochs; epoch += 1) {
+                features.forEach((x) => {
+                    const mu = Array.from({ length: latentDim }, (_, z) => bMu[z] + x.reduce((sum, value, f) => sum + value * enc[f][z], 0));
+                    const lv = Array.from({ length: latentDim }, (_, z) => bLogv[z] + x.reduce((sum, value, f) => sum + value * logv[f][z], 0));
+                    const xhat = Array.from({ length: inputDim }, (_, f) => bDec[f] + mu.reduce((sum, value, z) => sum + value * dec[z][f], 0));
+                    const err = xhat.map((value, f) => value - x[f]);
+                    const gradMu = Array.from({ length: latentDim }, () => 0);
+                    const gradLv = Array.from({ length: latentDim }, () => 0);
+                    dec.forEach((row, z) => {
+                        row.forEach((weight, f) => {
+                            gradMu[z] += err[f] * weight;
+                            dec[z][f] -= rate * err[f] * mu[z] / inputDim;
+                        });
+                    });
+                    bDec.forEach((_, f) => {
+                        bDec[f] -= rate * err[f] / inputDim;
+                    });
+                    if (name === 'VAE') {
+                        mu.forEach((value, z) => {
+                            gradMu[z] += beta * value;
+                            gradLv[z] += beta * 0.5 * (Math.exp(Math.max(-6, Math.min(6, lv[z]))) - 1);
+                        });
+                    }
+                    enc.forEach((row, f) => {
+                        row.forEach((_, z) => {
+                            enc[f][z] -= rate * gradMu[z] * x[f] / latentDim;
+                            if (name === 'VAE') logv[f][z] -= rate * gradLv[z] * x[f] / latentDim;
+                        });
+                    });
+                    bMu.forEach((_, z) => {
+                        bMu[z] -= rate * gradMu[z] / latentDim;
+                        if (name === 'VAE') bLogv[z] -= rate * gradLv[z] / latentDim;
+                    });
+                });
+            }
+            return normalizeScores(features.map((x) => {
+                const mu = Array.from({ length: latentDim }, (_, z) => bMu[z] + x.reduce((sum, value, f) => sum + value * enc[f][z], 0));
+                const lv = Array.from({ length: latentDim }, (_, z) => bLogv[z] + x.reduce((sum, value, f) => sum + value * logv[f][z], 0));
+                const xhat = Array.from({ length: inputDim }, (_, f) => bDec[f] + mu.reduce((sum, value, z) => sum + value * dec[z][f], 0));
+                const recon = mean(xhat.map((value, f) => Math.pow(value - x[f], 2)));
+                const kl = name === 'VAE'
+                    ? mean(mu.map((value, z) => 0.5 * (value * value + Math.exp(Math.max(-6, Math.min(6, lv[z]))) - 1 - lv[z])))
+                    : mean(mu.map(value => value * value)) * 0.05;
+                return recon + beta * kl;
+            }));
+        }
+
+        function graphAnalytics(rows) {
+            const adjacency = new Map();
+            const userMerchants = new Map();
+            const merchantUsers = new Map();
+            const addEdge = (a, b) => {
+                if (!adjacency.has(a)) adjacency.set(a, new Set());
+                if (!adjacency.has(b)) adjacency.set(b, new Set());
+                adjacency.get(a).add(b);
+                adjacency.get(b).add(a);
+            };
+            rows.forEach(row => {
+                const userNode = `u:${row.user}`;
+                const merchantNode = `m:${row.merchant}`;
+                addEdge(userNode, merchantNode);
+                if (!userMerchants.has(row.user)) userMerchants.set(row.user, new Set());
+                if (!merchantUsers.has(row.merchant)) merchantUsers.set(row.merchant, new Set());
+                userMerchants.get(row.user).add(row.merchant);
+                merchantUsers.get(row.merchant).add(row.user);
+            });
+
+            const degree = new Map(Array.from(adjacency.entries()).map(([node, neighbors]) => [node, neighbors.size]));
+            const core = new Map(degree);
+            let changed = true;
+            while (changed) {
+                changed = false;
+                adjacency.forEach((neighbors, node) => {
+                    const activeDegree = Array.from(neighbors).filter(other => (core.get(other) || 0) >= (core.get(node) || 0)).length;
+                    if (activeDegree < (core.get(node) || 0)) {
+                        core.set(node, activeDegree);
+                        changed = true;
+                    }
+                });
+            }
+
+            const component = new Map();
+            const componentStats = [];
+            adjacency.forEach((_, start) => {
+                if (component.has(start)) return;
+                const cid = componentStats.length;
+                const queue = [start];
+                component.set(start, cid);
+                let nodes = 0;
+                let edgeEnds = 0;
+                while (queue.length) {
+                    const node = queue.shift();
+                    nodes += 1;
+                    const neighbors = adjacency.get(node) || new Set();
+                    edgeEnds += neighbors.size;
+                    neighbors.forEach(other => {
+                        if (!component.has(other)) {
+                            component.set(other, cid);
+                            queue.push(other);
+                        }
+                    });
+                }
+                componentStats.push({ nodes, edges: edgeEnds / 2, rows: 0, risk: 0 });
+            });
+            rows.forEach(row => {
+                const cid = component.get(`u:${row.user}`);
+                const stats = componentStats[cid];
+                if (stats) {
+                    stats.rows += 1;
+                    stats.risk += row.graphRisk + row.categoryRisk + row.velocity1h / 18;
+                }
+            });
+            componentStats.forEach(stats => {
+                stats.density = stats.nodes > 1 ? (2 * stats.edges) / (stats.nodes * (stats.nodes - 1)) : 0;
+                stats.avgRisk = stats.rows ? stats.risk / stats.rows : 0;
+            });
+
+            const motifCount = (row) => {
+                const merchants = userMerchants.get(row.user) || new Set();
+                const users = merchantUsers.get(row.merchant) || new Set();
+                let twoHopSupport = 0;
+                merchants.forEach(merchant => {
+                    if (merchant === row.merchant) return;
+                    twoHopSupport += Math.max(0, (merchantUsers.get(merchant) || new Set()).size - 1);
+                });
+                users.forEach(user => {
+                    if (user === row.user) return;
+                    twoHopSupport += Math.max(0, (userMerchants.get(user) || new Set()).size - 1);
+                });
+                return twoHopSupport;
+            };
+
+            const linkScore = (row) => {
+                const merchants = userMerchants.get(row.user) || new Set();
+                const targetUsers = merchantUsers.get(row.merchant) || new Set();
+                let adamic = 0;
+                merchants.forEach(merchant => {
+                    if (merchant === row.merchant) return;
+                    const users = merchantUsers.get(merchant) || new Set();
+                    users.forEach(user => {
+                        if (targetUsers.has(user)) {
+                            adamic += 1 / Math.log(2 + (userMerchants.get(user) || new Set()).size);
+                        }
+                    });
+                });
+                return adamic;
+            };
+
+            return { degree, core, component, componentStats, userMerchants, merchantUsers, motifCount, linkScore };
+        }
+
+        function directGraphAnalyticsScores(name, rows) {
+            if (!['Centrality', 'Community Detection', 'Collusion Detection', 'k-core', 'Motif Counting', 'Link Prediction'].includes(name)) return null;
+            const graph = graphAnalytics(rows);
+            const values = rows.map(row => {
+                const userNode = `u:${row.user}`;
+                const merchantNode = `m:${row.merchant}`;
+                const userDegree = graph.degree.get(userNode) || 0;
+                const merchantDegree = graph.degree.get(merchantNode) || 0;
+                const cid = graph.component.get(userNode);
+                const community = graph.componentStats[cid] || { density: 0, avgRisk: 0, nodes: 1 };
+                if (name === 'Centrality') return Math.log1p(userDegree) + Math.log1p(merchantDegree) + row.graphRisk;
+                if (name === 'k-core') return (graph.core.get(userNode) || 0) + (graph.core.get(merchantNode) || 0) + row.graphRisk;
+                if (name === 'Motif Counting') return graph.motifCount(row) + row.velocity1h * 0.5 + row.graphRisk * 3;
+                if (name === 'Link Prediction') return graph.linkScore(row) + row.categoryRisk + row.graphRisk;
+                if (name === 'Community Detection') return community.avgRisk + community.density * 2 + Math.log1p(community.nodes) / 5;
+                const merchantUsers = (graph.merchantUsers.get(row.merchant) || new Set()).size;
+                const userMerchants = (graph.userMerchants.get(row.user) || new Set()).size;
+                return community.avgRisk + row.graphRisk * 2 + Math.log1p(merchantUsers * userMerchants) + graph.motifCount(row) / 10;
+            });
+            return normalizeScores(values);
+        }
+
         function scoreRows(rows) {
             const amounts = rows.map(r => r.amount).sort((a, b) => a - b);
             const median = amounts[Math.floor(amounts.length / 2)];
@@ -1168,7 +1357,7 @@
 
         function scoreModel(name, rows, baseScores) {
             const spec = runnerSpec(name);
-            const directScores = directStatisticalScores(name, rows) || directDensityScores(name, rows) || directGeometryScores(name, rows) || directSupervisedScores(name, rows);
+            const directScores = directStatisticalScores(name, rows) || directDensityScores(name, rows) || directGeometryScores(name, rows) || directSupervisedScores(name, rows) || directDeepAnomalyScores(name, rows) || directGraphAnalyticsScores(name, rows);
             if (directScores) return directScores;
             const h = spec.hash;
             const base = baseScores[spec.family] || baseScores.iforest;
