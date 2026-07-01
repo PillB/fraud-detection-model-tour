@@ -62,7 +62,7 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#cards .runner-status-badge").count() == 74
         assert page.locator("#cards .runner-status-badge").filter(has_text="Model-specific educational runner").count() > 0
         assert page.locator("#cards .runner-status-badge").filter(has_text="Exact lightweight JS runner").count() > 0
-        page.locator('[data-model-name="Isolation Forest"] a').filter(has_text="Card").first.click()
+        page.locator('[data-model-name="Isolation Forest"] a').filter(has_text="Inspect").first.click()
         page.wait_for_function("location.hash === '#model-workspace'")
         assert page.locator("#workspace-model-name").text_content() == "Isolation Forest"
         assert page.locator("#workspace-inputs").text_content()
@@ -75,8 +75,15 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-chart").get_by_text("Isolation Forest").is_visible()
         assert page.locator("#lab-explain").get_by_text("isolation-style feature attribution").is_visible()
         assert page.locator("#lab-representation svg").is_visible()
+        assert page.locator("#lab-timeline").get_by_text("Temporal CV").is_visible()
+        assert page.locator("#lab-validation").get_by_text("CV mean PR-AUC").is_visible()
         assert not page.url.endswith(".py")
         assert not page.url.endswith(".md")
+        first_alert_id = page.locator("#lab-alerts .font-mono").first.text_content()
+        page.locator("#lab-alerts .open-workbench").first.click()
+        page.wait_for_function("location.hash === '#workbench'")
+        assert page.locator("#workbench-txn-id").text_content() == first_alert_id
+        assert page.locator("#workbench-explainability").get_by_text("Linked from the lab").is_visible()
 
         page.locator('a[href="#cards"]').first.click()
         page.wait_for_function("location.hash === '#cards'")
@@ -102,6 +109,7 @@ def test_primary_website_flows_with_playwright():
         page.locator("#lab-model-select").select_option("GraphSAGE")
         assert page.locator("#lab-chart").get_by_text("GraphSAGE").is_visible()
         assert page.locator("#lab-explain").get_by_text("graph-neighborhood evidence").is_visible()
+        assert page.locator("#lab-validation").get_by_text("Browser validation for GraphSAGE").is_visible()
 
         page.get_by_role("button", name="ES").click()
         page.wait_for_function("document.documentElement.lang === 'es-419'")
@@ -130,6 +138,8 @@ def test_primary_website_flows_with_playwright():
         page.locator("#lab-model-select").select_option("GraphSAGE")
         assert page.locator("#lab-chart").get_by_text("GraphSAGE").is_visible()
         assert page.locator("#lab-explain").get_by_text("evidencia de vecindario de grafo").is_visible()
+        assert page.locator("#lab-timeline").get_by_text("CV temporal").is_visible()
+        assert page.locator("#lab-validation").get_by_text("Validación de navegador para GraphSAGE").is_visible()
 
         english_page = browser.new_page(viewport={"width": 1200, "height": 900})
         english_page.goto(f"{url}?lang=en#cards", wait_until="networkidle")
@@ -145,4 +155,37 @@ def test_primary_website_flows_with_playwright():
         mobile.wait_for_function("location.hash === '#browser-lab'")
         assert mobile.get_by_role("button", name="Run inference").is_visible()
 
+        browser.close()
+
+
+def test_every_model_selection_runs_browser_outputs():
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        pytest.skip("playwright is not installed")
+
+    with local_server() as url, sync_playwright() as p:
+        browser = p.chromium.launch()
+        page = browser.new_page(viewport={"width": 1280, "height": 900})
+        page.goto(f"{url}#browser-lab", wait_until="networkidle")
+        page.wait_for_function("document.querySelectorAll('#lab-model-select option').length === 75")
+
+        options = page.locator("#lab-model-select option").evaluate_all(
+            "(options) => options.map((option) => option.value).filter((value) => value !== 'all')"
+        )
+        assert len(options) == 74
+
+        errors = []
+        page.on("pageerror", lambda exc: errors.append(str(exc)))
+        for model in options:
+            page.locator("#lab-model-select").select_option(model)
+            assert page.locator("#lab-chart").get_by_text(model).is_visible()
+            assert page.locator("#lab-chart").get_by_text("PR-AUC").first.is_visible()
+            assert page.locator("#lab-alerts").get_by_text("TXN").first.is_visible()
+            assert page.locator("#lab-explain > div").count() >= 6
+            assert page.locator("#lab-representation svg circle").count() > 0
+            assert page.locator("#lab-timeline").text_content()
+            assert page.locator("#lab-validation").get_by_text("Fold 1").is_visible()
+            assert page.locator("#lab-validation").get_by_text("CV mean PR-AUC").is_visible()
+        assert errors == []
         browser.close()

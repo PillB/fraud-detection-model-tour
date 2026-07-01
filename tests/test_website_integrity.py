@@ -205,6 +205,9 @@ def test_browser_lab_exposes_model_specific_runner_contract():
 
     assert "lab-explain" in html
     assert "lab-representation" in html
+    assert "lab-timeline" in html
+    assert "lab-validation" in html
+    assert "workbench-explainability" in html
     assert "runner-status-badge" in js
     assert "runnerSpec(name)" in js
     assert "scoreModel(name, rows, baseScores)" in js
@@ -212,8 +215,10 @@ def test_browser_lab_exposes_model_specific_runner_contract():
     assert "select.value = name" in js
     assert "explanationFor(spec, alert)" in js
     assert "renderRepresentation(topModel.spec, rows, topModel.scores)" in js
+    assert "foldDiagnostics(labels, modelScores)" in js
+    assert "hydrateWorkbench(topModel.spec, alert)" in js
     assert "74 model-specific JavaScript runners" not in translations
-    assert "74 selecciones específicas por modelo" in translations
+    assert "74 tarjetas de modelo conectadas" in translations
     for model in covered:
         assert model in js or model in html
 
