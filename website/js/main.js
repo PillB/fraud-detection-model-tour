@@ -179,7 +179,7 @@
 
     function runnerSpecForModel(name) {
         const family = labKeyForModel(name);
-        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'Isolation Forest', 'LOF', 'One-Class SVM', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Deep Isolation Forest', 'Logistic Regression', 'Decision Trees', 'Gradient Boosting', 'Autoencoder', 'VAE', 'Centrality', 'Community Detection', 'Collusion Detection', 'k-core', 'Motif Counting', 'Link Prediction'].includes(name);
+        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'Isolation Forest', 'LOF', 'One-Class SVM', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Deep Isolation Forest', 'XGBoost', 'LightGBM', 'CatBoost', 'Random Forest', 'Logistic Regression', 'Decision Trees', 'ExtraTrees', 'Gradient Boosting', 'Autoencoder', 'VAE', 'Centrality', 'Community Detection', 'Collusion Detection', 'k-core', 'Motif Counting', 'Link Prediction'].includes(name);
         const explainKindByFamily = {
             rules: { en: 'threshold evidence', es: 'evidencia por umbrales' },
             iforest: { en: 'isolation-style feature attribution', es: 'atribución estilo aislamiento' },
@@ -754,6 +754,8 @@
         const timeline = document.getElementById('lab-timeline');
         const validation = document.getElementById('lab-validation');
         const status = document.getElementById('lab-status');
+        const loading = document.getElementById('lab-loading');
+        const loadingBar = document.getElementById('lab-loading-bar');
         if (!runBtn || !sizeInput || !modelSelect || !chart || !alerts) return;
 
         const models = getRequiredModels();
@@ -761,6 +763,9 @@
             new Option(activeLang() === 'es' ? 'Todos los modelos' : 'All models', 'all'),
             ...models.map((name) => new Option(name, name))
         );
+        if (models.includes('Isolation Forest')) {
+            modelSelect.value = 'Isolation Forest';
+        }
 
         const rng = (seed) => {
             let t = seed >>> 0;
@@ -1125,7 +1130,7 @@
         }
 
         function directSupervisedScores(name, rows) {
-            if (!['Logistic Regression', 'Decision Trees', 'Gradient Boosting'].includes(name)) return null;
+            if (!['XGBoost', 'LightGBM', 'CatBoost', 'Random Forest', 'Logistic Regression', 'Decision Trees', 'ExtraTrees', 'Gradient Boosting'].includes(name)) return null;
             const features = standardizedFeatures(rows);
             const labels = rows.map(row => row.fraud);
             const positives = Math.max(1, labels.reduce((sum, value) => sum + value, 0));
@@ -1179,15 +1184,55 @@
                         : branchScore(rightChild, row, root.rightValue)
                 )));
             }
+            if (name === 'Random Forest' || name === 'ExtraTrees') {
+                const treeCount = 18;
+                const predictions = rows.map(() => 0);
+                for (let tree = 0; tree < treeCount; tree += 1) {
+                    const chosen = features.map((_, index) => index).filter((_, index) => name === 'ExtraTrees' ? (index + tree) % 3 !== 0 : (index * 17 + tree * 11) % 5 !== 0);
+                    const subsetFeatures = chosen.map(index => features[index]);
+                    const subsetLabels = chosen.map(index => labels[index]);
+                    const subsetWeights = chosen.map(index => sampleWeights[index]);
+                    const stump = trainBestStump(subsetFeatures, subsetLabels, subsetWeights);
+                    const jitter = name === 'ExtraTrees' ? Math.sin(tree * 9.7 + stump.feature) * 0.25 : 0;
+                    features.forEach((row, index) => {
+                        const threshold = stump.threshold + jitter;
+                        predictions[index] += row[stump.feature] <= threshold ? stump.leftValue : stump.rightValue;
+                    });
+                }
+                return normalizeScores(predictions.map(value => value / treeCount));
+            }
+            if (name === 'CatBoost') {
+                const merchantStats = new Map();
+                const augmented = features.map((row, index) => {
+                    const key = rows[index].merchant % 17;
+                    const prev = merchantStats.get(key) || { count: 0, fraud: 0 };
+                    const orderedTarget = (prev.fraud + positives / rows.length) / (prev.count + 1);
+                    merchantStats.set(key, { count: prev.count + 1, fraud: prev.fraud + labels[index] });
+                    return row.concat(orderedTarget);
+                });
+                const stump = trainBestStump(augmented, labels, sampleWeights);
+                return normalizeScores(augmented.map(row => row[stump.feature] <= stump.threshold ? stump.leftValue : stump.rightValue));
+            }
             const baseRate = positives / labels.length;
             const additive = rows.map(() => Math.log(baseRate / Math.max(1e-6, 1 - baseRate)));
-            const learningRate = 0.55;
-            for (let stage = 0; stage < 8; stage += 1) {
+            const learningRate = name === 'LightGBM' ? 0.42 : name === 'XGBoost' ? 0.48 : 0.55;
+            const stages = name === 'LightGBM' ? 10 : name === 'XGBoost' ? 12 : 8;
+            for (let stage = 0; stage < stages; stage += 1) {
                 const probabilities = additive.map(sigmoid);
                 const residuals = labels.map((label, index) => label - probabilities[index]);
-                const stump = trainBestStump(features, residuals, sampleWeights);
+                const trainingFeatures = name === 'LightGBM'
+                    ? features.filter((_, index) => index % 2 === stage % 2 || labels[index])
+                    : features;
+                const trainingResiduals = name === 'LightGBM'
+                    ? residuals.filter((_, index) => index % 2 === stage % 2 || labels[index])
+                    : residuals;
+                const trainingWeights = name === 'LightGBM'
+                    ? sampleWeights.filter((_, index) => index % 2 === stage % 2 || labels[index])
+                    : sampleWeights;
+                const stump = trainBestStump(trainingFeatures, trainingResiduals, trainingWeights);
                 features.forEach((row, index) => {
-                    additive[index] += learningRate * (row[stump.feature] <= stump.threshold ? stump.leftValue : stump.rightValue);
+                    const regularizer = name === 'XGBoost' ? 0.92 : 1;
+                    additive[index] += learningRate * regularizer * (row[stump.feature] <= stump.threshold ? stump.leftValue : stump.rightValue);
                 });
             }
             return normalizeScores(additive.map(sigmoid));
@@ -1494,21 +1539,26 @@
             const top = scores.map((score, i) => ({ score, row: rows[i] }))
                 .sort((a, b) => b.score - a.score)
                 .slice(0, 42);
+            const threshold = top[Math.min(9, top.length - 1)]?.score || 0.5;
             const points = top.map((item, idx) => {
                 const x = 18 + Math.min(184, Math.max(0, item.row.graphRisk * 130 + (item.row.user % 31) * 2));
                 const y = 142 - Math.min(118, Math.max(0, item.score * 112 + item.row.isNight * 8));
-                const color = item.row.fraud ? '#dc2626' : (idx < 10 ? '#2563eb' : '#94a3b8');
+                const prioritized = item.score >= threshold;
+                const color = item.row.fraud && prioritized ? '#16a34a' : item.row.fraud ? '#dc2626' : prioritized ? '#2563eb' : '#94a3b8';
                 return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${idx < 8 ? 3.7 : 2.7}" fill="${color}" opacity="0.85"><title>${item.row.id} ${item.score.toFixed(3)}</title></circle>`;
             }).join('');
+            const boundaryY = 142 - Math.min(118, Math.max(0, threshold * 112));
             representation.innerHTML = `
                 <svg viewBox="0 0 230 160" class="w-full rounded-2xl border border-slate-200 bg-slate-50" role="img" aria-label="${spec.name} representation plot">
+                    <polygon points="18,16 214,16 214,${boundaryY.toFixed(1)} 18,${boundaryY.toFixed(1)}" fill="#dbeafe" opacity="0.75" />
+                    <path d="M 18 ${boundaryY.toFixed(1)} C 68 ${(boundaryY - 10).toFixed(1)}, 112 ${(boundaryY + 8).toFixed(1)}, 214 ${(boundaryY - 2).toFixed(1)}" fill="none" stroke="#2563eb" stroke-width="1.4" stroke-dasharray="4 3" />
                     <line x1="18" y1="142" x2="214" y2="142" stroke="#cbd5e1" />
                     <line x1="18" y1="16" x2="18" y2="142" stroke="#cbd5e1" />
                     <text x="116" y="155" font-size="8" fill="#64748b" text-anchor="middle">${activeLang() === 'es' ? 'exposición relacional / identidad' : 'relational / identity exposure'}</text>
                     <text x="8" y="82" font-size="8" fill="#64748b" text-anchor="middle" transform="rotate(-90 8 82)">${activeLang() === 'es' ? 'puntaje' : 'score'}</text>
                     ${points}
                 </svg>
-                <div class="mt-2 text-[10px] text-slate-500">${activeLang() === 'es' ? 'Azul: alertas priorizadas. Rojo: etiquetas de fraude en datos sintéticos.' : 'Blue: prioritized alerts. Red: fraud labels in synthetic data.'}</div>
+                <div class="mt-2 text-[10px] text-slate-500">${activeLang() === 'es' ? 'Azul: alertas priorizadas. Verde: fraude priorizado correctamente. Rojo: fraude etiquetado no priorizado. Área azul: región de decisión.' : 'Blue: prioritized alerts. Green: correctly prioritized fraud. Red: labeled fraud not prioritized. Blue area: decision region.'}</div>
             `;
         }
 
@@ -1694,7 +1744,7 @@
             const filtered = selected === 'all' ? results : results.filter(r => r.key === selected || r.name === selected);
             const maxPr = Math.max(...filtered.map(r => r.prAuc), 0.01);
             chart.innerHTML = filtered.map(r => `
-                <div>
+                <div data-lab-result-name="${r.name}">
                     <div class="flex justify-between gap-2 text-xs mb-1">
                         <span class="font-medium text-slate-700">${r.name} <span class="ml-1 rounded-full ${r.spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'} px-1.5 py-0.5 text-[9px]">${r.spec.exact ? (activeLang() === 'es' ? 'exacto' : 'exact') : (activeLang() === 'es' ? 'educativo' : 'educational')}</span></span>
                         <span class="font-mono text-emerald-700">PR-AUC ${r.prAuc.toFixed(3)} · R@50 ${r.recall50.toFixed(2)}</span>
@@ -1732,7 +1782,25 @@
             renderValidation(topModel.spec, topModel.diagnostics);
         }
 
-        function runLab() {
+        let pendingRun = 0;
+
+        function setLoading(isLoading, selected = null) {
+            if (!loading) return;
+            loading.classList.toggle('hidden', !isLoading);
+            runBtn.disabled = isLoading;
+            modelSelect.disabled = isLoading;
+            sizeInput.disabled = isLoading;
+            if (loadingBar) {
+                loadingBar.style.width = isLoading ? (selected === 'all' ? '82%' : '58%') : '100%';
+            }
+            if (status && isLoading) {
+                status.textContent = activeLang() === 'es'
+                    ? `Ajustando ${selected === 'all' ? 'todos los modelos' : selected} en el navegador...`
+                    : `Fitting ${selected === 'all' ? 'all models' : selected} in the browser...`;
+            }
+        }
+
+        function runLabCore() {
             const n = parseInt(sizeInput.value, 10);
             const rows = generateTransactions(n);
             const labels = rows.map(r => r.fraud);
@@ -1759,6 +1827,20 @@
                     ? `Completadas ${rows.length} filas, ${fraudCount} etiquetas de fraude y ${runnableModels.length} ejecutor(es) de modelo.`
                     : `Completed ${rows.length} rows, ${fraudCount} fraud labels, and ${runnableModels.length} model runner(s).`;
             }
+            setLoading(false, selected);
+        }
+
+        function runLab() {
+            pendingRun += 1;
+            const runId = pendingRun;
+            const selected = modelSelect.value || 'all';
+            setLoading(true, selected);
+            window.requestAnimationFrame(() => {
+                window.setTimeout(() => {
+                    if (runId !== pendingRun) return;
+                    runLabCore();
+                }, 30);
+            });
         }
 
         sizeInput.addEventListener('input', () => {

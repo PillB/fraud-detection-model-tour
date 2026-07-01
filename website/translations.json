@@ -324,8 +324,8 @@
     "es": "BASELINE SUPERVISADO"
   },
   "cards.xgboost.tier": {
-    "en": "Tier 1",
-    "es": "Nivel 1"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.xgboost.desc": {
     "en": "Gradient-boosted trees are the production standard for labeled tabular fraud. With strong velocity, amount-deviation, and KYA aggregate features, they perform well on known patterns and support SHAP-style explanations.",
@@ -344,8 +344,8 @@
     "es": "Inspeccionar"
   },
   "cards.xgboost.run": {
-    "en": "Runnable example",
-    "es": "Ejemplo ejecutable"
+    "en": "Run",
+    "es": "Ejecutar"
   },
   "cards.vae.title": {
     "en": "VAE",
@@ -356,8 +356,8 @@
     "es": "ANOMALÍA GENERATIVA"
   },
   "cards.vae.tier": {
-    "en": "Tier 3",
-    "es": "Nivel 3"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.vae.desc": {
     "en": "A VAE trained mainly on legitimate transactions learns a probabilistic manifold of normal behavior. Reconstruction probability can surface novel fraud when labels are scarce, and latent features can feed supervised downstream models.",
@@ -372,8 +372,8 @@
     "es": "Probabilidad de reconstrucción An &amp; Cho (2015). Los latentes se integran directamente en pipelines híbridos."
   },
   "cards.vae.run": {
-    "en": "Runnable example",
-    "es": "Ejemplo ejecutable"
+    "en": "Run",
+    "es": "Ejecutar"
   },
   "cards.moe.title": {
     "en": "MoE Hybrid",
@@ -384,8 +384,8 @@
     "es": "HÍBRIDO AVANZADO"
   },
   "cards.moe.tier": {
-    "en": "Tier 5–6",
-    "es": "Nivel 5–6"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.moe.desc": {
     "en": "A Mixture-of-Experts routes cases to specialized experts: sequence/RNN for behavior, Transformer/MLP for high-order KYA interactions, and autoencoder for reconstruction anomalies. The value is adaptive coverage across fraud archetypes, not a single universal expert.",
@@ -400,8 +400,8 @@
     "es": "El gating enruta casos pesados en secuencia o anómalos a expertos especializados. Mezcla insignia."
   },
   "cards.moe.run": {
-    "en": "Runnable example",
-    "es": "Ejemplo ejecutable"
+    "en": "Run",
+    "es": "Ejecutar"
   },
   "cards.lstm.title": {
     "en": "LSTM Sequence",
@@ -412,8 +412,8 @@
     "es": "CONDUCTUAL"
   },
   "cards.lstm.tier": {
-    "en": "Tier 5",
-    "es": "Nivel 5"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.lstm.desc": {
     "en": "Recurrent models capture temporal dependencies across a user’s transaction history. Sudden deviations in velocity, amount patterns, or merchant sequences become detectable even when individual transactions appear benign. Essential for modeling drift and behavioral fraud.",
@@ -428,8 +428,8 @@
     "es": "El proxy ejecutable usa rezagos y variables de velocidad; un LSTM de producción consume secuencias de eventos por usuario con padding."
   },
   "cards.lstm.run": {
-    "en": "Runnable example",
-    "es": "Ejemplo ejecutable"
+    "en": "Run",
+    "es": "Ejecutar"
   },
   "cards.tab.title": {
     "en": "TabTransformer",
@@ -440,8 +440,8 @@
     "es": "DL TABULAR"
   },
   "cards.tab.tier": {
-    "en": "Tier 4",
-    "es": "Nivel 4"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.tab.desc": {
     "en": "Self-attention applied to categorical features (merchant type, KYA risk buckets, time-of-day) produces contextual embeddings. Captures complex interactions that tree models require explicit cross-features to detect. Highly effective when tabular data includes rich categorical signals from KYA/KYE profiles.",
@@ -456,8 +456,8 @@
     "es": "La implementación ejecutable usa embeddings más un clasificador; en producción se usan variantes completas de Transformers tabulares con manejo cuidadoso del desbalance."
   },
   "cards.tab.run": {
-    "en": "Runnable example",
-    "es": "Ejemplo ejecutable"
+    "en": "Run",
+    "es": "Ejecutar"
   },
   "cards.graph.title": {
     "en": "GraphSAGE",
@@ -468,8 +468,8 @@
     "es": "GRÁFICO / RELACIONAL"
   },
   "cards.graph.tier": {
-    "en": "Tier 4",
-    "es": "Nivel 4"
+    "en": "Runnable example",
+    "es": "Ejemplo ejecutable"
   },
   "cards.graph.desc": {
     "en": "Inductive graph neural network that learns node embeddings via neighbor sampling and aggregation. Critical for detecting collusion rings, mule networks, and shared-device or KYA-linked fraud that is invisible to purely tabular models. Naturally handles new entities at inference time.",
@@ -484,8 +484,8 @@
     "es": "Usa NetworkX más agregación por promedio sobre el grafo sintético de transacciones/KYA. En producción se usa PyG o DGL con muestreo, cortes temporales y explicabilidad de grafos."
   },
   "cards.graph.run": {
-    "en": "Runnable example",
-    "es": "Ejemplo ejecutable"
+    "en": "Run",
+    "es": "Ejecutar"
   },
   "cards.footer": {
     "en": "The six flagship cards teach the main path. The expanded catalog above covers every additional family used in experiments and production cascades, including Isolation Forest, LOF, OCSVM, density outlier models, R-GCN, GAT, link prediction, and entity resolution.",
@@ -690,6 +690,14 @@
   "lab.status.ready": {
     "en": "Ready. Runs locally in your browser.",
     "es": "Listo. Se ejecuta localmente en tu navegador."
+  },
+  "lab.loading.title": {
+    "en": "Fitting browser model...",
+    "es": "Ajustando modelo en el navegador..."
+  },
+  "lab.loading.note": {
+    "en": "Preparing data, training, validating, and rendering evidence.",
+    "es": "Preparando datos, entrenando, validando y renderizando evidencia."
   },
   "lab.note": {
     "en": "Direct lightweight runners are used for simple rules/statistics where the browser implementation matches the intended calculation. Deep trees, neural networks, GNNs, TGNNs, and generative models use model-specific educational runners plus links to Python implementations.",
