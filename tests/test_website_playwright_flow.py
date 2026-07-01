@@ -111,10 +111,16 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-explain").get_by_text("graph-neighborhood evidence").is_visible()
         assert page.locator("#lab-validation").get_by_text("Browser validation for GraphSAGE").is_visible()
         assert page.locator("#lab-validation").get_by_text("Model-specific educational approximation: GraphSAGE").is_visible()
-        for direct_model in ["Z-Score", "HBOS", "ECOD", "COPOD", "PCA Reconstruction", "Robust Covariance", "kNN Outlier", "KMeans", "DBSCAN"]:
+        assert page.locator("#lab-validation").get_by_text("Simulated training/cross-validation trace").is_visible()
+        assert page.locator("#lab-timeline").get_by_text("Simulated training trace").is_visible()
+        assert page.locator("#lab-timeline svg").count() >= 1
+        for direct_model in ["Z-Score", "HBOS", "ECOD", "COPOD", "PCA Reconstruction", "Robust Covariance", "kNN Outlier", "KMeans", "DBSCAN", "Logistic Regression", "Decision Trees", "Gradient Boosting"]:
             page.locator("#lab-model-select").select_option(direct_model)
             assert page.locator("#lab-chart").get_by_text(direct_model).is_visible()
             assert page.locator("#lab-validation").get_by_text(f"Direct in-browser implementation: {direct_model}").is_visible()
+            assert page.locator("#lab-timeline").get_by_text("Actual browser training trace").is_visible()
+        page.locator("#lab-model-select").select_option("XGBoost")
+        assert page.locator("#lab-validation").get_by_text("Model-specific educational approximation: XGBoost").is_visible()
 
         page.get_by_role("button", name="ES").click()
         page.wait_for_function("document.documentElement.lang === 'es-419'")

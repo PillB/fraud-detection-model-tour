@@ -230,11 +230,15 @@ def test_browser_lab_exposes_model_specific_runner_contract():
         "kNN Outlier",
         "KMeans",
         "DBSCAN",
+        "Logistic Regression",
+        "Decision Trees",
+        "Gradient Boosting",
     ]:
         assert direct_model in js
     assert "directStatisticalScores(name, rows)" in js
     assert "directDensityScores(name, rows)" in js
     assert "directGeometryScores(name, rows)" in js
+    assert "directSupervisedScores(name, rows)" in js
     assert "74 model-specific JavaScript runners" not in translations
     assert "74 tarjetas de modelo conectadas" in translations
     for model in covered:
