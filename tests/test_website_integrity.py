@@ -312,3 +312,6 @@ def test_claims_and_internal_reviewer_language_are_scoped():
     assert "roc-auc is misleading" not in combined
     assert "validated examples" in combined
     assert "74 visible model and technique entries" in combined
+    assert "three realistic patterns" not in combined
+    assert "collusion rings" in combined
+    assert "label delay" in combined

@@ -182,6 +182,9 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-validation").get_by_text("Browser validation for GraphSAGE").is_visible()
         assert page.locator("#lab-validation").get_by_text("Direct in-browser implementation: GraphSAGE").is_visible()
         assert page.locator("#lab-timeline").get_by_text("Actual browser training trace").is_visible()
+        assert page.locator("#lab-representation").get_by_text("user, merchant, device, and IP subgraph").is_visible()
+        assert page.locator("#lab-representation svg line").count() > 0
+        assert page.locator("#lab-representation svg circle").count() > 0
         assert page.locator("#lab-timeline svg").count() >= 1
         for direct_model in sorted(DIRECT_BROWSER_MODELS):
             page.locator("#lab-model-select").select_option(direct_model)
@@ -229,6 +232,7 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
         assert lab_result(page, "GraphSAGE").is_visible()
         assert page.locator("#lab-explain").get_by_text("evidencia de vecindario de grafo").is_visible()
+        assert page.locator("#lab-representation").get_by_text("subgrafo de usuarios, comercios, dispositivos e IP").is_visible()
         assert page.locator("#lab-timeline").get_by_text("CV temporal").is_visible()
         assert page.locator("#lab-validation").get_by_text("Validación de navegador para GraphSAGE").is_visible()
 

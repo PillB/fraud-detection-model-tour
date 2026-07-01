@@ -13,7 +13,7 @@ See docs/model-cards/LSTM_Sequence.md
 
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import average_precision_score
 from sklearn.preprocessing import StandardScaler
 
@@ -26,7 +26,18 @@ def engineer_seq_features(tx):
     tx['lag_hour'] = tx.groupby('user_id')['hour'].shift(1).fillna(0)
     tx['vel_1h'] = tx['user_tx_count_1h']
     tx['dev_amount'] = tx.groupby('user_id')['amount'].transform(lambda x: (x - x.mean()) / (x.std() + 1e-6))
+    optional = [
+        'user_tx_count_24h',
+        'temporal_burst_score',
+        'prior_decline_count',
+        'new_device_for_user',
+        'geo_distance_km',
+        'device_age_days',
+    ]
     feats = tx[['amount', 'is_night', 'hour', 'vel_1h', 'lag_amount', 'lag_hour', 'dev_amount']].copy()
+    for col in optional:
+        if col in tx.columns:
+            feats[col] = tx[col]
     cat = pd.get_dummies(tx['category'], prefix='cat')
     X = pd.concat([feats, cat], axis=1).fillna(0).values
     y = tx['is_fraud'].values
@@ -48,7 +59,7 @@ def main():
     train = slice(0, int(0.7*n))
     test = slice(int(0.7*n), n)
     
-    clf = RandomForestClassifier(n_estimators=50, random_state=42, class_weight='balanced')
+    clf = GradientBoostingClassifier(n_estimators=80, random_state=42)
     clf.fit(X[train], y[train])
     
     proba = clf.predict_proba(X[test])[:,1]

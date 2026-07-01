@@ -140,28 +140,28 @@
     "es": "Generador de Datos Sintéticos"
   },
   "synthetic.desc": {
-    "en": "Realistic transactional and relational benchmark data, engineered to mirror the signals a fraud team would expect in production:",
-    "es": "Datos transaccionales y relacionales realistas para pruebas comparativas, diseñados para reflejar señales que un equipo antifraude esperaría en producción:"
+    "en": "Scenario-rich transactional and relational benchmark data, engineered to stress the different model families used in production fraud programs:",
+    "es": "Datos transaccionales y relacionales ricos en escenarios, diseñados para exigir a las distintas familias de modelos usadas en programas antifraude de producción:"
   },
   "synthetic.li1": {
-    "en": "• 200 users + 80 merchants + 30 workers (KYE)",
-    "es": "• 200 usuarios + 80 comercios + 30 empleados/analistas (KYE)"
+    "en": "• Users, merchants, workers, devices, IP blocks, addresses, and cards",
+    "es": "• Usuarios, comercios, empleados, dispositivos, bloques IP, direcciones y tarjetas"
   },
   "synthetic.li2": {
-    "en": "• Timestamped transactions with amount, category, and hour",
-    "es": "• Transacciones con fecha/hora, monto, categoría y hora del día"
+    "en": "• Timestamped txns with amount, channel, category, geo-distance, and label delay",
+    "es": "• Transacciones con fecha/hora, monto, canal, categoría, distancia geográfica y retraso de etiqueta"
   },
   "synthetic.li3": {
-    "en": "• Engineered velocity features (1h/24h counts)",
-    "es": "• Variables de velocidad construidas (conteos en 1h/24h)"
+    "en": "• Engineered velocity, amount deviation, entity-sharing, temporal burst, and graph-risk features",
+    "es": "• Variables de velocidad, desviación de monto, entidades compartidas, ráfaga temporal y riesgo de grafo"
   },
   "synthetic.li4": {
-    "en": "• Fraud injected at 1.2% with three realistic patterns",
-    "es": "• Fraude inyectado al 1.2% con tres patrones realistas"
+    "en": "• Fraud injected at 1.2% across outliers, bursts, account takeover, merchant abuse, mimicry, and collusion rings",
+    "es": "• Fraude inyectado al 1.2% en outliers, ráfagas, toma de cuentas, abuso de comercios, mimetismo y anillos de colusión"
   },
   "synthetic.li5": {
-    "en": "• NetworkX graph: transaction edges plus KYA/KYE links",
-    "es": "• Grafo en NetworkX: aristas de transacción y vínculos KYA/KYE"
+    "en": "• Heterogeneous NetworkX graph: transactions, devices, IPs, cards, KYA/KYE links, and ring communities",
+    "es": "• Grafo heterogéneo en NetworkX: transacciones, dispositivos, IP, tarjetas, vínculos KYA/KYE y comunidades tipo anillo"
   },
   "synthetic.cmd": {
     "en": "python experiments/synthetic_fraud_data.py",
@@ -332,8 +332,8 @@
     "es": "Los árboles potenciados por gradiente son un estándar de producción para fraude tabular etiquetado. Con buenas variables de velocidad, desviación de monto y agregados KYA, funcionan bien en patrones conocidos y soportan explicaciones estilo SHAP."
   },
   "cards.xgboost.pr": {
-    "en": "Representative PR-AUC: 0.284",
-    "es": "PR-AUC representativo: 0.284"
+    "en": "Current PR-AUC: run browser lab or comparison script",
+    "es": "PR-AUC actual: ejecuta el lab del navegador o el script comparativo"
   },
   "cards.xgboost.note": {
     "en": "Velocity and KYA aggregates dominate importance rankings. Primary supervised layer; pairs naturally with anomaly scores.",
@@ -364,8 +364,8 @@
     "es": "Un VAE entrenado principalmente con transacciones legítimas aprende una variedad probabilística del comportamiento normal. La probabilidad de reconstrucción puede revelar fraude nuevo cuando hay pocas etiquetas, y las variables latentes pueden alimentar modelos supervisados posteriores."
   },
   "cards.vae.pr": {
-    "en": "Representative PR-AUC: 0.367 (VAE + IF hybrid)",
-    "es": "PR-AUC representativo: 0.367 (híbrido VAE + IF)"
+    "en": "Current PR-AUC: run browser lab or VAE + IF script",
+    "es": "PR-AUC actual: ejecuta el lab del navegador o el script VAE + IF"
   },
   "cards.vae.note": {
     "en": "An &amp; Cho (2015) reconstruction probability. Latents integrate directly into hybrid pipelines.",
@@ -392,8 +392,8 @@
     "es": "Un Mixture-of-Experts enruta casos hacia expertos especializados: secuencia/RNN para comportamiento, Transformer/MLP para interacciones KYA de alto orden y autoencoder para anomalías de reconstrucción. Su valor es la cobertura adaptativa de arquetipos de fraude, no un único experto universal."
   },
   "cards.moe.pr": {
-    "en": "Representative PR-AUC: 0.295 • 91.5% Recall (Vallarino 2025)",
-    "es": "PR-AUC representativo: 0.295 • 91.5% de recall (Vallarino 2025)"
+    "en": "Current PR-AUC: run browser lab or MoE script",
+    "es": "PR-AUC actual: ejecuta el lab del navegador o el script MoE"
   },
   "cards.moe.note": {
     "en": "Gating routes seq-heavy or anomalous cases to specialized experts. Flagship mixture.",
@@ -420,8 +420,8 @@
     "es": "Los modelos recurrentes capturan dependencias temporales en el historial de transacciones de un usuario. Desviaciones repentinas en velocidad, patrones de monto o secuencias de comercios se vuelven detectables incluso cuando las transacciones individuales parecen benignas. Esencial para modelar deriva y fraude conductual."
   },
   "cards.lstm.pr": {
-    "en": "Representative PR-AUC: 0.261",
-    "es": "PR-AUC representativo: 0.261"
+    "en": "Current PR-AUC: run browser lab or sequence script",
+    "es": "PR-AUC actual: ejecuta el lab del navegador o el script secuencial"
   },
   "cards.lstm.note": {
     "en": "Runnable proxy uses lagged and velocity features; a production LSTM consumes padded per-user event sequences.",
@@ -448,8 +448,8 @@
     "es": "La autoatención aplicada a variables categóricas (tipo de comercio, bandas de riesgo KYA, hora del día) produce embeddings contextuales. Captura interacciones complejas que los modelos de árboles solo detectan si se construyen cruces de variables explícitos. Es muy efectiva cuando los datos tabulares incluyen señales categóricas ricas de perfiles KYA/KYE."
   },
   "cards.tab.pr": {
-    "en": "Representative PR-AUC: 0.278",
-    "es": "PR-AUC representativo: 0.278"
+    "en": "Current PR-AUC: run browser lab or tabular script",
+    "es": "PR-AUC actual: ejecuta el lab del navegador o el script tabular"
   },
   "cards.tab.note": {
     "en": "Runnable implementation uses embeddings plus a classifier; production systems use full tabular Transformer variants with careful imbalance handling.",
@@ -476,8 +476,8 @@
     "es": "Red neuronal de grafos inductiva que aprende embeddings de nodos mediante muestreo y agregación de vecinos. Es crítica para detectar anillos de colusión, redes de cuentas mula y fraude vinculado a dispositivos compartidos o señales KYA que son invisibles para modelos puramente tabulares. Maneja naturalmente nuevas entidades en tiempo de inferencia."
   },
   "cards.graph.pr": {
-    "en": "Representative PR-AUC: 0.319 (NetworkX-based educational proxy)",
-    "es": "PR-AUC representativo: 0.319 (proxy educativo basado en NetworkX)"
+    "en": "Current PR-AUC: run browser lab or graph script",
+    "es": "PR-AUC actual: ejecuta el lab del navegador o el script de grafo"
   },
   "cards.graph.note": {
     "en": "Uses NetworkX plus mean aggregation over the synthetic transaction/KYA graph. Production systems use PyG or DGL with sampling, temporal splits, and graph explainability.",
@@ -1668,8 +1668,8 @@
     "es": "PR-AUC + contexto operativo"
   },
   "metrics.p1": {
-    "en": "<strong>PR-AUC</strong> is primary because it focuses on the rare positive class. On 1.2% fraud data, random guessing scores about 0.012; a model around 0.28-0.37 is meaningfully better at surfacing fraud near the top of a review queue.",
-    "es": "<strong>PR-AUC</strong> es la métrica principal porque se enfoca en la clase positiva rara. Con 1.2% de fraude, el azar puntúa cerca de 0.012; un modelo alrededor de 0.28-0.37 es mucho mejor para llevar fraude real a la parte alta de la cola de revisión."
+    "en": "<strong>PR-AUC</strong> is primary because it focuses on the rare positive class. On 1.2% fraud data, random guessing scores about 0.012. Interpret scores against the current generator, split, and feature set; richer scenarios are intentionally harder than simple three-pattern toys.",
+    "es": "<strong>PR-AUC</strong> es la métrica principal porque se enfoca en la clase positiva rara. Con 1.2% de fraude, el azar puntúa cerca de 0.012. Interpreta los puntajes según el generador, la partición y las variables actuales; los escenarios más ricos son intencionalmente más difíciles que los juguetes simples de tres patrones."
   },
   "metrics.p2": {
     "en": "Production framing: review budget is limited, for example the top 50-200 alerts. <strong>Recall@K</strong> tells you what fraction of actual fraud you catch within that budget. <strong>Cost</strong> framing weighs false negatives, review effort, and customer friction.",

@@ -64,8 +64,26 @@ def run_single_seed(tx, seed):
     """Run one seed with temporal split and full metrics."""
     np.random.seed(seed)
     train_df, test_df = temporal_train_test_split(tx)
-    num = ['amount', 'hour', 'user_tx_count_1h', 'user_tx_count_24h']
-    cat = ['category', 'is_night']
+    candidate_num = [
+        'amount',
+        'hour',
+        'user_tx_count_1h',
+        'user_tx_count_24h',
+        'geo_distance_km',
+        'prior_decline_count',
+        'merchant_risk_score',
+        'account_age_days',
+        'amount_zscore_user',
+        'device_user_count',
+        'ip_user_count',
+        'card_user_count',
+        'temporal_burst_score',
+        'entity_link_risk',
+        'graph_risk_score',
+    ]
+    candidate_cat = ['category', 'is_night', 'channel', 'region']
+    num = [col for col in candidate_num if col in tx.columns]
+    cat = [col for col in candidate_cat if col in tx.columns]
     X_train = train_df[num + cat]
     y_train = train_df['is_fraud']
     X_test = test_df[num + cat]

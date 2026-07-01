@@ -307,20 +307,20 @@
                         <span data-i18n="synthetic.title">Synthetic Data Generator</span>
                     </div>
                     <div class="text-sm text-slate-600 space-y-2.5">
-                        <p data-i18n="synthetic.desc">Realistic transactional and relational benchmark data, engineered to mirror the signals a fraud team would expect in production:</p>
+                        <p data-i18n="synthetic.desc">Scenario-rich transactional and relational benchmark data, engineered to stress the different model families used in production fraud programs:</p>
                         <ul class="text-xs grid grid-cols-1 gap-y-[3px] pl-1 text-slate-500">
-                            <li data-i18n="synthetic.li1">• 200 users + 80 merchants + 30 workers (KYE)</li>
-                            <li data-i18n="synthetic.li2">• Timestamped txns with amount, category, hour</li>
-                            <li data-i18n="synthetic.li3">• Engineered velocity features (1h/24h counts)</li>
-                            <li data-i18n="synthetic.li4">• Fraud injected at 1.2% with 3 realistic patterns</li>
-                            <li data-i18n="synthetic.li5">• NetworkX graph: transaction edges + KYA / KYE links</li>
+                            <li data-i18n="synthetic.li1">• Users, merchants, workers, devices, IP blocks, addresses, and cards</li>
+                            <li data-i18n="synthetic.li2">• Timestamped txns with amount, channel, category, geo-distance, and label delay</li>
+                            <li data-i18n="synthetic.li3">• Engineered velocity, amount deviation, entity-sharing, temporal burst, and graph-risk features</li>
+                            <li data-i18n="synthetic.li4">• Fraud injected at 1.2% across outliers, bursts, account takeover, merchant abuse, mimicry, and collusion rings</li>
+                            <li data-i18n="synthetic.li5">• Heterogeneous NetworkX graph: transactions, devices, IPs, cards, KYA/KYE links, and ring communities</li>
                         </ul>
                         <div class="pt-3 text-[10px] font-mono text-emerald-600 border-t mt-3" data-i18n="synthetic.cmd">
                             python experiments/synthetic_fraud_data.py
                         </div>
                         <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2 text-center">
                             <div class="rounded-2xl bg-slate-50 p-3">
-                                <div class="text-lg font-semibold text-slate-900">310</div>
+                                <div class="text-lg font-semibold text-slate-900">715+</div>
                                 <div class="text-[10px] text-slate-500" data-i18n="synthetic.stat.entities">entities</div>
                             </div>
                             <div class="rounded-2xl bg-slate-50 p-3">
@@ -328,7 +328,7 @@
                                 <div class="text-[10px] text-slate-500" data-i18n="synthetic.stat.fraud">fraud</div>
                             </div>
                             <div class="rounded-2xl bg-slate-50 p-3">
-                                <div class="text-lg font-semibold text-slate-900">4</div>
+                                <div class="text-lg font-semibold text-slate-900">7</div>
                                 <div class="text-[10px] text-slate-500" data-i18n="synthetic.stat.views">signal views</div>
                             </div>
                         </div>
@@ -679,7 +679,7 @@
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.xgboost.desc">Gradient-boosted trees constitute the production standard for labeled tabular fraud. Strong feature engineering—velocity, amount deviation, KYA aggregates—yields high PR-AUC on known patterns while delivering native feature importances and SHAP explanations.</p>
 
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700" data-i18n="cards.xgboost.pr">Representative PR-AUC: 0.284</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.xgboost.pr">Current PR-AUC: run browser lab or comparison script</div>
                         <div class="text-[10px] text-slate-500" data-i18n="cards.xgboost.note">Velocity and KYA aggregates dominate importance rankings. Primary supervised layer; pairs naturally with anomaly scores.</div>
                     </div>
 
@@ -701,7 +701,7 @@
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.vae.desc">VAE trained exclusively on legitimate transactions learns a probabilistic manifold of normal behavior. Per An &amp; Cho (2015), reconstruction probability provides a calibrated anomaly score that surfaces novel and zero-day fraud where labels are absent. Latent representations also serve as high-value features for downstream supervised models.</p>
 
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700" data-i18n="cards.vae.pr">Representative PR-AUC: 0.367 (VAE + IF hybrid)</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.vae.pr">Current PR-AUC: run browser lab or VAE + IF script</div>
                         <div class="text-[10px] text-slate-500" data-i18n="cards.vae.note">An &amp; Cho (2015) reconstruction probability. Latents integrate directly into hybrid pipelines.</div>
                     </div>
 
@@ -723,7 +723,7 @@
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.moe.desc">Mixture-of-Experts architecture routes inputs to specialized experts (sequence / RNN for behavior, transformer / MLP for high-order KYA interactions, autoencoder for reconstruction anomalies). Learned or heuristic gating enables adaptive coverage across fraud archetypes. Vallarino 2025 demonstrated strong results on high-fidelity synthetic credit card data.</p>
 
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700" data-i18n="cards.moe.pr">Representative PR-AUC: 0.295 • 91.5% Recall (Vallarino 2025)</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.moe.pr">Current PR-AUC: run browser lab or MoE script</div>
                         <div class="text-[10px] text-slate-500" data-i18n="cards.moe.note">Gating routes seq-heavy or anomalous cases to specialized experts. Flagship mixture.</div>
                     </div>
 
@@ -745,7 +745,7 @@
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.lstm.desc">Recurrent models capture temporal dependencies across a user’s transaction history. Sudden deviations in velocity, amount patterns, or merchant sequences become detectable even when individual transactions appear benign. Essential for modeling drift and behavioral fraud.</p>
 
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700" data-i18n="cards.lstm.pr">Representative PR-AUC: 0.261</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.lstm.pr">Current PR-AUC: run browser lab or sequence script</div>
                         <div class="text-[10px] text-slate-500" data-i18n="cards.lstm.note">Educational proxy uses lagged + velocity features; native LSTM uses per-user sequences.</div>
                     </div>
 
@@ -767,7 +767,7 @@
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.tab.desc">Self-attention applied to categorical features (merchant type, KYA risk buckets, time-of-day) produces contextual embeddings. Captures complex interactions that tree models require explicit cross-features to detect. Highly effective when tabular data includes rich categorical signals from KYA/KYE profiles.</p>
 
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700" data-i18n="cards.tab.pr">Representative PR-AUC: 0.278</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.tab.pr">Current PR-AUC: run browser lab or tabular script</div>
                         <div class="text-[10px] text-slate-500" data-i18n="cards.tab.note">Educational simulation using embeddings + classifier; attention provides feature-level interpretability. Production: use full TabTransformer.</div>
                     </div>
 
@@ -789,7 +789,7 @@
                     <p class="mt-3 text-sm leading-snug text-slate-600" data-i18n="cards.graph.desc">Inductive graph neural network that learns node embeddings via neighbor sampling and aggregation. Critical for detecting collusion rings, mule networks, and shared-device or KYA-linked fraud that is invisible to purely tabular models. Naturally handles new entities at inference time.</p>
 
                     <div class="mt-4 text-xs">
-                        <div class="font-medium text-emerald-700" data-i18n="cards.graph.pr">Representative PR-AUC: 0.319 (NetworkX-based educational proxy)</div>
+                        <div class="font-medium text-emerald-700" data-i18n="cards.graph.pr">Current PR-AUC: run browser lab or graph script</div>
                         <div class="text-[10px] text-slate-500" data-i18n="cards.graph.note">Uses NetworkX plus mean aggregation over the synthetic transaction/KYA graph. Production systems use PyG or DGL with sampling, temporal splits, and graph explainability.</div>
                     </div>
 
@@ -861,7 +861,7 @@
             <div class="uppercase text-xs tracking-[1.5px] text-blue-700 font-semibold mb-1" data-i18n="metrics.title">Metrics that matter</div>
             <h4 class="font-semibold mb-3" data-i18n="metrics.subtitle">PR-AUC + operational context</h4>
             <div class="text-sm text-slate-600 leading-relaxed">
-                <p data-i18n="metrics.p1"><strong>PR-AUC</strong> is primary because it focuses on the rare positive class. On 1.2% fraud data, random guessing scores 0.012. A model with 0.28–0.37 is meaningfully better at surfacing fraud in the top of a review queue.</p>
+                <p data-i18n="metrics.p1"><strong>PR-AUC</strong> is primary because it focuses on the rare positive class. On 1.2% fraud data, random guessing scores 0.012. Scores should be interpreted against the current generator, split, and feature set; richer scenarios are intentionally harder than simple three-pattern toys.</p>
                 <p class="mt-2" data-i18n="metrics.p2">Production framing: Review budget is limited (e.g. top-K=50–200 alerts). <strong>Recall@K</strong> tells you what fraction of actual fraud you catch within budget. <strong>Cost</strong> framing (Bahnsen-style): FN ≈ fraud amount lost; FP ≈ review/investigator cost + customer friction. Hybrids and good FE improve both lift and queue efficiency.</p>
                 <p class="mt-2" data-i18n="metrics.p3">Always report vs. random baseline and vs. simple rules. Use temporal splits for evaluation. See junior_starter.py and compare_models.py for runnable scripts with these metrics.</p>
             </div>
@@ -1212,7 +1212,7 @@
 
                 <div class="mt-6 pt-5 border-t text-xs text-slate-500">
                     <span data-i18n="pipeline.run">Run:</span> <span class="font-mono bg-slate-100 px-2 py-0.5 rounded">python scripts/full_pipeline.py</span>.
-                    <span data-i18n="pipeline.run.text">The script emits documented rationales per step, Ensemble PR-AUC, Hybrid PR-AUC (typically 0.29–0.35 range on synthetic benchmark data), and ranked top transactions with explanations.
+                    <span data-i18n="pipeline.run.text">The script emits documented rationales per step, Ensemble PR-AUC, Hybrid PR-AUC, and ranked top transactions with explanations on the current scenario-rich synthetic benchmark.
                     This is the canonical reference implementation invoked by model cards, the comparison harness, and the guided tour.</span>
                     <div class="mt-3 flex flex-wrap gap-2">
                         <a href="https://colab.research.google.com/github/PillB/fraud-detection-model-tour/blob/main/notebooks/model_tour_examples.ipynb" target="_blank" class="px-3 py-1.5 bg-blue-700 hover:bg-blue-800 text-white rounded-2xl font-semibold" data-i18n="pipeline.runOnline">Run all examples online</a>
@@ -1411,6 +1411,6 @@
     </main>
 
     <!-- Professional interactivity and enhancements (BCG/McKinsey UX) -->
-    <script src="js/main.js?v=20260701-direct-graph-ensemble"></script>
+    <script src="js/main.js?v=20260701-scenario-graph-data"></script>
 </body>
 </html>

@@ -786,39 +786,87 @@
         function generateTransactions(n) {
             const random = rng(20260630 + n);
             const rows = [];
+            const ringUsers = new Set([3, 17, 34, 51, 68, 85, 102, 119, 136, 153, 170, 187]);
+            const ringMerchants = new Set([7, 13, 26, 39, 52, 65]);
+            const ringDevices = [11, 29, 47, 71];
+            const ringIps = [5, 12, 21, 33];
             for (let i = 0; i < n; i += 1) {
                 const user = Math.floor(random() * 210);
                 const merchant = Math.floor(random() * 85);
                 const hour = Math.floor(random() * 24);
                 const isNight = hour < 6 || hour > 22 ? 1 : 0;
+                const channelRoll = random();
+                const channel = channelRoll < 0.46 ? 'card_present' : channelRoll < 0.8 ? 'card_not_present' : channelRoll < 0.94 ? 'wallet' : 'api';
+                const device = user % 173;
+                const ip = user % 61;
+                const card = user % 241;
                 const amount = Math.max(1, Math.exp(4 + gaussian(random) * 0.9));
                 const velocity1h = Math.floor(random() * 5 + random() * 3);
                 const velocity24h = Math.floor(random() * 20 + random() * 8);
                 const categoryRisk = random() < 0.1 ? 1 : random() < 0.4 ? 0.45 : 0.15;
-                const graphRisk = ((user % 17 === 0) || (merchant % 13 === 0)) ? 0.75 : random() * 0.25;
+                const deviceUserCount = 1 + (ringUsers.has(user) ? 6 : device % 11 === 0 ? 3 : 0) + Math.floor(random() * 3);
+                const ipUserCount = 1 + (ringUsers.has(user) ? 7 : ip % 13 === 0 ? 4 : 0) + Math.floor(random() * 3);
+                const cardUserCount = 1 + (ringUsers.has(user) ? 4 : card % 17 === 0 ? 2 : 0);
+                const merchantRisk = ringMerchants.has(merchant) ? 0.86 : categoryRisk * 0.7 + random() * 0.18;
+                const priorDeclines = Math.floor(random() * 2);
+                const accountAge = Math.floor(5 + random() * 2200);
+                const geoDistance = Math.max(0, Math.exp(2.6 + gaussian(random) * 1.0));
+                let graphRisk = Math.min(1, deviceUserCount / 12 + ipUserCount / 16 + cardUserCount / 10 + merchantRisk * 0.28);
                 let fraud = 0;
+                let archetype = 'legit';
                 let amt = amount;
                 let v1 = velocity1h;
                 let v24 = velocity24h;
+                let deviceId = device;
+                let ipBlock = ip;
+                let cardId = card;
+                let declines = priorDeclines;
+                let distance = geoDistance;
+                let chan = channel;
+                let age = accountAge;
                 const pattern = random();
                 if (pattern < 0.004) {
-                    fraud = 1; amt *= 6; v1 += 1;
+                    fraud = 1; archetype = 'amount_night_outlier'; amt *= 6; v1 += 1; distance *= 3; chan = 'card_not_present';
                 } else if (pattern < 0.008) {
-                    fraud = 1; v1 += 9; v24 += 22;
+                    fraud = 1; archetype = 'velocity_burst'; v1 += 9; v24 += 22; declines += 5; chan = 'api';
                 } else if (pattern < 0.012) {
-                    fraud = 1; amt *= 2.2; v24 += 8;
+                    fraud = 1;
+                    const sub = random();
+                    if (sub < 0.34) {
+                        archetype = 'account_takeover'; amt *= 1.7; v24 += 8; deviceId = Math.floor(random() * 173); ipBlock = Math.floor(random() * 61); age = Math.floor(1 + random() * 12); distance = 900 + random() * 6500; chan = 'card_not_present';
+                    } else if (sub < 0.68) {
+                        archetype = 'collusion_ring'; amt *= 1.4; v1 += 3; v24 += 10; deviceId = ringDevices[Math.floor(random() * ringDevices.length)]; ipBlock = ringIps[Math.floor(random() * ringIps.length)]; cardId = 500 + Math.floor(random() * 8); graphRisk = 0.93; chan = 'wallet';
+                    } else {
+                        archetype = 'mimicry_low_signal'; amt *= 1.15; deviceId = ringDevices[Math.floor(random() * ringDevices.length)]; ipBlock = ringIps[Math.floor(random() * ringIps.length)]; graphRisk = 0.72; chan = 'card_present';
+                    }
                 }
+                const temporalBurst = v1 * 0.42 + declines * 0.8 + (isNight ? 0.7 : 0) + (age < 14 ? 1.2 : 0);
+                const entityLinkRisk = Math.min(3, deviceUserCount / 8 + ipUserCount / 12 + cardUserCount / 6 + merchantRisk);
                 rows.push({
                     id: `TXN${String(i).padStart(6, '0')}`,
                     user,
                     merchant,
+                    device: deviceId,
+                    ip: ipBlock,
+                    card: cardId,
                     amount: Math.round(amt * 100) / 100,
                     hour,
                     isNight,
+                    channel: chan,
                     velocity1h: v1,
                     velocity24h: v24,
                     categoryRisk,
-                    graphRisk,
+                    merchantRisk,
+                    priorDeclines: declines,
+                    accountAge: age,
+                    geoDistance: Math.round(distance * 100) / 100,
+                    deviceUserCount,
+                    ipUserCount,
+                    cardUserCount,
+                    temporalBurst,
+                    entityLinkRisk,
+                    graphRisk: Math.min(1, graphRisk + fraud * 0.12),
+                    archetype,
                     fraud
                 });
             }
@@ -845,7 +893,11 @@
                 r.velocity24h,
                 r.graphRisk,
                 r.categoryRisk,
-                r.isNight
+                r.isNight,
+                r.entityLinkRisk || 0,
+                r.temporalBurst || 0,
+                Math.log1p(r.geoDistance || 0),
+                r.priorDeclines || 0
             ]);
         }
 
@@ -1380,7 +1432,13 @@
             rows.forEach(row => {
                 const userNode = `u:${row.user}`;
                 const merchantNode = `m:${row.merchant}`;
+                const deviceNode = `d:${row.device}`;
+                const ipNode = `ip:${row.ip}`;
+                const cardNode = `c:${row.card}`;
                 addEdge(userNode, merchantNode);
+                addEdge(userNode, deviceNode);
+                addEdge(userNode, ipNode);
+                addEdge(userNode, cardNode);
                 if (!userMerchants.has(row.user)) userMerchants.set(row.user, new Set());
                 if (!merchantUsers.has(row.merchant)) merchantUsers.set(row.merchant, new Set());
                 userMerchants.get(row.user).add(row.merchant);
@@ -1529,11 +1587,11 @@
             const deviations = rows.map(r => Math.abs(r.amount - median)).sort((a, b) => a - b);
             const mad = deviations[Math.floor(deviations.length / 2)] || 1;
             const raw = {
-                rules: rows.map(r => (r.amount > median + 6 * mad ? 0.45 : 0) + (r.velocity1h > 7 ? 0.35 : 0) + (r.isNight ? 0.12 : 0) + r.categoryRisk * 0.08),
-                iforest: rows.map(r => Math.abs(r.amount - median) / (mad * 12) + r.velocity1h / 18 + r.velocity24h / 60 + r.isNight * 0.08),
-                gbdt: rows.map(r => 1 / (1 + Math.exp(-(0.004 * (r.amount - median) + 0.18 * r.velocity1h + 0.05 * r.velocity24h + 0.45 * r.categoryRisk + 0.3 * r.isNight - 2.6)))),
-                vae: rows.map(r => Math.pow((r.amount - median) / (mad * 10), 2) + Math.pow((r.velocity1h - 3) / 8, 2) + Math.pow((r.velocity24h - 12) / 32, 2)),
-                graph: rows.map(r => r.graphRisk + (r.user % 23 === 0 ? 0.18 : 0) + (r.merchant % 19 === 0 ? 0.14 : 0))
+                rules: rows.map(r => (r.amount > median + 6 * mad ? 0.45 : 0) + (r.velocity1h > 7 ? 0.35 : 0) + (r.isNight ? 0.12 : 0) + r.categoryRisk * 0.08 + (r.priorDeclines || 0) * 0.04),
+                iforest: rows.map(r => Math.abs(r.amount - median) / (mad * 12) + r.velocity1h / 18 + r.velocity24h / 60 + r.isNight * 0.08 + (r.entityLinkRisk || 0) / 14 + Math.log1p(r.geoDistance || 0) / 18),
+                gbdt: rows.map(r => 1 / (1 + Math.exp(-(0.004 * (r.amount - median) + 0.18 * r.velocity1h + 0.05 * r.velocity24h + 0.45 * r.categoryRisk + 0.28 * (r.merchantRisk || 0) + 0.22 * (r.entityLinkRisk || 0) + 0.3 * r.isNight - 2.8)))),
+                vae: rows.map(r => Math.pow((r.amount - median) / (mad * 10), 2) + Math.pow((r.velocity1h - 3) / 8, 2) + Math.pow((r.velocity24h - 12) / 32, 2) + Math.pow(((r.geoDistance || 0) - 70) / 1200, 2)),
+                graph: rows.map(r => r.graphRisk + (r.entityLinkRisk || 0) * 0.24 + (r.deviceUserCount || 1) / 18 + (r.ipUserCount || 1) / 22 + (r.user % 23 === 0 ? 0.18 : 0) + (r.merchant % 19 === 0 ? 0.14 : 0))
             };
             const normalized = Object.fromEntries(Object.entries(raw).map(([k, v]) => [k, normalizeScores(v)]));
             normalized.moe = rows.map((_, i) => (
@@ -1571,9 +1629,9 @@
             const median = amounts[Math.floor(amounts.length / 2)];
             const amountSignal = normalizeScores(rows.map(r => Math.abs(r.amount - median)));
             const velocitySignal = normalizeScores(rows.map(r => r.velocity1h * 2 + r.velocity24h));
-            const graphSignal = normalizeScores(rows.map(r => r.graphRisk + (r.user % 23 === 0 ? 0.2 : 0) + (r.merchant % 19 === 0 ? 0.16 : 0)));
-            const temporalSignal = normalizeScores(rows.map(r => r.isNight + Math.abs(r.hour - 13) / 24 + r.velocity1h / 12));
-            const identitySignal = normalizeScores(rows.map(r => ((r.user % 17 === 0) ? 1 : 0) + ((r.merchant % 13 === 0) ? 1 : 0) + r.categoryRisk));
+            const graphSignal = normalizeScores(rows.map(r => r.graphRisk + (r.entityLinkRisk || 0) * 0.22 + (r.user % 23 === 0 ? 0.2 : 0) + (r.merchant % 19 === 0 ? 0.16 : 0)));
+            const temporalSignal = normalizeScores(rows.map(r => r.isNight + Math.abs(r.hour - 13) / 24 + r.velocity1h / 12 + (r.temporalBurst || 0) / 12));
+            const identitySignal = normalizeScores(rows.map(r => ((r.user % 17 === 0) ? 1 : 0) + ((r.merchant % 13 === 0) ? 1 : 0) + r.categoryRisk + (r.deviceUserCount || 1) / 8 + (r.ipUserCount || 1) / 12));
             return normalizeScores(rows.map((_, i) => (
                 base[i] * 0.52 +
                 amountSignal[i] * weight.amount +
@@ -1590,9 +1648,9 @@
             const baseItems = [
                 { key: 'amount', label: activeLang() === 'es' ? 'Monto anómalo' : 'Amount anomaly', value: Math.min(1, Math.log10(row.amount + 1) / 4) },
                 { key: 'velocity', label: activeLang() === 'es' ? 'Velocidad' : 'Velocity', value: Math.min(1, (row.velocity1h * 2 + row.velocity24h) / 55) },
-                { key: 'graph', label: activeLang() === 'es' ? 'Vecindario de grafo' : 'Graph neighborhood', value: Math.min(1, row.graphRisk + (row.user % 23 === 0 ? 0.18 : 0)) },
-                { key: 'temporal', label: activeLang() === 'es' ? 'Temporalidad' : 'Temporal context', value: Math.min(1, row.isNight * 0.55 + Math.abs(row.hour - 13) / 24) },
-                { key: 'identity', label: activeLang() === 'es' ? 'KYA/KYE' : 'KYA/KYE context', value: Math.min(1, row.categoryRisk + (row.merchant % 13 === 0 ? 0.25 : 0)) }
+                { key: 'graph', label: activeLang() === 'es' ? 'Vecindario de grafo' : 'Graph neighborhood', value: Math.min(1, row.graphRisk + (row.entityLinkRisk || 0) * 0.22 + (row.user % 23 === 0 ? 0.18 : 0)) },
+                { key: 'temporal', label: activeLang() === 'es' ? 'Temporalidad' : 'Temporal context', value: Math.min(1, row.isNight * 0.55 + Math.abs(row.hour - 13) / 24 + (row.temporalBurst || 0) / 15) },
+                { key: 'identity', label: activeLang() === 'es' ? 'KYA/KYE' : 'KYA/KYE context', value: Math.min(1, row.categoryRisk + (row.merchantRisk || 0) * 0.3 + (row.deviceUserCount || 1) / 10 + (row.ipUserCount || 1) / 14) }
             ];
             const emphasis = {
                 rules: ['velocity', 'amount', 'temporal'],
@@ -1636,6 +1694,54 @@
                 .sort((a, b) => b.score - a.score)
                 .slice(0, 42);
             const threshold = top[Math.min(9, top.length - 1)]?.score || 0.5;
+            const graphLike = spec.family === 'graph' || ['Collusion Detection', 'Louvain', 'Leiden', 'GraphSAGE', 'GAT', 'GCN', 'R-GCN', 'HGT', 'CrimeGNN', 'BRIGHT', 'Knowledge Graph', 'Graph Attention Evidence'].includes(spec.name);
+            if (graphLike) {
+                const colorFor = (item) => item.row.fraud && item.score >= threshold ? '#16a34a' : item.row.fraud ? '#dc2626' : item.score >= threshold ? '#2563eb' : '#94a3b8';
+                const focus = top.slice(0, 8);
+                const nodes = new Map();
+                const addNode = (id, label, kind, x, y, item) => {
+                    if (!nodes.has(id)) nodes.set(id, { id, label, kind, x, y, color: colorFor(item), fraud: item.row.fraud });
+                    else if (item.row.fraud && item.score >= threshold) nodes.get(id).color = '#16a34a';
+                };
+                const edges = [];
+                focus.forEach((item, index) => {
+                    const row = item.row;
+                    const y = 26 + index * 13;
+                    const jitter = (index % 2) * 8;
+                    addNode(`u${row.user}`, `U${row.user}`, 'user', 40 + jitter, y, item);
+                    addNode(`m${row.merchant}`, `M${row.merchant}`, 'merchant', 172 - jitter, y, item);
+                    addNode(`d${row.device}`, `D${row.device}`, 'device', 84, Math.max(18, y - 8), item);
+                    addNode(`ip${row.ip}`, `IP${row.ip}`, 'ip', 128, Math.min(138, y + 8), item);
+                    edges.push({ a: `u${row.user}`, b: `m${row.merchant}`, color: colorFor(item), width: item.score >= threshold ? 1.8 : 1.0, label: row.id });
+                    edges.push({ a: `u${row.user}`, b: `d${row.device}`, color: colorFor(item), width: 0.9, label: row.archetype });
+                    edges.push({ a: `u${row.user}`, b: `ip${row.ip}`, color: colorFor(item), width: 0.9, label: row.archetype });
+                });
+                const nodeList = Array.from(nodes.values()).slice(0, 34);
+                const nodeById = new Map(nodeList.map(node => [node.id, node]));
+                const edgeSvg = edges
+                    .filter(edge => nodeById.has(edge.a) && nodeById.has(edge.b))
+                    .map(edge => {
+                        const a = nodeById.get(edge.a);
+                        const b = nodeById.get(edge.b);
+                        return `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${edge.color}" stroke-width="${edge.width}" opacity="0.52"><title>${edge.label}</title></line>`;
+                    }).join('');
+                const nodeSvg = nodeList.map(node => `
+                    <g>
+                        <circle cx="${node.x}" cy="${node.y}" r="${node.kind === 'merchant' ? 4.2 : node.kind === 'user' ? 3.8 : 3.1}" fill="${node.color}" opacity="0.9"><title>${node.kind} ${node.label}</title></circle>
+                        <text x="${node.x}" y="${node.y - 5.2}" font-size="6.2" fill="#475569" text-anchor="middle">${node.label}</text>
+                    </g>
+                `).join('');
+                representation.innerHTML = `
+                    <svg viewBox="0 0 230 160" class="w-full rounded-2xl border border-slate-200 bg-slate-50" role="img" aria-label="${spec.name} graph representation">
+                        <rect x="12" y="12" width="206" height="132" rx="12" fill="#eff6ff" opacity="0.65" />
+                        <text x="115" y="154" font-size="8" fill="#64748b" text-anchor="middle">${activeLang() === 'es' ? 'subgrafo de usuarios, comercios, dispositivos e IP' : 'user, merchant, device, and IP subgraph'}</text>
+                        ${edgeSvg}
+                        ${nodeSvg}
+                    </svg>
+                    <div class="mt-2 text-[10px] text-slate-500">${activeLang() === 'es' ? 'Azul: alertas priorizadas. Verde: fraude priorizado correctamente. Rojo: fraude etiquetado no priorizado. Las aristas comparten el color de la transacción que conectan.' : 'Blue: prioritized alerts. Green: correctly prioritized fraud. Red: labeled fraud not prioritized. Edges inherit the color of the transaction they connect.'}</div>
+                `;
+                return;
+            }
             const points = top.map((item, idx) => {
                 const x = 18 + Math.min(184, Math.max(0, item.row.graphRisk * 130 + (item.row.user % 31) * 2));
                 const y = 142 - Math.min(118, Math.max(0, item.score * 112 + item.row.isNight * 8));
@@ -2067,7 +2173,7 @@
 
     async function loadTranslations() {
         try {
-            const res = await fetch('translations.json?v=20260701-direct-graph-ensemble', { cache: 'no-store' });
+            const res = await fetch('translations.json?v=20260701-scenario-graph-data', { cache: 'no-store' });
             translations = await res.json();
         } catch (e) {
             console.warn('Could not load translations.json, using fallback English');
