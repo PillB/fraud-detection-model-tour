@@ -233,12 +233,22 @@ def test_browser_lab_exposes_model_specific_runner_contract():
         "Logistic Regression",
         "Decision Trees",
         "Gradient Boosting",
+        "Autoencoder",
+        "VAE",
+        "Centrality",
+        "Community Detection",
+        "Collusion Detection",
+        "k-core",
+        "Motif Counting",
+        "Link Prediction",
     ]:
         assert direct_model in js
     assert "directStatisticalScores(name, rows)" in js
     assert "directDensityScores(name, rows)" in js
     assert "directGeometryScores(name, rows)" in js
     assert "directSupervisedScores(name, rows)" in js
+    assert "directDeepAnomalyScores(name, rows)" in js
+    assert "directGraphAnalyticsScores(name, rows)" in js
     assert "74 model-specific JavaScript runners" not in translations
     assert "74 tarjetas de modelo conectadas" in translations
     for model in covered:
