@@ -59,6 +59,20 @@ def test_primary_website_flows_with_playwright():
         assert page.locator(".consulting-card").count() == 74
         assert page.locator("#cards [data-card-model-visible]").count() == 74
         assert page.locator("#cards .consulting-card").filter(has_text="Runnable example").count() == 74
+        page.locator('[data-model-name="Isolation Forest"] a').filter(has_text="Card").first.click()
+        page.wait_for_function("location.hash === '#model-workspace'")
+        assert page.locator("#workspace-model-name").text_content() == "Isolation Forest"
+        assert page.locator("#workspace-inputs").text_content()
+
+        page.locator('[data-model-name="Isolation Forest"] a').filter(has_text="Run").first.click()
+        page.wait_for_function("location.hash === '#browser-lab'")
+        assert page.locator("#lab-model-select").input_value() == "iforest"
+        assert page.locator("#lab-chart").get_by_text("Isolation Forest proxy").is_visible()
+        assert not page.url.endswith(".py")
+        assert not page.url.endswith(".md")
+
+        page.locator('a[href="#cards"]').first.click()
+        page.wait_for_function("location.hash === '#cards'")
         page.get_by_role("button", name="Graph / Network").click()
         graph_card = page.locator("#cards .model-card").filter(has_text="GraphSAGE")
         xgb_card = page.locator("#cards .model-card").filter(has_text="XGBoost")

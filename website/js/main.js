@@ -18,6 +18,7 @@
         initMobileJumpNav();
         initCardsCoverageMatrix();
         initBrowserModelLab();
+        initModelWorkspace();
         
         // Mark animations
         document.querySelectorAll('.card, .bg-white.border').forEach((el, i) => {
@@ -158,6 +159,214 @@
             docs: docsByCategory[category],
             script: scriptByCategory[category]
         };
+    }
+
+    function labKeyForModel(name) {
+        const meta = modelMeta(name);
+        if (['XGBoost', 'LightGBM', 'CatBoost', 'Random Forest', 'Logistic Regression', 'Decision Trees', 'ExtraTrees', 'Gradient Boosting', 'TabTransformer', 'FT-Transformer', 'SAINT', 'TabNet', 'Cost-Sensitive Ensembles', 'Balanced Random Forest', 'EasyEnsemble', 'RUSBoost'].includes(name)) return 'gbdt';
+        if (['VAE', 'Autoencoder', 'Deep SVDD', 'DAGMM', 'CTGAN', 'Diffusion / TabDDPM'].includes(name)) return 'vae';
+        if (['GraphSAGE', 'GAT', 'R-GCN', 'HGT', 'GCN', 'Heterogeneous GNN', 'Centrality', 'Community Detection', 'Collusion Detection', 'Louvain', 'Leiden', 'k-core', 'Motif Counting', 'Link Prediction', 'CrimeGNN', 'BRIGHT', 'Entity Resolution', 'Knowledge Graph', 'Graph Attention Evidence'].includes(name)) return 'graph';
+        if (['MoE', 'Cascades', 'Stacking', 'Self-Supervised Pretraining', 'GraphRAG', 'Federated Learning'].includes(name)) return 'moe';
+        if (['Z-Score', 'IQR', 'MAD', 'Modified Z-Score'].includes(name)) return 'rules';
+        if (['TGN', 'TGAT', 'JODIE', 'DyRep', 'EvolveGCN', 'Temporal Graph Validation'].includes(name)) return 'graph';
+        if (['LSTM', 'GRU', 'Transformer Sequences', 'Interleaved RNN', 'BERT4ETH'].includes(name)) return 'moe';
+        return meta.category === 'graph' ? 'graph' : 'iforest';
+    }
+
+    function modelNarrative(name) {
+        const meta = modelMeta(name);
+        const labKey = labKeyForModel(name);
+        const categoryNarrative = {
+            supervised: {
+                inputs: {
+                    en: 'Transaction rows with engineered velocity, amount deviation, merchant, account, device, and KYA/KYE attributes.',
+                    es: 'Filas de transacciones con variables de velocidad, desviación de monto, comercio, cuenta, dispositivo y atributos KYA/KYE.'
+                },
+                outputs: {
+                    en: 'A calibrated fraud score, feature importance or SHAP-style evidence, and rank-ordered review queues.',
+                    es: 'Un puntaje calibrado de fraude, evidencia tipo importancia/SHAP y colas de revisión ordenadas por riesgo.'
+                },
+                limits: {
+                    en: 'Needs representative labels and retraining. It can miss new collusion patterns unless graph or anomaly scores are added.',
+                    es: 'Necesita etiquetas representativas y reentrenamiento. Puede omitir patrones nuevos de colusión si no se agregan señales de grafo o anomalía.'
+                }
+            },
+            generative: {
+                inputs: {
+                    en: 'Mostly legitimate transactions or weakly labeled data, scaled numeric features, and behavior windows.',
+                    es: 'Transacciones principalmente legítimas o con etiquetas débiles, variables numéricas escaladas y ventanas de comportamiento.'
+                },
+                outputs: {
+                    en: 'An anomaly score, reconstruction or isolation evidence, and a triage list for novel or rare behavior.',
+                    es: 'Un puntaje de anomalía, evidencia de reconstrucción o aislamiento y una lista de priorización para conductas nuevas o raras.'
+                },
+                limits: {
+                    en: 'Scores are relative and require threshold calibration. High anomaly does not automatically mean confirmed fraud.',
+                    es: 'Los puntajes son relativos y requieren calibrar umbrales. Una anomalía alta no significa fraude confirmado automáticamente.'
+                }
+            },
+            hybrid: {
+                inputs: {
+                    en: 'Scores or embeddings from rules, anomaly detectors, supervised models, temporal features, and graph features.',
+                    es: 'Puntajes o embeddings de reglas, detectores de anomalías, modelos supervisados, variables temporales y variables de grafo.'
+                },
+                outputs: {
+                    en: 'A fused decision score, routed expert evidence, and a production-style escalation path.',
+                    es: 'Un puntaje fusionado, evidencia del experto seleccionado y una ruta de escalamiento estilo producción.'
+                },
+                limits: {
+                    en: 'More moving parts means harder monitoring, explainability, and rollback. Keep component metrics visible.',
+                    es: 'Más componentes implican monitoreo, explicabilidad y reversión más difíciles. Mantén visibles las métricas de cada componente.'
+                }
+            },
+            sequence: {
+                inputs: {
+                    en: 'Ordered user, card, merchant, device, or graph events with timestamps and rolling behavior features.',
+                    es: 'Eventos ordenados de usuario, tarjeta, comercio, dispositivo o grafo con marcas de tiempo y variables móviles.'
+                },
+                outputs: {
+                    en: 'Behavioral risk over time, drift-sensitive embeddings, or a sequence-aware alert score.',
+                    es: 'Riesgo conductual en el tiempo, embeddings sensibles a deriva o un puntaje de alerta con contexto secuencial.'
+                },
+                limits: {
+                    en: 'Requires careful temporal splits and enough history. Cold-start entities need fallback tabular or graph gates.',
+                    es: 'Requiere particiones temporales cuidadosas y suficiente historial. Entidades nuevas necesitan respaldo tabular o de grafo.'
+                }
+            },
+            tabular: {
+                inputs: {
+                    en: 'High-cardinality categorical fields, numeric transaction features, and KYA/KYE context.',
+                    es: 'Campos categóricos de alta cardinalidad, variables numéricas de transacción y contexto KYA/KYE.'
+                },
+                outputs: {
+                    en: 'Contextual tabular embeddings, fraud scores, and attention-style evidence for feature interactions.',
+                    es: 'Embeddings tabulares contextuales, puntajes de fraude y evidencia tipo atención para interacciones entre variables.'
+                },
+                limits: {
+                    en: 'Often needs more data and tuning than boosted trees. Benchmark against XGBoost or LightGBM before adopting.',
+                    es: 'Suele necesitar más datos y ajuste que árboles potenciados. Compáralo contra XGBoost o LightGBM antes de adoptarlo.'
+                }
+            },
+            graph: {
+                inputs: {
+                    en: 'User-device-merchant-account graphs, typed relationships, communities, motifs, and temporal edge events.',
+                    es: 'Grafos usuario-dispositivo-comercio-cuenta, relaciones tipadas, comunidades, motivos y eventos temporales de aristas.'
+                },
+                outputs: {
+                    en: 'Entity risk, suspicious communities, hidden-link candidates, and evidence neighborhoods for investigators.',
+                    es: 'Riesgo de entidad, comunidades sospechosas, candidatos a enlaces ocultos y vecindarios de evidencia para investigadores.'
+                },
+                limits: {
+                    en: 'Graph leakage and stale edges can mislead metrics. Use temporal validation and explainable neighborhoods.',
+                    es: 'La fuga de información del grafo y aristas obsoletas pueden distorsionar métricas. Usa validación temporal y vecindarios explicables.'
+                }
+            }
+        };
+        const narrative = categoryNarrative[meta.category];
+        return {
+            name,
+            meta,
+            labKey,
+            inputs: localizedText(narrative.inputs),
+            outputs: localizedText(narrative.outputs),
+            fit: meta.best,
+            limits: localizedText(narrative.limits)
+        };
+    }
+
+    function inferModelFromHref(href, text) {
+        const models = getRequiredModels();
+        const haystack = decodeURIComponent(`${href || ''} ${text || ''}`).toLowerCase().replace(/[_-]/g, ' ');
+        return models.find((name) => haystack.includes(name.toLowerCase().replace(/[_-]/g, ' ')))
+            || (haystack.includes('xgboost') ? 'XGBoost' : null)
+            || (haystack.includes('graphsage') ? 'GraphSAGE' : null)
+            || (haystack.includes('tabtransformer') ? 'TabTransformer' : null)
+            || (haystack.includes('isolation forest') ? 'Isolation Forest' : null)
+            || (haystack.includes('randomforest') ? 'Random Forest' : null)
+            || (haystack.includes('community') ? 'Community Detection' : null)
+            || (haystack.includes('temporal') ? 'Temporal Graph Validation' : null)
+            || (haystack.includes('rgcn') ? 'R-GCN' : null)
+            || (haystack.includes('graphrag') ? 'GraphRAG' : null)
+            || (haystack.includes('vae') ? 'VAE' : null)
+            || (haystack.includes('moe') ? 'MoE' : null)
+            || null;
+    }
+
+    function selectWorkspaceModel(name) {
+        const workspace = document.getElementById('model-workspace');
+        if (!workspace || !name) return;
+        const detail = modelNarrative(name);
+        const setText = (id, value) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        };
+        setText('workspace-model-name', detail.name);
+        setText('workspace-model-label', localizedText(detail.meta.label));
+        setText('workspace-model-summary', detail.meta.best);
+        setText('workspace-inputs', detail.inputs);
+        setText('workspace-outputs', detail.outputs);
+        setText('workspace-fit', detail.fit);
+        setText('workspace-limits', detail.limits);
+        const source = document.getElementById('workspace-source');
+        if (source) source.href = detail.meta.docs;
+        const run = document.getElementById('workspace-run');
+        if (run) run.dataset.modelName = detail.name;
+        const note = document.getElementById('workspace-run-note');
+        if (note) {
+            note.textContent = activeLang() === 'es'
+                ? `${detail.name} se ejecuta en el laboratorio con el proxy "${detail.labKey}". El enlace fuente queda disponible para revisar la implementación Python.`
+                : `${detail.name} runs in the browser lab with the "${detail.labKey}" proxy. The source link remains available for the Python implementation.`;
+        }
+    }
+
+    function runModelInBrowserLab(name) {
+        if (!name) return;
+        selectWorkspaceModel(name);
+        const key = labKeyForModel(name);
+        const lab = document.getElementById('browser-lab');
+        const select = document.getElementById('lab-model-select');
+        const runButton = document.getElementById('lab-run');
+        if (select && Array.from(select.options).some((option) => option.value === key)) {
+            select.value = key;
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+        } else if (window.ModelTour && typeof window.ModelTour.runBrowserLab === 'function') {
+            window.ModelTour.runBrowserLab();
+        }
+        if (runButton) runButton.click();
+        if (lab) {
+            lab.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.replaceState({}, '', '#browser-lab');
+        }
+    }
+
+    function initModelWorkspace() {
+        selectWorkspaceModel('XGBoost');
+        const run = document.getElementById('workspace-run');
+        if (run) {
+            run.addEventListener('click', () => runModelInBrowserLab(run.dataset.modelName || 'XGBoost'));
+        }
+        document.addEventListener('click', (event) => {
+            const anchor = event.target.closest('a');
+            if (!anchor) return;
+            const href = anchor.getAttribute('href') || '';
+            const card = anchor.closest('.model-card');
+            const text = anchor.textContent || '';
+            const name = (card && card.dataset.modelName) || inferModelFromHref(href, text);
+            const isModelCardLink = href.includes('/model-cards/') || href.includes('docs/model-cards') || /^(card|full card|ficha|tarjeta completa)$/i.test(text.trim());
+            const isRunLink = href.includes('/experiments/') || /run|script|ejecutar|example|ejemplo/i.test(text);
+            if (!name || (!isModelCardLink && !isRunLink)) return;
+            event.preventDefault();
+            if (isRunLink) {
+                runModelInBrowserLab(name);
+                return;
+            }
+            selectWorkspaceModel(name);
+            const workspace = document.getElementById('model-workspace');
+            if (workspace) {
+                workspace.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                history.replaceState({}, '', `#model-workspace`);
+            }
+        });
     }
 
     function initFullModelSurfaces() {

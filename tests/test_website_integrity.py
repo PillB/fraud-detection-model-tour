@@ -207,6 +207,7 @@ def test_core_sections_follow_guided_narrative_order():
         "tradeoffs",
         "decision-matrix",
         "cards",
+        "model-workspace",
         "metrics",
         "experiments",
         "browser-lab",
