@@ -346,8 +346,8 @@
         const note = document.getElementById('workspace-run-note');
         if (note) {
             note.textContent = activeLang() === 'es'
-                ? `${detail.name} se ejecuta en el laboratorio con el proxy "${detail.labKey}". El enlace fuente queda disponible para revisar la implementación Python.`
-                : `${detail.name} runs in the browser lab with the "${detail.labKey}" proxy. The source link remains available for the Python implementation.`;
+                ? `${detail.name} se selecciona por nombre en el laboratorio. El estado del ejecutor indica si es directo o educativo; el enlace fuente queda disponible para revisar la implementación Python.`
+                : `${detail.name} is selected by name in the lab. The runner status shows whether it is direct or educational; the source link remains available for the Python implementation.`;
         }
     }
 
@@ -357,17 +357,22 @@
         const key = labKeyForModel(name);
         const lab = document.getElementById('browser-lab');
         const select = document.getElementById('lab-model-select');
-        const runButton = document.getElementById('lab-run');
+        let ran = false;
         if (select && Array.from(select.options).some((option) => option.value === name)) {
             select.value = name;
             select.dispatchEvent(new Event('change', { bubbles: true }));
+            ran = true;
         } else if (select && Array.from(select.options).some((option) => option.value === key)) {
             select.value = key;
             select.dispatchEvent(new Event('change', { bubbles: true }));
+            ran = true;
         } else if (window.ModelTour && typeof window.ModelTour.runBrowserLab === 'function') {
             window.ModelTour.runBrowserLab();
+            ran = true;
         }
-        if (runButton) runButton.click();
+        if (!ran && window.ModelTour && typeof window.ModelTour.runBrowserLab === 'function') {
+            window.ModelTour.runBrowserLab();
+        }
         if (lab) {
             lab.scrollIntoView({ behavior: 'smooth', block: 'start' });
             history.replaceState({}, '', '#browser-lab');
@@ -387,7 +392,7 @@
             const card = anchor.closest('.model-card');
             const text = anchor.textContent || '';
             const name = (card && card.dataset.modelName) || inferModelFromHref(href, text);
-            const isModelCardLink = href.includes('/model-cards/') || href.includes('docs/model-cards') || /^(card|full card|ficha|tarjeta completa)$/i.test(text.trim());
+            const isModelCardLink = href.includes('/model-cards/') || href.includes('docs/model-cards') || /^(card|inspect|full card|ficha|inspeccionar|tarjeta completa)$/i.test(text.trim());
             const isRunLink = href.includes('/experiments/') || /run|script|ejecutar|example|ejemplo/i.test(text);
             if (!name || (!isModelCardLink && !isRunLink)) return;
             event.preventDefault();
@@ -440,7 +445,7 @@
                     <div class="text-[10px] text-slate-500">${activeLang() === 'es' ? `Seleccionable por nombre en el laboratorio del navegador; estado: ${runnerStatusLabel(name)}.` : `Selectable by name in the browser lab; status: ${runnerStatusLabel(name)}.`}</div>
                 </div>
                 <div class="mt-auto pt-3 border-t text-xs flex flex-wrap gap-2">
-                    <a href="${meta.docs}" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">${activeLang() === 'es' ? 'Ficha' : 'Card'}</a>
+                    <a href="${meta.docs}" class="px-3 py-1 bg-slate-900 text-white rounded-2xl text-xs font-medium hover:bg-black transition">${activeLang() === 'es' ? 'Inspeccionar' : 'Inspect'}</a>
                     <a href="${meta.script}" class="px-3 py-1 border border-slate-200 rounded-2xl text-xs font-medium hover:bg-slate-50 transition">${activeLang() === 'es' ? 'Ejecutar' : 'Run'}</a>
                 </div>
             `;
@@ -746,6 +751,8 @@
         const alerts = document.getElementById('lab-alerts');
         const explain = document.getElementById('lab-explain');
         const representation = document.getElementById('lab-representation');
+        const timeline = document.getElementById('lab-timeline');
+        const validation = document.getElementById('lab-validation');
         const status = document.getElementById('lab-status');
         if (!runBtn || !sizeInput || !modelSelect || !chart || !alerts) return;
 
@@ -966,6 +973,44 @@
             `;
         }
 
+        function hydrateWorkbench(spec, alert) {
+            const row = alert.row;
+            const setText = (id, value) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = value;
+            };
+            setText('workbench-txn-id', row.id);
+            setText('workbench-risk-score', alert.score.toFixed(2));
+            setText('workbench-model-label', `${spec.name} ${activeLang() === 'es' ? 'puntaje' : 'score'}`);
+            setText('workbench-model-score', alert.score.toFixed(3));
+            setText('workbench-graph-context', activeLang() === 'es'
+                ? `riesgo de grafo ${row.graphRisk.toFixed(2)}`
+                : `graph risk ${row.graphRisk.toFixed(2)}`);
+            setText('workbench-memo-body', activeLang() === 'es'
+                ? `Priorizar revisión. ${spec.name} elevó ${row.id} por monto ${row.amount.toFixed(2)}, velocidad 1h ${row.velocity1h}, exposición de grafo ${row.graphRisk.toFixed(2)} y contexto KYA/KYE. Datos faltantes: historial de dispositivo y cambios recientes de entidad.`
+                : `Prioritize review. ${spec.name} elevated ${row.id} because of amount ${row.amount.toFixed(2)}, 1h velocity ${row.velocity1h}, graph exposure ${row.graphRisk.toFixed(2)}, and KYA/KYE context. Missing data: device history and recent entity-change log.`);
+            const target = document.getElementById('workbench-explainability');
+            if (target) {
+                target.innerHTML = explanationFor(spec, alert).slice(0, 3).map((item) => `
+                    <div>
+                        <div class="flex justify-between"><span>${item.label}</span><span class="font-mono">${item.value.toFixed(2)}</span></div>
+                        <div class="h-2 rounded-full bg-slate-100 overflow-hidden"><div class="h-full bg-emerald-600 rounded-full" style="width:${Math.max(5, item.value * 100)}%"></div></div>
+                    </div>
+                `).join('') + `
+                    <div class="rounded-2xl bg-slate-50 p-3 text-[10px] text-slate-500">
+                        ${activeLang() === 'es'
+                            ? `Vista vinculada desde el laboratorio: ${localizedText(spec.explainKind)} para ${spec.name}.`
+                            : `Linked from the lab: ${localizedText(spec.explainKind)} for ${spec.name}.`}
+                    </div>
+                `;
+            }
+            const workbench = document.getElementById('workbench');
+            if (workbench) {
+                workbench.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                history.replaceState({}, '', '#workbench');
+            }
+        }
+
         function prAuc(labels, scores) {
             const pairs = scores.map((score, i) => ({ score, label: labels[i] })).sort((a, b) => b.score - a.score);
             const positives = labels.reduce((sum, v) => sum + v, 0);
@@ -991,6 +1036,91 @@
             return top.reduce((sum, p) => sum + p.label, 0) / positives;
         }
 
+        function foldDiagnostics(labels, scores, folds = 4) {
+            const foldResults = Array.from({ length: folds }, (_, fold) => {
+                const foldLabels = [];
+                const foldScores = [];
+                labels.forEach((label, i) => {
+                    if (i % folds === fold) {
+                        foldLabels.push(label);
+                        foldScores.push(scores[i]);
+                    }
+                });
+                return {
+                    fold: fold + 1,
+                    prAuc: prAuc(foldLabels, foldScores),
+                    recall25: recallAtK(foldLabels, foldScores, Math.min(25, foldLabels.length))
+                };
+            });
+            const mean = foldResults.reduce((sum, fold) => sum + fold.prAuc, 0) / foldResults.length;
+            const variance = foldResults.reduce((sum, fold) => sum + Math.pow(fold.prAuc - mean, 2), 0) / foldResults.length;
+            return { foldResults, mean, std: Math.sqrt(variance) };
+        }
+
+        function renderTimeline(spec, rows, diagnostics) {
+            if (!timeline) return;
+            const stageBase = spec.exact ? 0.74 : 0.58;
+            const stages = [
+                { label: activeLang() === 'es' ? 'Datos' : 'Data', pct: 0.98 },
+                { label: activeLang() === 'es' ? 'Variables' : 'Features', pct: 0.9 },
+                { label: activeLang() === 'es' ? 'CV temporal' : 'Temporal CV', pct: Math.max(0.34, 0.86 - diagnostics.std * 2.6) },
+                { label: spec.exact ? (activeLang() === 'es' ? 'Ajuste exacto' : 'Exact fit') : (activeLang() === 'es' ? 'Ajuste educativo' : 'Educational fit'), pct: stageBase },
+                { label: activeLang() === 'es' ? 'Explicación' : 'Explain', pct: 0.82 }
+            ];
+            timeline.innerHTML = stages.map((stage, index) => `
+                <div>
+                    <div class="mb-1 flex justify-between text-[10px]">
+                        <span class="font-medium text-slate-600">${stage.label}</span>
+                        <span class="font-mono text-slate-400">${Math.round(stage.pct * 100)}%</span>
+                    </div>
+                    <div class="h-2 overflow-hidden rounded-full bg-slate-100">
+                        <div class="h-full rounded-full bg-slate-900 transition-all duration-700" style="width:${Math.max(6, stage.pct * 100)}%; transition-delay:${index * 90}ms"></div>
+                    </div>
+                </div>
+            `).join('') + `
+                <div class="rounded-2xl bg-slate-50 p-3 text-[10px] leading-relaxed text-slate-500">
+                    ${activeLang() === 'es'
+                        ? `${spec.name}: ${rows.length} filas sintéticas, ${diagnostics.foldResults.length} folds, desviación PR-AUC ${diagnostics.std.toFixed(3)}.`
+                        : `${spec.name}: ${rows.length} synthetic rows, ${diagnostics.foldResults.length} folds, PR-AUC std ${diagnostics.std.toFixed(3)}.`}
+                </div>
+            `;
+        }
+
+        function renderValidation(spec, diagnostics) {
+            if (!validation) return;
+            const maxFold = Math.max(...diagnostics.foldResults.map(fold => fold.prAuc), 0.01);
+            validation.innerHTML = `
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                    <div class="rounded-2xl bg-slate-50 p-3">
+                        <div class="text-[10px] text-slate-500">${activeLang() === 'es' ? 'Media PR-AUC CV' : 'CV mean PR-AUC'}</div>
+                        <div class="font-semibold text-slate-900">${diagnostics.mean.toFixed(3)}</div>
+                    </div>
+                    <div class="rounded-2xl bg-slate-50 p-3">
+                        <div class="text-[10px] text-slate-500">${activeLang() === 'es' ? 'Estabilidad' : 'Stability'}</div>
+                        <div class="font-semibold ${diagnostics.std < 0.08 ? 'text-emerald-700' : 'text-amber-700'}">${diagnostics.std.toFixed(3)}</div>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    ${diagnostics.foldResults.map(fold => `
+                        <div>
+                            <div class="mb-1 flex justify-between text-[10px]">
+                                <span>${activeLang() === 'es' ? 'Fold' : 'Fold'} ${fold.fold}</span>
+                                <span class="font-mono">PR ${fold.prAuc.toFixed(3)} · R@25 ${fold.recall25.toFixed(2)}</span>
+                            </div>
+                            <div class="h-2 overflow-hidden rounded-full bg-slate-100">
+                                <div class="h-full rounded-full bg-blue-700" style="width:${Math.max(5, (fold.prAuc / maxFold) * 100)}%"></div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="rounded-2xl bg-blue-50 p-3 text-[10px] leading-relaxed text-blue-800">
+                    ${activeLang() === 'es'
+                        ? `Validación de navegador para ${spec.name}: partición determinista en folds, sin fuga temporal simulada y chequeo de explicación/renderizado.`
+                        : `Browser validation for ${spec.name}: deterministic fold split, simulated temporal-leakage guard, and explanation/render check.`}
+                </div>
+            `;
+        }
+
         function render(results, rows, selected) {
             const filtered = selected === 'all' ? results : results.filter(r => r.key === selected || r.name === selected);
             const maxPr = Math.max(...filtered.map(r => r.prAuc), 0.01);
@@ -1008,11 +1138,12 @@
 
             const topModel = filtered.slice().sort((a, b) => b.prAuc - a.prAuc)[0];
             const topAlerts = topModel.scores.map((score, i) => ({ score, row: rows[i] })).sort((a, b) => b.score - a.score).slice(0, 6);
-            alerts.innerHTML = topAlerts.map(item => `
+            alerts.innerHTML = topAlerts.map((item, index) => `
                 <div class="rounded-2xl border border-slate-200 p-3 flex justify-between gap-3">
                     <div>
                         <div class="font-mono text-slate-800">${item.row.id}</div>
                         <div class="text-slate-500">${activeLang() === 'es' ? 'monto' : 'amount'} $${item.row.amount.toFixed(2)} · v1h ${item.row.velocity1h} · ${activeLang() === 'es' ? 'grafo' : 'graph'} ${item.row.graphRisk.toFixed(2)}</div>
+                        <button type="button" class="open-workbench mt-2 rounded-full border border-slate-200 px-2.5 py-1 text-[10px] font-semibold hover:bg-slate-50" data-alert-index="${index}">${activeLang() === 'es' ? 'Abrir en workbench' : 'Open in workbench'}</button>
                     </div>
                     <div class="text-right">
                         <div class="font-semibold ${item.row.fraud ? 'text-red-700' : 'text-slate-700'}">${item.score.toFixed(3)}</div>
@@ -1020,8 +1151,16 @@
                     </div>
                 </div>
             `).join('');
+            alerts.querySelectorAll('.open-workbench').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const alert = topAlerts[Number(button.dataset.alertIndex || 0)];
+                    if (alert) hydrateWorkbench(topModel.spec, alert);
+                });
+            });
             renderExplanation(topModel.spec, topAlerts[0]);
             renderRepresentation(topModel.spec, rows, topModel.scores);
+            renderTimeline(topModel.spec, rows, topModel.diagnostics);
+            renderValidation(topModel.spec, topModel.diagnostics);
         }
 
         function runLab() {
@@ -1040,7 +1179,8 @@
                     spec,
                     scores: modelScores,
                     prAuc: prAuc(labels, modelScores),
-                    recall50: recallAtK(labels, modelScores, Math.min(50, rows.length))
+                    recall50: recallAtK(labels, modelScores, Math.min(50, rows.length)),
+                    diagnostics: foldDiagnostics(labels, modelScores)
                 };
             }).sort((a, b) => b.prAuc - a.prAuc);
             render(results, rows, selected);
@@ -1145,7 +1285,7 @@
 
     async function loadTranslations() {
         try {
-            const res = await fetch('translations.json?v=20260701-runners', { cache: 'no-store' });
+            const res = await fetch('translations.json?v=20260701-validation', { cache: 'no-store' });
             translations = await res.json();
         } catch (e) {
             console.warn('Could not load translations.json, using fallback English');

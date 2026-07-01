@@ -44,8 +44,8 @@
     "es": "Ver pruebas comparativas"
   },
   "hero.badge": {
-    "en": "RESEARCH-BACKED • REGRESSION-GATED EXAMPLES • 2024-2026 SURVEYS",
-    "es": "RESPALDADO POR INVESTIGACIÓN • EJEMPLOS CON PRUEBAS DE REGRESIÓN • SURVEYS 2024-2026"
+    "en": "RESEARCH-BACKED • REGRESSION-TESTED EXAMPLES • 2024-2026 LITERATURE",
+    "es": "RESPALDADO POR INVESTIGACIÓN • EJEMPLOS CON PRUEBAS DE REGRESIÓN • LITERATURA 2024-2026"
   },
   "hero.title": {
     "en": "Fraud Detection<br>ML Techniques",
@@ -340,8 +340,8 @@
     "es": "Velocidad y agregados KYA dominan las clasificaciones de importancia. Es la capa supervisada primaria y se combina naturalmente con puntajes de anomalía."
   },
   "cards.xgboost.full": {
-    "en": "Full Card",
-    "es": "Tarjeta Completa"
+    "en": "Inspect",
+    "es": "Inspeccionar"
   },
   "cards.xgboost.run": {
     "en": "Runnable example",
@@ -636,8 +636,8 @@
     "es": "Ejecuta modelos antifraude en el sitio"
   },
   "lab.desc": {
-    "en": "Generate synthetic transactions, choose any of the 74 model-specific browser selections, compute PR-AUC and Recall@K, and inspect alerts, explanation bars, and a compact representation plot without leaving the page. Heavy production models remain linked through Python; the browser lab clearly labels exact lightweight runners versus educational approximations.",
-    "es": "Genera transacciones sintéticas, elige cualquiera de las 74 selecciones específicas por modelo en el navegador, calcula PR-AUC y Recall@K, e inspecciona alertas, barras de explicación y una visualización compacta de representación sin salir de la página. Los modelos pesados de producción siguen vinculados mediante Python; el laboratorio distingue claramente ejecutores ligeros exactos y aproximaciones educativas."
+    "en": "Generate synthetic transactions, choose from 74 model-card selections mapped to direct lightweight or educational browser runners, compute PR-AUC and Recall@K, and inspect alerts, explanation bars, cross-validation diagnostics, and representation plots without leaving the page.",
+    "es": "Genera transacciones sintéticas, elige entre 74 tarjetas de modelo conectadas a ejecutores ligeros directos o educativos del navegador, calcula PR-AUC y Recall@K, e inspecciona alertas, barras de explicación, diagnósticos de validación cruzada y visualizaciones de representación sin salir de la página."
   },
   "lab.controls": {
     "en": "Controls",
@@ -692,8 +692,8 @@
     "es": "Listo. Se ejecuta localmente en tu navegador."
   },
   "lab.note": {
-    "en": "Exact lightweight runners are used where the math is small enough for the browser. Deep trees, neural networks, GNNs, TGNNs, and generative models use model-specific educational runners plus links to Python implementations.",
-    "es": "Se usan ejecutores ligeros exactos cuando la matemática cabe bien en el navegador. Árboles profundos, redes neuronales, GNN, TGNN y modelos generativos usan ejecutores educativos específicos por modelo más enlaces a implementaciones Python."
+    "en": "Direct lightweight runners are used for simple rules/statistics where the browser implementation matches the intended calculation. Deep trees, neural networks, GNNs, TGNNs, and generative models use model-specific educational runners plus links to Python implementations.",
+    "es": "Se usan ejecutores ligeros directos para reglas y estadísticas simples cuando el cálculo es lo bastante simple para ejecutarse fielmente en el navegador. Árboles profundos, redes neuronales, GNN, TGNN y modelos generativos usan ejecutores educativos específicos por modelo más enlaces a implementaciones Python."
   },
   "lab.metrics": {
     "en": "Metrics",
@@ -707,9 +707,17 @@
     "en": "Top risk alerts",
     "es": "Alertas de mayor riesgo"
   },
+  "lab.timeline": {
+    "en": "Training timeline",
+    "es": "Línea de entrenamiento"
+  },
   "lab.explain": {
     "en": "Explainability companion",
     "es": "Explicabilidad complementaria"
+  },
+  "lab.validation": {
+    "en": "Validation diagnostics",
+    "es": "Diagnósticos de validación"
   },
   "lab.representation": {
     "en": "Representation view",
@@ -904,8 +912,8 @@
     "es": "MoE, stacking o ensambles en cascada."
   },
   "footer.text1": {
-    "en": "Built with rigor for practitioners, students, and research teams.<br>All implementations pass the regression gate. Model cards cite foundational and recent work, including An &amp; Cho, Hamilton et al., Vallarino, Chen, and broader graph/fraud literature.",
-    "es": "Construido con rigor para profesionales, estudiantes y equipos de investigación.<br>Todas las implementaciones pasan la puerta de regresión. Las tarjetas de modelo citan trabajos fundacionales y recientes, incluidos An &amp; Cho, Hamilton et al., Vallarino, Chen y literatura amplia de grafos/fraude."
+    "en": "Built with rigor for practitioners, students, and research teams.<br>All example implementations pass the project's regression tests. Model cards cite foundational and recent work, including An &amp; Cho, Hamilton et al., Vallarino, Chen, and broader graph/fraud literature.",
+    "es": "Construido con rigor para profesionales, estudiantes y equipos de investigación.<br>Todas las implementaciones de ejemplo pasan las pruebas de regresión del proyecto. Las tarjetas de modelo citan trabajos fundacionales y recientes, incluidos An &amp; Cho, Hamilton et al., Vallarino, Chen y literatura amplia de grafos/fraude."
   },
   "footer.pillb": {
     "en": "PillB • Educational &amp; research use",
@@ -1152,24 +1160,24 @@
     "es": "Capa conductual después del filtro"
   },
   "cards.vae.full": {
-    "en": "Full Card",
-    "es": "Tarjeta Completa"
+    "en": "Inspect",
+    "es": "Inspeccionar"
   },
   "cards.moe.full": {
-    "en": "Full Card",
-    "es": "Tarjeta Completa"
+    "en": "Inspect",
+    "es": "Inspeccionar"
   },
   "cards.lstm.full": {
-    "en": "Full Card",
-    "es": "Tarjeta Completa"
+    "en": "Inspect",
+    "es": "Inspeccionar"
   },
   "cards.tab.full": {
-    "en": "Full Card",
-    "es": "Tarjeta Completa"
+    "en": "Inspect",
+    "es": "Inspeccionar"
   },
   "cards.graph.full": {
-    "en": "Full Card",
-    "es": "Tarjeta Completa"
+    "en": "Inspect",
+    "es": "Inspeccionar"
   },
   "a11y.skip": {
     "en": "Skip to main content",
@@ -1561,7 +1569,7 @@
   },
   "workbench.desc": {
     "en": "A useful fraud product does not stop at a score. It helps an analyst understand why the alert exists, what graph context matters, what evidence is missing, and which action is defensible.",
-    "es": "Un producto antifraude útil no se detiene en un score. Ayuda al analista a entender por qué existe la alerta, qué contexto de grafo importa, qué evidencia falta y qué acción es defendible."
+    "es": "Un producto antifraude útil no se detiene en una puntuación de riesgo. Ayuda al analista a entender por qué existe la alerta, qué contexto de grafo importa, qué evidencia falta y qué acción es defendible."
   },
   "workbench.alert.title": {
     "en": "1. ALERT SUMMARY",
@@ -1576,12 +1584,32 @@
     "es": "riesgo híbrido"
   },
   "workbench.alert.gate": {
-    "en": "Rules / IF gate",
-    "es": "Reglas / filtro IF"
+    "en": "Rules / Isolation Forest gate",
+    "es": "Reglas / filtro Isolation Forest"
   },
   "workbench.alert.triggered": {
     "en": "triggered",
     "es": "activado"
+  },
+  "workbench.explain.title": {
+    "en": "Explanation stack",
+    "es": "Pila de explicación"
+  },
+  "workbench.explain.amount": {
+    "en": "Amount anomaly",
+    "es": "Anomalía de monto"
+  },
+  "workbench.explain.graph": {
+    "en": "Graph neighborhood",
+    "es": "Vecindario de grafo"
+  },
+  "workbench.explain.velocity": {
+    "en": "Velocity burst",
+    "es": "Ráfaga de velocidad"
+  },
+  "workbench.explain.note": {
+    "en": "Companion view for SHAP-style tabular evidence, reconstruction residuals, and graph-neighborhood support.",
+    "es": "Vista complementaria para evidencia tabular tipo SHAP, residuales de reconstrucción y soporte del vecindario de grafo."
   },
   "workbench.alert.tree": {
     "en": "Tree classifier",
