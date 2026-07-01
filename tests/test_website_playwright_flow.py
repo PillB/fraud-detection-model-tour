@@ -115,7 +115,7 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-validation").get_by_text("Simulated training/cross-validation trace").is_visible()
         assert page.locator("#lab-timeline").get_by_text("Simulated training trace").is_visible()
         assert page.locator("#lab-timeline svg").count() >= 1
-        for direct_model in ["Z-Score", "IQR", "MAD", "Modified Z-Score", "HBOS", "ECOD", "COPOD", "PCA Reconstruction", "Robust Covariance", "kNN Outlier", "KMeans", "DBSCAN", "Logistic Regression", "Decision Trees", "Gradient Boosting", "Autoencoder", "VAE", "Centrality", "Community Detection", "Collusion Detection", "k-core", "Motif Counting", "Link Prediction"]:
+        for direct_model in ["Z-Score", "IQR", "MAD", "Modified Z-Score", "HBOS", "ECOD", "COPOD", "Isolation Forest", "LOF", "One-Class SVM", "PCA Reconstruction", "Robust Covariance", "kNN Outlier", "KMeans", "DBSCAN", "Deep Isolation Forest", "Logistic Regression", "Decision Trees", "Gradient Boosting", "Autoencoder", "VAE", "Centrality", "Community Detection", "Collusion Detection", "k-core", "Motif Counting", "Link Prediction"]:
             page.locator("#lab-model-select").select_option(direct_model)
             assert page.locator("#lab-chart").get_by_text(direct_model).is_visible()
             assert page.locator("#lab-validation").get_by_text(f"Direct in-browser implementation: {direct_model}").is_visible()
@@ -241,7 +241,7 @@ def test_every_model_card_runnable_example_button_runs_exact_model():
             assert page.locator("#lab-validation").get_by_text("Fold 1").is_visible()
             assert page.locator("#lab-validation").get_by_text("CV mean PR-AUC").is_visible()
             validation_text = page.locator("#lab-validation").text_content()
-            if model in {"Z-Score", "IQR", "MAD", "Modified Z-Score", "HBOS", "ECOD", "COPOD", "PCA Reconstruction", "Robust Covariance", "kNN Outlier", "KMeans", "DBSCAN", "Logistic Regression", "Decision Trees", "Gradient Boosting", "Autoencoder", "VAE", "Centrality", "Community Detection", "Collusion Detection", "k-core", "Motif Counting", "Link Prediction"}:
+            if model in {"Z-Score", "IQR", "MAD", "Modified Z-Score", "HBOS", "ECOD", "COPOD", "Isolation Forest", "LOF", "One-Class SVM", "PCA Reconstruction", "Robust Covariance", "kNN Outlier", "KMeans", "DBSCAN", "Deep Isolation Forest", "Logistic Regression", "Decision Trees", "Gradient Boosting", "Autoencoder", "VAE", "Centrality", "Community Detection", "Collusion Detection", "k-core", "Motif Counting", "Link Prediction"}:
                 assert f"Direct in-browser implementation: {model}" in validation_text
             else:
                 assert f"Model-specific educational approximation: {model}" in validation_text

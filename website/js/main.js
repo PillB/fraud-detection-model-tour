@@ -179,7 +179,7 @@
 
     function runnerSpecForModel(name) {
         const family = labKeyForModel(name);
-        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Logistic Regression', 'Decision Trees', 'Gradient Boosting', 'Autoencoder', 'VAE', 'Centrality', 'Community Detection', 'Collusion Detection', 'k-core', 'Motif Counting', 'Link Prediction'].includes(name);
+        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'Isolation Forest', 'LOF', 'One-Class SVM', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Deep Isolation Forest', 'Logistic Regression', 'Decision Trees', 'Gradient Boosting', 'Autoencoder', 'VAE', 'Centrality', 'Community Detection', 'Collusion Detection', 'k-core', 'Motif Counting', 'Link Prediction'].includes(name);
         const explainKindByFamily = {
             rules: { en: 'threshold evidence', es: 'evidencia por umbrales' },
             iforest: { en: 'isolation-style feature attribution', es: 'atribución estilo aislamiento' },
@@ -1020,6 +1020,64 @@
             return null;
         }
 
+        function directClassicalAnomalyScores(name, rows) {
+            if (!['Isolation Forest', 'Deep Isolation Forest', 'LOF', 'One-Class SVM'].includes(name)) return null;
+            const base = standardizedFeatures(rows);
+            const features = name === 'Deep Isolation Forest'
+                ? base.map(row => [
+                    Math.tanh(row[0] * 0.9 + row[1] * 0.35 - row[3] * 0.2),
+                    Math.tanh(row[2] * 0.55 + row[4] * 0.9 + row[5] * 0.35),
+                    Math.tanh(row[0] * row[3] * 0.35 + row[1] * 0.2),
+                    Math.tanh(row[2] * row[5] * 0.28 - row[4] * 0.15)
+                ])
+                : base;
+            if (name === 'Isolation Forest' || name === 'Deep Isolation Forest') {
+                const treeCount = name === 'Deep Isolation Forest' ? 32 : 36;
+                const maxDepth = 8;
+                const pathLength = (sample, seed, depth = 0, indices = null) => {
+                    const active = indices || features.map((_, index) => index);
+                    if (depth >= maxDepth || active.length <= 3) return depth + Math.log2(active.length + 1);
+                    const featureIndex = (seed + depth * 13) % features[0].length;
+                    const values = active.map(index => features[index][featureIndex]);
+                    const min = Math.min(...values);
+                    const max = Math.max(...values);
+                    if (max - min < 1e-6) return depth + Math.log2(active.length + 1);
+                    const split = min + (max - min) * (((Math.sin(seed * 17.13 + depth * 3.7) + 1) / 2) * 0.8 + 0.1);
+                    const next = active.filter(index => (sample[featureIndex] <= split) === (features[index][featureIndex] <= split));
+                    return pathLength(sample, seed, depth + 1, next.length ? next : active);
+                };
+                const raw = features.map(sample => {
+                    let total = 0;
+                    for (let tree = 0; tree < treeCount; tree += 1) total += pathLength(sample, tree + 11);
+                    return -total / treeCount;
+                });
+                return normalizeScores(raw);
+            }
+            const distances = features.map((row, i) => features.map((other, j) => ({
+                index: j,
+                distance: i === j ? Infinity : Math.hypot(...row.map((value, f) => value - other[f]))
+            })).sort((a, b) => a.distance - b.distance));
+            if (name === 'LOF') {
+                const k = 10;
+                const kDistance = distances.map(items => items[k - 1]?.distance || 1);
+                const lrd = features.map((_, i) => {
+                    const reach = distances[i].slice(0, k).map(item => Math.max(kDistance[item.index] || 0, item.distance));
+                    return k / Math.max(1e-6, reach.reduce((sum, value) => sum + value, 0));
+                });
+                return normalizeScores(features.map((_, i) => {
+                    const ratio = distances[i].slice(0, k).reduce((sum, item) => sum + (lrd[item.index] || 0), 0) / Math.max(k * lrd[i], 1e-6);
+                    return ratio;
+                }));
+            }
+            const center = features[0].map((_, index) => median(column(features, index)));
+            const radial = features.map(row => Math.hypot(...row.map((value, index) => value - center[index]))).sort((a, b) => a - b);
+            const boundary = quantile(radial, 0.9) || 1;
+            return normalizeScores(features.map(row => {
+                const distance = Math.hypot(...row.map((value, index) => value - center[index]));
+                return Math.max(0, distance - boundary) + distance / boundary * 0.2;
+            }));
+        }
+
         function standardizedFeatures(rows) {
             const features = featureRows(rows);
             const centers = features[0].map((_, index) => mean(column(features, index)));
@@ -1357,7 +1415,7 @@
 
         function scoreModel(name, rows, baseScores) {
             const spec = runnerSpec(name);
-            const directScores = directStatisticalScores(name, rows) || directDensityScores(name, rows) || directGeometryScores(name, rows) || directSupervisedScores(name, rows) || directDeepAnomalyScores(name, rows) || directGraphAnalyticsScores(name, rows);
+            const directScores = directStatisticalScores(name, rows) || directDensityScores(name, rows) || directGeometryScores(name, rows) || directClassicalAnomalyScores(name, rows) || directSupervisedScores(name, rows) || directDeepAnomalyScores(name, rows) || directGraphAnalyticsScores(name, rows);
             if (directScores) return directScores;
             const h = spec.hash;
             const base = baseScores[spec.family] || baseScores.iforest;

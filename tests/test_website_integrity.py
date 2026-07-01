@@ -225,11 +225,15 @@ def test_browser_lab_exposes_model_specific_runner_contract():
         "HBOS",
         "ECOD",
         "COPOD",
+        "Isolation Forest",
+        "LOF",
+        "One-Class SVM",
         "PCA Reconstruction",
         "Robust Covariance",
         "kNN Outlier",
         "KMeans",
         "DBSCAN",
+        "Deep Isolation Forest",
         "Logistic Regression",
         "Decision Trees",
         "Gradient Boosting",
@@ -246,6 +250,7 @@ def test_browser_lab_exposes_model_specific_runner_contract():
     assert "directStatisticalScores(name, rows)" in js
     assert "directDensityScores(name, rows)" in js
     assert "directGeometryScores(name, rows)" in js
+    assert "directClassicalAnomalyScores(name, rows)" in js
     assert "directSupervisedScores(name, rows)" in js
     assert "directDeepAnomalyScores(name, rows)" in js
     assert "directGraphAnalyticsScores(name, rows)" in js
