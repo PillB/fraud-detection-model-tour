@@ -55,6 +55,41 @@ DIRECT_BROWSER_MODELS = {
     "GCN",
     "GraphSAGE",
     "GAT",
+    "R-GCN",
+    "HGT",
+    "Heterogeneous GNN",
+    "TGN",
+    "TGAT",
+    "JODIE",
+    "DyRep",
+    "EvolveGCN",
+    "CrimeGNN",
+    "BRIGHT",
+    "Entity Resolution",
+    "Knowledge Graph",
+    "Graph Attention Evidence",
+    "Temporal Graph Validation",
+    "TabTransformer",
+    "FT-Transformer",
+    "SAINT",
+    "TabNet",
+    "LSTM",
+    "GRU",
+    "Transformer Sequences",
+    "Interleaved RNN",
+    "MoE",
+    "Cascades",
+    "Self-Supervised Pretraining",
+    "GraphRAG",
+    "Federated Learning",
+    "Deep SVDD",
+    "DAGMM",
+}
+
+CHECKPOINT_BROWSER_MODELS = {
+    "CTGAN",
+    "Diffusion / TabDDPM",
+    "BERT4ETH",
 }
 
 
@@ -123,8 +158,8 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#cards [data-card-model-visible]").count() == 74
         assert page.locator("#cards .consulting-card").filter(has_text="Runnable example").count() == 74
         assert page.locator("#cards .runner-status-badge").count() == 74
-        assert page.locator("#cards .runner-status-badge").filter(has_text="Model-specific educational runner").count() > 0
         assert page.locator("#cards .runner-status-badge").filter(has_text="Exact lightweight JS runner").count() > 0
+        assert page.locator("#cards .runner-status-badge").filter(has_text="Checkpoint-backed JS runner").count() > 0
         page.locator('[data-model-name="Isolation Forest"] a').filter(has_text="Inspect").first.click()
         page.wait_for_function("location.hash === '#model-workspace'")
         assert page.locator("#workspace-model-name").text_content() == "Isolation Forest"
@@ -143,12 +178,21 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-representation").get_by_text("PC1: transaction anomaly mix").is_visible()
         assert page.locator("#lab-representation").get_by_text("PC2: relational / temporal risk").is_visible()
         assert page.locator("#lab-representation").get_by_text("Green: correctly prioritized fraud").is_visible()
-        assert page.locator("#lab-representation svg polygon").count() >= 1
+        assert page.locator('#lab-representation svg [data-decision-region="true"]').count() >= 1
         assert page.locator("#lab-timeline").get_by_text("Temporal CV").is_visible()
         assert page.locator("#lab-timeline").get_by_text("fit step / validation fold").is_visible()
         assert page.locator("#lab-timeline").get_by_text("error / validation loss").is_visible()
         assert page.locator("#lab-validation").get_by_text("CV mean PR-AUC").is_visible()
         assert "&amp;" not in page.locator("body").inner_text()
+        page.locator('[data-i18n="lab.metrics"]').hover()
+        assert page.locator("#section-help-tooltip").is_visible()
+        assert page.locator("#section-help-tooltip").get_by_text("PR-AUC measures").is_visible()
+        assert page.locator("#section-help-tooltip").evaluate(
+            """el => {
+                const r = el.getBoundingClientRect();
+                return r.left >= 0 && r.top >= 0 && r.right <= innerWidth && r.bottom <= innerHeight;
+            }"""
+        )
         assert not page.url.endswith(".py")
         assert not page.url.endswith(".md")
         first_alert_id = page.locator("#lab-alerts .font-mono").first.text_content()
@@ -156,6 +200,15 @@ def test_primary_website_flows_with_playwright():
         page.wait_for_function("location.hash === '#workbench'")
         assert page.locator("#workbench-txn-id").text_content() == first_alert_id
         assert page.locator("#workbench-explainability").get_by_text("Linked from the lab").is_visible()
+        page.locator('[data-i18n="workbench.graph.title"]').scroll_into_view_if_needed()
+        page.locator('[data-i18n="workbench.graph.title"]').hover()
+        assert page.locator("#section-help-tooltip").get_by_text("suspicious entity neighborhood").is_visible()
+        assert page.locator("#section-help-tooltip").evaluate(
+            """el => {
+                const r = el.getBoundingClientRect();
+                return r.left >= 0 && r.top >= 0 && r.right <= innerWidth && r.bottom <= innerHeight;
+            }"""
+        )
 
         page.locator('a[href="#cards"]').first.click()
         page.wait_for_function("location.hash === '#cards'")
@@ -191,7 +244,7 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#lab-representation").get_by_text("Blue halo: decision region").is_visible()
         assert page.locator("#lab-representation svg line").count() > 0
         assert page.locator("#lab-representation svg circle").count() > 0
-        assert page.locator("#lab-representation svg polygon").count() >= 1
+        assert page.locator('#lab-representation svg [data-decision-region="true"]').count() >= 1
         assert page.locator("#lab-timeline svg").count() >= 1
         for direct_model in sorted(DIRECT_BROWSER_MODELS):
             page.locator("#lab-model-select").select_option(direct_model)
@@ -200,10 +253,11 @@ def test_primary_website_flows_with_playwright():
             assert lab_result(page, direct_model).is_visible()
             assert page.locator("#lab-validation").get_by_text(f"Direct in-browser implementation: {direct_model}").is_visible()
             assert page.locator("#lab-timeline").get_by_text("Actual browser training trace").is_visible()
-        page.locator("#lab-model-select").select_option("R-GCN")
-        wait_for_lab_result(page, "R-GCN")
-        assert page.locator("#lab-chart [data-lab-result-name]").count() == 1
-        assert page.locator("#lab-validation").get_by_text("Model-specific educational approximation: R-GCN").is_visible()
+        for checkpoint_model in sorted(CHECKPOINT_BROWSER_MODELS):
+            page.locator("#lab-model-select").select_option(checkpoint_model)
+            wait_for_lab_result(page, checkpoint_model)
+            assert page.locator("#lab-validation").get_by_text(f"Checkpoint-backed in-browser inference: {checkpoint_model}").is_visible()
+            assert page.locator("#lab-timeline").get_by_text("Checkpoint-backed inference trace").is_visible()
         page.locator("#lab-model-select").select_option("LOF")
         assert page.locator("#lab-loading").is_visible()
         wait_for_lab_result(page, "LOF")
@@ -225,8 +279,8 @@ def test_primary_website_flows_with_playwright():
         assert page.locator("#cards [data-card-model-visible]").count() == 74
         assert page.locator("#cards .consulting-card").filter(has_text="Ejemplo ejecutable").count() == 74
         assert page.locator("#cards .runner-status-badge").count() == 74
-        assert page.locator("#cards .runner-status-badge").filter(has_text="Ejecutor educativo específico").count() > 0
         assert page.locator("#cards .runner-status-badge").filter(has_text="Ejecutor JS ligero exacto").count() > 0
+        assert page.locator("#cards .runner-status-badge").filter(has_text="Ejecutor JS con checkpoint").count() > 0
         assert page.locator(".comparison-table tbody tr").count() == 74
         assert page.locator('#lab-model-select option[value="all"]').text_content() == "Todos los modelos"
         assert graph_card.is_visible()
@@ -332,6 +386,8 @@ def test_every_model_selection_runs_browser_outputs():
             assert page.locator("#lab-alerts").get_by_text("TXN").first.is_visible()
             assert page.locator("#lab-explain > div").count() >= 6
             assert page.locator("#lab-representation svg circle").count() > 0
+            assert page.locator('#lab-representation svg [data-decision-region="true"][data-decision-class="fn"]').count() == 0
+            assert page.locator('#lab-representation svg [data-decision-region="true"][data-decision-class="tn"]').count() == 0
             assert page.locator("#lab-timeline").text_content()
             assert page.locator("#lab-validation").get_by_text("Fold 1").is_visible()
             assert page.locator("#lab-validation").get_by_text("CV mean PR-AUC").is_visible()
@@ -381,6 +437,8 @@ def test_every_model_card_runnable_example_button_runs_exact_model():
             validation_text = page.locator("#lab-validation").text_content()
             if model in DIRECT_BROWSER_MODELS:
                 assert f"Direct in-browser implementation: {model}" in validation_text
+            elif model in CHECKPOINT_BROWSER_MODELS:
+                assert f"Checkpoint-backed in-browser inference: {model}" in validation_text
             else:
                 assert f"Model-specific educational approximation: {model}" in validation_text
         assert errors == []

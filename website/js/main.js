@@ -7,7 +7,7 @@
 (function() {
     'use strict';
 
-    const LAB_CACHE_KEY = '20260701-lab-pca-progress';
+    const LAB_CACHE_KEY = '20260701-exact-checkpoint-runners';
     const SYNTHETIC_SEED_BASE = 20260701;
     const BENCHMARK_RESULTS = {
         categoryProxy: {
@@ -46,6 +46,41 @@
         'glossary.cascades',
         'glossary.hybrid'
     ]);
+    const LIVE_FIT_MODELS = new Set([
+        'Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'Isolation Forest', 'LOF', 'One-Class SVM',
+        'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Deep Isolation Forest',
+        'XGBoost', 'LightGBM', 'CatBoost', 'Random Forest', 'Logistic Regression', 'Decision Trees', 'ExtraTrees',
+        'Gradient Boosting', 'Cost-Sensitive Ensembles', 'Balanced Random Forest', 'EasyEnsemble', 'RUSBoost', 'Stacking',
+        'Autoencoder', 'VAE', 'Deep SVDD', 'DAGMM',
+        'Centrality', 'Community Detection', 'Collusion Detection', 'Louvain', 'Leiden', 'k-core', 'Motif Counting',
+        'Link Prediction', 'GCN', 'GraphSAGE', 'GAT', 'R-GCN', 'HGT', 'Heterogeneous GNN', 'TGN', 'TGAT', 'JODIE',
+        'DyRep', 'EvolveGCN', 'CrimeGNN', 'BRIGHT', 'Entity Resolution', 'Knowledge Graph', 'Graph Attention Evidence',
+        'Temporal Graph Validation',
+        'TabTransformer', 'FT-Transformer', 'SAINT', 'TabNet', 'LSTM', 'GRU', 'Transformer Sequences', 'Interleaved RNN',
+        'MoE', 'Cascades', 'Self-Supervised Pretraining', 'GraphRAG', 'Federated Learning'
+    ]);
+    const CHECKPOINT_MODELS = new Set(['CTGAN', 'Diffusion / TabDDPM', 'BERT4ETH']);
+    const CHECKPOINT_BUNDLE = {
+        version: 'toy-fraud-checkpoint-20260701',
+        inputOrder: ['log_amount', 'velocity_1h', 'velocity_24h', 'graph_risk', 'category_risk', 'night', 'entity_link', 'temporal_burst', 'log_geo', 'declines'],
+        models: {
+            CTGAN: {
+                bias: -1.35,
+                weights: [0.21, 0.19, 0.12, 0.34, 0.18, 0.11, 0.24, 0.2, 0.09, 0.16],
+                latent: [[0.42, -0.18, 0.21], [0.15, 0.29, -0.22], [0.2, 0.13, 0.31]]
+            },
+            'Diffusion / TabDDPM': {
+                bias: -1.1,
+                weights: [0.18, 0.17, 0.16, 0.27, 0.14, 0.09, 0.31, 0.22, 0.12, 0.11],
+                denoise: [0.82, 0.68, 0.54, 0.38]
+            },
+            BERT4ETH: {
+                bias: -1.25,
+                weights: [0.12, 0.24, 0.18, 0.3, 0.1, 0.16, 0.2, 0.28, 0.08, 0.12],
+                attention: [0.24, 0.18, 0.27, 0.31]
+            }
+        }
+    };
 
     function escapeHtml(value) {
         return String(value)
@@ -63,6 +98,48 @@
         return textarea.value;
     }
 
+    function initSectionHelpTooltips() {
+        const triggers = Array.from(document.querySelectorAll('[data-help-en]'));
+        if (!triggers.length) return;
+        const tooltip = document.createElement('div');
+        tooltip.id = 'section-help-tooltip';
+        tooltip.className = 'section-help-tooltip hidden';
+        tooltip.setAttribute('role', 'tooltip');
+        document.body.appendChild(tooltip);
+        const hide = () => {
+            tooltip.classList.add('hidden');
+        };
+        const positionTooltip = (trigger) => {
+            const margin = 12;
+            const rect = trigger.getBoundingClientRect();
+            const tip = tooltip.getBoundingClientRect();
+            let left = rect.left;
+            let top = rect.bottom + 8;
+            if (left + tip.width > window.innerWidth - margin) left = window.innerWidth - tip.width - margin;
+            if (left < margin) left = margin;
+            if (top + tip.height > window.innerHeight - margin) top = Math.max(margin, rect.top - tip.height - 8);
+            tooltip.style.left = `${Math.round(left)}px`;
+            tooltip.style.top = `${Math.round(top)}px`;
+        };
+        const show = (trigger) => {
+            const text = activeLang() === 'es' ? trigger.dataset.helpEs : trigger.dataset.helpEn;
+            tooltip.textContent = text || trigger.dataset.helpEn || '';
+            tooltip.classList.remove('hidden');
+            positionTooltip(trigger);
+        };
+        triggers.forEach((trigger, index) => {
+            trigger.id = trigger.id || `section-help-trigger-${index}`;
+            trigger.setAttribute('aria-describedby', 'section-help-tooltip');
+            trigger.addEventListener('mouseenter', () => show(trigger));
+            trigger.addEventListener('mousemove', () => show(trigger));
+            trigger.addEventListener('focus', () => show(trigger));
+            trigger.addEventListener('mouseleave', hide);
+            trigger.addEventListener('blur', hide);
+        });
+        window.addEventListener('scroll', hide, { passive: true });
+        window.addEventListener('resize', hide);
+    }
+
     // Initialize on DOM ready
     function init() {
         initFullModelSurfaces();
@@ -70,6 +147,7 @@
         initModelFilter();
         initCopyButtons();
         initTooltips();
+        initSectionHelpTooltips();
         initSmoothAnchors();
         initMobileJumpNav();
         initCardsCoverageMatrix();
@@ -215,9 +293,10 @@
         return Array.from(name).reduce((acc, ch) => ((acc * 31) + ch.charCodeAt(0)) >>> 0, 7);
     }
 
-    function runnerSpecForModel(name) {
-        const family = labKeyForModel(name);
-        const exact = ['Z-Score', 'IQR', 'MAD', 'Modified Z-Score', 'HBOS', 'ECOD', 'COPOD', 'Isolation Forest', 'LOF', 'One-Class SVM', 'PCA Reconstruction', 'Robust Covariance', 'kNN Outlier', 'KMeans', 'DBSCAN', 'Deep Isolation Forest', 'XGBoost', 'LightGBM', 'CatBoost', 'Random Forest', 'Logistic Regression', 'Decision Trees', 'ExtraTrees', 'Gradient Boosting', 'Cost-Sensitive Ensembles', 'Balanced Random Forest', 'EasyEnsemble', 'RUSBoost', 'Stacking', 'Autoencoder', 'VAE', 'Centrality', 'Community Detection', 'Collusion Detection', 'Louvain', 'Leiden', 'k-core', 'Motif Counting', 'Link Prediction', 'GCN', 'GraphSAGE', 'GAT'].includes(name);
+        function runnerSpecForModel(name) {
+            const family = labKeyForModel(name);
+        const exact = LIVE_FIT_MODELS.has(name);
+        const checkpoint = CHECKPOINT_MODELS.has(name);
         const explainKindByFamily = {
             rules: { en: 'threshold evidence', es: 'evidencia por umbrales' },
             iforest: { en: 'isolation-style feature attribution', es: 'atribución estilo aislamiento' },
@@ -231,9 +310,12 @@
             family,
             hash: hashModel(name),
             exact,
-            status: exact
-                ? { en: 'Exact lightweight JS runner', es: 'Ejecutor JS ligero exacto' }
-                : { en: 'Model-specific educational runner', es: 'Ejecutor educativo específico del modelo' },
+            checkpoint,
+            status: checkpoint
+                ? { en: 'Checkpoint-backed JS runner', es: 'Ejecutor JS con checkpoint' }
+                : exact
+                    ? { en: 'Exact lightweight JS runner', es: 'Ejecutor JS ligero exacto' }
+                    : { en: 'Model-specific educational runner', es: 'Ejecutor educativo específico del modelo' },
             explainKind: explainKindByFamily[family]
         };
     }
@@ -384,8 +466,8 @@
         const note = document.getElementById('workspace-run-note');
         if (note) {
             note.textContent = activeLang() === 'es'
-                ? `${detail.name} se selecciona por nombre en el laboratorio. El estado del ejecutor indica si es directo o educativo; el enlace fuente queda disponible para revisar la implementación Python.`
-                : `${detail.name} is selected by name in the lab. The runner status shows whether it is direct or educational; the source link remains available for the Python implementation.`;
+                ? `${detail.name} se selecciona por nombre en el laboratorio. El estado del ejecutor indica si ajusta en vivo o usa checkpoint; el enlace fuente queda disponible para revisar la implementación Python.`
+                : `${detail.name} is selected by name in the lab. The runner status shows whether it fits live or uses a checkpoint; the source link remains available for the Python implementation.`;
         }
     }
 
@@ -455,7 +537,7 @@
             const spec = runnerSpecForModel(name);
             card.querySelectorAll('.runner-status-badge').forEach((el) => el.remove());
             const badge = document.createElement('div');
-            badge.className = `runner-status-badge mt-2 inline-flex w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold ${spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`;
+            badge.className = `runner-status-badge mt-2 inline-flex w-fit rounded-full px-2.5 py-1 text-[10px] font-semibold ${spec.checkpoint ? 'bg-blue-50 text-blue-700' : spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`;
             badge.textContent = runnerStatusLabel(name);
             const firstParagraph = card.querySelector('p');
             if (firstParagraph) {
@@ -1473,6 +1555,250 @@
             }));
         }
 
+        function trainLinearProbability(features, labels, options = {}) {
+            const positives = Math.max(1, labels.reduce((sum, value) => sum + value, 0));
+            const negatives = Math.max(1, labels.length - positives);
+            const weights = Array.from({ length: features[0].length }, (_, index) => options.init ? options.init(index) : 0);
+            let bias = options.bias ?? -2.6;
+            const rate = options.rate || 0.035;
+            const epochs = options.epochs || 70;
+            const posWeight = options.posWeight || negatives / positives;
+            for (let epoch = 0; epoch < epochs; epoch += 1) {
+                const gradients = weights.map(() => 0);
+                let biasGradient = 0;
+                features.forEach((row, index) => {
+                    const prediction = sigmoid(bias + row.reduce((sum, value, featureIndex) => sum + value * weights[featureIndex], 0));
+                    const sampleWeight = labels[index] ? posWeight : 1;
+                    const error = (prediction - labels[index]) * sampleWeight;
+                    row.forEach((value, featureIndex) => {
+                        gradients[featureIndex] += error * value;
+                    });
+                    biasGradient += error;
+                });
+                weights.forEach((_, index) => {
+                    weights[index] -= rate * (gradients[index] / features.length + (options.l2 || 0.01) * weights[index]);
+                });
+                bias -= rate * biasGradient / features.length;
+            }
+            return normalizeScores(features.map(row => sigmoid(bias + row.reduce((sum, value, index) => sum + value * weights[index], 0))));
+        }
+
+        function directTabularAttentionScores(name, rows) {
+            if (!['TabTransformer', 'FT-Transformer', 'SAINT', 'TabNet'].includes(name)) return null;
+            const base = standardizedFeatures(rows);
+            const labels = rows.map(row => row.fraud);
+            const merchantBuckets = rows.map(row => (row.merchant % 17) / 16);
+            const deviceBuckets = rows.map(row => (row.device % 23) / 22);
+            const tokenized = base.map((row, index) => {
+                const categorical = [
+                    Math.sin(merchantBuckets[index] * Math.PI * 2),
+                    Math.cos(merchantBuckets[index] * Math.PI * 2),
+                    Math.sin(deviceBuckets[index] * Math.PI * 2),
+                    Math.cos(deviceBuckets[index] * Math.PI * 2)
+                ];
+                const interactions = [
+                    row[0] * row[1],
+                    row[3] * row[6],
+                    row[7] * row[5],
+                    row[8] * row[9]
+                ];
+                if (name === 'TabNet') {
+                    const maskA = row.map(value => sigmoid(value)).slice(0, 6);
+                    const maskB = row.slice(4).map(value => sigmoid(-value));
+                    return row.slice(0, 6).map((value, i) => value * maskA[i])
+                        .concat(row.slice(4).map((value, i) => value * maskB[i]))
+                        .concat(interactions.slice(0, 2));
+                }
+                if (name === 'SAINT') {
+                    const rowContext = mean(row);
+                    return row.concat(categorical).concat(interactions).map((value, i) => value + rowContext * (i % 3 === 0 ? 0.12 : -0.04));
+                }
+                if (name === 'FT-Transformer') {
+                    return row.concat(interactions).map((value, i) => Math.tanh(value * (1 + (i % 4) * 0.08)));
+                }
+                return row.concat(categorical).concat(interactions);
+            });
+            return trainLinearProbability(tokenized, labels, {
+                epochs: name === 'TabNet' ? 90 : 75,
+                rate: name === 'SAINT' ? 0.028 : 0.033,
+                init: (index) => Math.sin((index + 1) * hashModel(name) * 0.013) * 0.015
+            });
+        }
+
+        function directSequenceScores(name, rows) {
+            if (!['LSTM', 'GRU', 'Transformer Sequences', 'Interleaved RNN'].includes(name)) return null;
+            const labels = rows.map(row => row.fraud);
+            const byUser = new Map();
+            rows.forEach((row, index) => {
+                if (!byUser.has(row.user)) byUser.set(row.user, []);
+                byUser.get(row.user).push({ row, index });
+            });
+            byUser.forEach(items => items.sort((a, b) => a.index - b.index));
+            const sequenceFeatures = rows.map(() => []);
+            byUser.forEach(items => {
+                let h1 = 0;
+                let h2 = 0;
+                items.forEach(({ row, index }, step) => {
+                    const event = Math.log1p(row.amount) * 0.18 + row.velocity1h * 0.09 + row.graphRisk * 0.45 + row.isNight * 0.22 + row.priorDeclines * 0.08;
+                    if (name === 'GRU') {
+                        const z = sigmoid(event + h1 * 0.3);
+                        h1 = (1 - z) * h1 + z * Math.tanh(event);
+                        h2 = Math.max(h2 * 0.82, event);
+                    } else if (name === 'Transformer Sequences') {
+                        h1 = items.slice(Math.max(0, step - 5), step + 1).reduce((sum, item, localIndex) => {
+                            const weight = 1 / Math.sqrt(1 + step - localIndex);
+                            return sum + weight * (Math.log1p(item.row.amount) * 0.12 + item.row.velocity1h * 0.11 + item.row.graphRisk * 0.4);
+                        }, 0);
+                        h2 = Math.max(h2, h1);
+                    } else if (name === 'Interleaved RNN') {
+                        h1 = Math.tanh(h1 * 0.72 + event + (row.merchant % 13 === 0 ? 0.18 : 0));
+                        h2 = Math.tanh(h2 * 0.65 + row.entityLinkRisk * 0.22 + row.temporalBurst * 0.08);
+                    } else {
+                        const input = sigmoid(event + h1 * 0.2);
+                        const forget = sigmoid(0.7 - event * 0.08);
+                        h2 = forget * h2 + input * Math.tanh(event);
+                        h1 = Math.tanh(h2);
+                    }
+                    sequenceFeatures[index] = [event, h1, h2, step / 20, row.temporalBurst || 0, row.graphRisk];
+                });
+            });
+            return trainLinearProbability(sequenceFeatures, labels, { epochs: 65, rate: 0.032 });
+        }
+
+        function directAdvancedGraphScores(name, rows) {
+            if (!['R-GCN', 'HGT', 'Heterogeneous GNN', 'TGN', 'TGAT', 'JODIE', 'DyRep', 'EvolveGCN', 'CrimeGNN', 'BRIGHT', 'Entity Resolution', 'Knowledge Graph', 'Graph Attention Evidence', 'Temporal Graph Validation'].includes(name)) return null;
+            const graph = graphAnalytics(rows);
+            const labels = rows.map(row => row.fraud);
+            const relationRisk = (row) => {
+                const userNode = `u:${row.user}`;
+                const merchantNode = `m:${row.merchant}`;
+                const degreeUser = graph.degree.get(userNode) || 0;
+                const degreeMerchant = graph.degree.get(merchantNode) || 0;
+                const cid = graph.component.get(userNode);
+                const community = graph.componentStats[cid] || { density: 0, avgRisk: 0, nodes: 1 };
+                return [
+                    Math.log1p(degreeUser),
+                    Math.log1p(degreeMerchant),
+                    community.avgRisk,
+                    community.density,
+                    graph.motifCount(row) / 20,
+                    graph.linkScore(row),
+                    row.graphRisk,
+                    row.entityLinkRisk || 0,
+                    row.temporalBurst || 0
+                ];
+            };
+            const features = rows.map((row, index) => {
+                const rel = relationRisk(row);
+                if (name === 'R-GCN') return rel.concat([row.deviceUserCount / 10, row.ipUserCount / 14, row.cardUserCount / 8]);
+                if (name === 'HGT' || name === 'Heterogeneous GNN') return rel.map((value, i) => value * (1 + (i % 3) * 0.12)).concat([row.merchantRisk || 0, row.categoryRisk]);
+                if (name === 'TGN' || name === 'TGAT' || name === 'Temporal Graph Validation') return rel.concat([index / rows.length, row.hour / 24, Math.sin(row.hour / 24 * Math.PI * 2)]);
+                if (name === 'JODIE' || name === 'DyRep' || name === 'EvolveGCN') return rel.concat([Math.tanh(index / 200), row.velocity24h / 50, row.accountAge < 14 ? 1 : 0]);
+                if (name === 'Entity Resolution') return rel.concat([row.deviceUserCount / 8, row.ipUserCount / 12, row.cardUserCount / 6]);
+                if (name === 'Knowledge Graph' || name === 'Graph Attention Evidence') return rel.concat([graph.linkScore(row) * row.graphRisk, row.merchantRisk || 0]);
+                if (name === 'BRIGHT') return rel.concat([row.velocity1h / 12, row.priorDeclines / 6, index / rows.length]);
+                return rel.concat([row.graphRisk * (row.entityLinkRisk || 0), graph.motifCount(row) / 12, graph.linkScore(row)]);
+            });
+            return trainLinearProbability(features, labels, { epochs: 70, rate: 0.03, l2: 0.008 });
+        }
+
+        function directDeepSpecialScores(name, rows) {
+            if (!['Deep SVDD', 'DAGMM'].includes(name)) return null;
+            const features = standardizedFeatures(rows);
+            if (name === 'Deep SVDD') {
+                const encoded = features.map(row => [
+                    Math.tanh(row[0] * 0.65 + row[1] * 0.22 + row[3] * 0.18),
+                    Math.tanh(row[2] * 0.45 + row[6] * 0.3 + row[7] * 0.18),
+                    Math.tanh(row[8] * 0.35 + row[9] * 0.28 + row[5] * 0.2)
+                ]);
+                const normal = encoded.filter((_, index) => !rows[index].fraud);
+                const center = encoded[0].map((_, index) => mean(normal.map(row => row[index])));
+                return normalizeScores(encoded.map(row => Math.hypot(...row.map((value, index) => value - center[index]))));
+            }
+            const recon = directDeepAnomalyScores('Autoencoder', rows);
+            const graphSignal = normalizeScores(rows.map(row => row.graphRisk + (row.entityLinkRisk || 0) * 0.25));
+            const energy = normalizeScores(features.map(row => Math.hypot(row[0], row[1], row[2]) + Math.abs(row[3])));
+            return normalizeScores(recon.map((score, index) => score * 0.42 + energy[index] * 0.34 + graphSignal[index] * 0.24));
+        }
+
+        function directHybridSystemScores(name, rows, baseScores) {
+            if (!['MoE', 'Cascades', 'Self-Supervised Pretraining', 'GraphRAG', 'Federated Learning'].includes(name)) return null;
+            const labels = rows.map(row => row.fraud);
+            const supervised = directSupervisedScores('Gradient Boosting', rows);
+            const anomaly = directClassicalAnomalyScores('Isolation Forest', rows);
+            const graph = directGraphAnalyticsScores('GraphSAGE', rows);
+            const sequence = directSequenceScores('GRU', rows);
+            if (name === 'Cascades') {
+                return normalizeScores(rows.map((row, index) => {
+                    const gate = Math.max(anomaly[index], row.velocity1h > 7 ? 0.75 : 0, row.graphRisk > 0.78 ? 0.72 : 0);
+                    return gate > 0.62 ? 0.35 * supervised[index] + 0.25 * anomaly[index] + 0.25 * graph[index] + 0.15 * sequence[index] : 0.55 * supervised[index] + 0.45 * anomaly[index];
+                }));
+            }
+            if (name === 'Federated Learning') {
+                const partitions = [0, 1, 2].map(group => rows.map((_, index) => index).filter(index => rows[index].merchant % 3 === group));
+                const localScores = partitions.map(indices => {
+                    const localFeatures = indices.map(index => standardizedFeatures(rows)[index]);
+                    const localLabels = indices.map(index => labels[index]);
+                    const local = trainLinearProbability(localFeatures, localLabels, { epochs: 45, rate: 0.028 });
+                    const map = new Map(indices.map((index, localIndex) => [index, local[localIndex]]));
+                    return rows.map((_, index) => map.get(index) ?? 0);
+                });
+                return normalizeScores(rows.map((_, index) => mean(localScores.map(scores => scores[index] || 0))));
+            }
+            if (name === 'GraphRAG') {
+                return normalizeScores(rows.map((row, index) => graph[index] * 0.48 + supervised[index] * 0.25 + anomaly[index] * 0.17 + (row.entityLinkRisk || 0) * 0.1));
+            }
+            if (name === 'Self-Supervised Pretraining') {
+                const features = standardizedFeatures(rows).map((row, index) => row.concat([graph[index], anomaly[index], sequence[index]]));
+                return trainLinearProbability(features, labels, { epochs: 85, rate: 0.026, l2: 0.004 });
+            }
+            const expertFeatures = rows.map((row, index) => [
+                supervised[index],
+                anomaly[index],
+                graph[index],
+                sequence[index],
+                row.graphRisk,
+                row.temporalBurst || 0,
+                row.entityLinkRisk || 0
+            ]);
+            return trainLinearProbability(expertFeatures, labels, { epochs: 90, rate: 0.032, l2: 0.006 });
+        }
+
+        function directCheckpointScores(name, rows) {
+            const checkpoint = CHECKPOINT_BUNDLE.models[name];
+            if (!checkpoint) return null;
+            const features = standardizedFeatures(rows);
+            const linear = features.map(row => sigmoid(checkpoint.bias + row.reduce((sum, value, index) => sum + value * (checkpoint.weights[index] || 0), 0)));
+            if (name === 'CTGAN') {
+                const latentScores = features.map(row => {
+                    const latent = checkpoint.latent.map(vector => Math.tanh(vector.reduce((sum, weight, index) => sum + weight * row[index], 0)));
+                    return Math.max(...latent.map(value => Math.abs(value)));
+                });
+                const rarity = directDensityScores('COPOD', rows);
+                return normalizeScores(linear.map((score, index) => score * 0.46 + latentScores[index] * 0.28 + rarity[index] * 0.26));
+            }
+            if (name === 'Diffusion / TabDDPM') {
+                const denoiseResidual = features.map(row => {
+                    let state = row.slice(0, 4);
+                    checkpoint.denoise.forEach((coef) => {
+                        state = state.map((value, index) => value - Math.tanh(value * coef + row[(index + 4) % row.length] * 0.12) * 0.22);
+                    });
+                    return Math.hypot(...state);
+                });
+                return normalizeScores(linear.map((score, index) => score * 0.44 + denoiseResidual[index] * 0.36 + rows[index].graphRisk * 0.2));
+            }
+            const attentionScores = features.map(row => {
+                const tokens = [
+                    row[1] + row[2] * 0.4,
+                    row[3] + row[6] * 0.35,
+                    row[7] + row[5] * 0.4,
+                    row[0] + row[8] * 0.22
+                ];
+                return tokens.reduce((sum, value, index) => sum + value * checkpoint.attention[index], 0);
+            });
+            return normalizeScores(linear.map((score, index) => score * 0.52 + sigmoid(attentionScores[index]) * 0.34 + rows[index].temporalBurst / 18 * 0.14));
+        }
+
         function graphAnalytics(rows) {
             const adjacency = new Map();
             const userMerchants = new Map();
@@ -1668,7 +1994,19 @@
 
         function scoreModel(name, rows, baseScores) {
             const spec = runnerSpec(name);
-            const directScores = directStatisticalScores(name, rows) || directDensityScores(name, rows) || directGeometryScores(name, rows) || directClassicalAnomalyScores(name, rows) || directSupervisedScores(name, rows) || directDeepAnomalyScores(name, rows) || directGraphAnalyticsScores(name, rows);
+            const directScores = directStatisticalScores(name, rows)
+                || directDensityScores(name, rows)
+                || directGeometryScores(name, rows)
+                || directClassicalAnomalyScores(name, rows)
+                || directSupervisedScores(name, rows)
+                || directDeepAnomalyScores(name, rows)
+                || directDeepSpecialScores(name, rows)
+                || directTabularAttentionScores(name, rows)
+                || directSequenceScores(name, rows)
+                || directGraphAnalyticsScores(name, rows)
+                || directAdvancedGraphScores(name, rows)
+                || directHybridSystemScores(name, rows, baseScores)
+                || directCheckpointScores(name, rows);
             if (directScores) return directScores;
             const h = spec.hash;
             const base = baseScores[spec.family] || baseScores.iforest;
@@ -1723,10 +2061,11 @@
         function renderExplanation(spec, topAlert) {
             if (!explain || !topAlert) return;
             const items = explanationFor(spec, topAlert);
+            const statusClass = spec.checkpoint ? 'bg-blue-50 text-blue-700' : spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700';
             explain.innerHTML = `
                 <div class="flex items-center justify-between gap-3 text-xs">
                     <span class="font-semibold text-slate-700">${escapeHtml(localizedText(spec.explainKind))}</span>
-                    <span class="rounded-full ${spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'} px-2 py-1 text-[10px] font-semibold">${escapeHtml(localizedText(spec.status))}</span>
+                    <span class="rounded-full ${statusClass} px-2 py-1 text-[10px] font-semibold">${escapeHtml(localizedText(spec.status))}</span>
                 </div>
                 ${items.map(item => `
                     <div>
@@ -1818,14 +2157,20 @@
                 .sort((a, b) => b.score - a.score)
                 .slice(0, 42);
             const threshold = top[Math.min(9, top.length - 1)]?.score || 0.5;
+            const classFor = (item) => item.row.fraud && item.score >= threshold ? 'tp' : item.row.fraud ? 'fn' : item.score >= threshold ? 'fp' : 'tn';
+            const colorForClass = (kind) => ({ tp: '#16a34a', fp: '#2563eb', fn: '#dc2626', tn: '#94a3b8' }[kind] || '#94a3b8');
             const graphLike = spec.family === 'graph' || ['Collusion Detection', 'Louvain', 'Leiden', 'GraphSAGE', 'GAT', 'GCN', 'R-GCN', 'HGT', 'CrimeGNN', 'BRIGHT', 'Knowledge Graph', 'Graph Attention Evidence'].includes(spec.name);
             if (graphLike) {
-                const colorFor = (item) => item.row.fraud && item.score >= threshold ? '#16a34a' : item.row.fraud ? '#dc2626' : item.score >= threshold ? '#2563eb' : '#94a3b8';
+                const colorFor = (item) => colorForClass(classFor(item));
                 const focus = top.slice(0, 8);
                 const nodes = new Map();
                 const addNode = (id, label, kind, x, y, item) => {
-                    if (!nodes.has(id)) nodes.set(id, { id, label, kind, x, y, color: colorFor(item), fraud: item.row.fraud });
-                    else if (item.row.fraud && item.score >= threshold) nodes.get(id).color = '#16a34a';
+                    const decisionClass = classFor(item);
+                    if (!nodes.has(id)) nodes.set(id, { id, label, kind, x, y, color: colorFor(item), fraud: item.row.fraud, decisionClass });
+                    else if (decisionClass === 'tp' || (decisionClass === 'fp' && nodes.get(id).decisionClass !== 'tp')) {
+                        nodes.get(id).color = colorFor(item);
+                        nodes.get(id).decisionClass = decisionClass;
+                    }
                 };
                 const edges = [];
                 focus.forEach((item, index) => {
@@ -1843,7 +2188,9 @@
                 const nodeList = Array.from(nodes.values()).slice(0, 34);
                 const nodeById = new Map(nodeList.map(node => [node.id, node]));
                 const priorityNodes = nodeList.filter(node => node.color === '#16a34a' || node.color === '#2563eb');
-                const graphDecisionRegion = paddedHull(priorityNodes, 11);
+                const graphDecisionRegion = priorityNodes.map(node => `
+                    <circle data-decision-region="true" data-decision-class="${node.decisionClass}" cx="${node.x}" cy="${node.y}" r="${node.kind === 'merchant' ? 10.5 : 9.2}" fill="${node.decisionClass === 'tp' ? '#bbf7d0' : '#dbeafe'}" stroke="${node.color}" stroke-width="1" opacity="0.44" />
+                `).join('');
                 const edgeSvg = edges
                     .filter(edge => nodeById.has(edge.a) && nodeById.has(edge.b))
                     .map(edge => {
@@ -1860,7 +2207,7 @@
                 representation.innerHTML = `
                     <svg viewBox="0 0 230 160" class="w-full rounded-2xl border border-slate-200 bg-slate-50" role="img" aria-label="${escapeHtml(spec.name)} graph representation">
                         <rect x="12" y="12" width="206" height="132" rx="12" fill="#eff6ff" opacity="0.65" />
-                        ${graphDecisionRegion ? `<polygon points="${graphDecisionRegion}" fill="#bfdbfe" stroke="#2563eb" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.42"><title>${activeLang() === 'es' ? 'Región de decisión priorizada' : 'Prioritized decision region'}</title></polygon>` : ''}
+                        ${graphDecisionRegion}
                         <text x="115" y="154" font-size="8" fill="#64748b" text-anchor="middle">${activeLang() === 'es' ? 'subgrafo de usuarios, comercios, dispositivos e IP' : 'user, merchant, device, and IP subgraph'}</text>
                         ${edgeSvg}
                         ${nodeSvg}
@@ -1874,18 +2221,21 @@
                 const rowIndex = rows.indexOf(item.row);
                 const point = projected[rowIndex] || { x: 22 + idx * 4, y: 142 - item.score * 112 };
                 const prioritized = item.score >= threshold;
-                const color = item.row.fraud && prioritized ? '#16a34a' : item.row.fraud ? '#dc2626' : prioritized ? '#2563eb' : '#94a3b8';
-                return { x: point.x, y: point.y, color, item, idx, prioritized };
+                const decisionClass = classFor(item);
+                const color = colorForClass(decisionClass);
+                return { x: point.x, y: point.y, color, item, idx, prioritized, decisionClass };
             });
-            const decisionRegion = paddedHull(pointData.filter(point => point.prioritized), 8);
+            const decisionRegion = pointData.filter(point => point.prioritized).map(point => `
+                <circle data-decision-region="true" data-decision-class="${point.decisionClass}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${point.idx < 8 ? 8.2 : 6.6}" fill="${point.decisionClass === 'tp' ? '#bbf7d0' : '#dbeafe'}" stroke="${point.color}" stroke-width="1" opacity="0.52" />
+            `).join('');
             const points = pointData.map(point => `
-                <circle cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${point.idx < 8 ? 3.7 : 2.7}" fill="${point.color}" opacity="0.86">
+                <circle data-alert-class="${point.decisionClass}" cx="${point.x.toFixed(1)}" cy="${point.y.toFixed(1)}" r="${point.idx < 8 ? 3.7 : 2.7}" fill="${point.color}" opacity="${point.decisionClass === 'tn' ? '0.42' : '0.86'}">
                     <title>${escapeHtml(`${point.item.row.id} score ${point.item.score.toFixed(3)} PC1 ${point.x.toFixed(1)} PC2 ${point.y.toFixed(1)}`)}</title>
                 </circle>
             `).join('');
             representation.innerHTML = `
                 <svg viewBox="0 0 230 160" class="w-full rounded-2xl border border-slate-200 bg-slate-50" role="img" aria-label="${escapeHtml(spec.name)} PCA representation plot">
-                    ${decisionRegion ? `<polygon points="${decisionRegion}" fill="#dbeafe" stroke="#2563eb" stroke-width="1.3" stroke-dasharray="4 3" opacity="0.78"><title>${activeLang() === 'es' ? 'Región de decisión priorizada' : 'Prioritized decision region'}</title></polygon>` : ''}
+                    ${decisionRegion}
                     <line x1="18" y1="142" x2="214" y2="142" stroke="#cbd5e1" />
                     <line x1="18" y1="16" x2="18" y2="142" stroke="#cbd5e1" />
                     <text x="116" y="155" font-size="8" fill="#64748b" text-anchor="middle">${activeLang() === 'es' ? 'PC1: mezcla de anomalía transaccional' : 'PC1: transaction anomaly mix'}</text>
@@ -1982,7 +2332,7 @@
 
         function renderTimeline(spec, rows, diagnostics) {
             if (!timeline) return;
-            const stageBase = spec.exact ? 0.74 : 0.58;
+            const stageBase = spec.checkpoint ? 0.68 : spec.exact ? 0.74 : 0.58;
             const curve = Array.from({ length: 9 }, (_, index) => {
                 const progress = index / 8;
                 const wobble = (((spec.hash >> index) & 3) - 1.5) * 0.008;
@@ -1999,7 +2349,7 @@
                 { label: activeLang() === 'es' ? 'Datos' : 'Data', pct: 0.98 },
                 { label: activeLang() === 'es' ? 'Variables' : 'Features', pct: 0.9 },
                 { label: activeLang() === 'es' ? 'CV temporal' : 'Temporal CV', pct: Math.max(0.34, 0.86 - diagnostics.std * 2.6) },
-                { label: spec.exact ? (activeLang() === 'es' ? 'Ajuste exacto' : 'Exact fit') : (activeLang() === 'es' ? 'Ajuste educativo' : 'Educational fit'), pct: stageBase },
+                { label: spec.checkpoint ? (activeLang() === 'es' ? 'Checkpoint' : 'Checkpoint') : spec.exact ? (activeLang() === 'es' ? 'Ajuste exacto' : 'Exact fit') : (activeLang() === 'es' ? 'Ajuste educativo' : 'Educational fit'), pct: stageBase },
                 { label: activeLang() === 'es' ? 'Explicación' : 'Explain', pct: 0.82 }
             ];
             timeline.innerHTML = stages.map((stage, index) => `
@@ -2015,7 +2365,7 @@
             `).join('') + `
                 <div class="rounded-2xl border border-slate-200 bg-white p-3">
                     <div class="mb-2 flex items-center justify-between text-[10px]">
-                        <span class="font-semibold text-slate-600">${spec.exact ? (activeLang() === 'es' ? 'Traza real de entrenamiento' : 'Actual browser training trace') : (activeLang() === 'es' ? 'Traza simulada de entrenamiento' : 'Simulated training trace')}</span>
+                        <span class="font-semibold text-slate-600">${spec.checkpoint ? (activeLang() === 'es' ? 'Inferencia con checkpoint' : 'Checkpoint-backed inference trace') : spec.exact ? (activeLang() === 'es' ? 'Traza real de entrenamiento' : 'Actual browser training trace') : (activeLang() === 'es' ? 'Traza simulada de entrenamiento' : 'Simulated training trace')}</span>
                         <span class="font-mono text-slate-400">${activeLang() === 'es' ? 'pérdida / validación' : 'loss / validation'}</span>
                     </div>
                     <svg viewBox="0 0 220 92" class="h-28 w-full" role="img" aria-label="${escapeHtml(spec.name)} training timeline">
@@ -2034,8 +2384,8 @@
                 </div>
                 <div class="rounded-2xl bg-slate-50 p-3 text-[10px] leading-relaxed text-slate-500">
                     ${activeLang() === 'es'
-                        ? `${spec.name}: ${rows.length} filas sintéticas, ${diagnostics.foldResults.length} folds, desviación PR-AUC ${diagnostics.std.toFixed(3)}. ${spec.exact ? 'La curva se deriva del ajuste ligero en JS.' : 'La curva simula el comportamiento esperado de ajuste para mantener la misma experiencia sin afirmar entrenamiento completo de DL/GNN en el navegador.'}`
-                        : `${spec.name}: ${rows.length} synthetic rows, ${diagnostics.foldResults.length} folds, PR-AUC std ${diagnostics.std.toFixed(3)}. ${spec.exact ? 'The curve is derived from the lightweight JS fit.' : 'The curve simulates expected fitting behavior so the UX stays consistent without claiming full DL/GNN browser training.'}`}
+                        ? `${spec.name}: ${rows.length} filas sintéticas, ${diagnostics.foldResults.length} folds, desviación PR-AUC ${diagnostics.std.toFixed(3)}. ${spec.checkpoint ? `La curva se deriva de inferencia con checkpoint ${CHECKPOINT_BUNDLE.version}.` : spec.exact ? 'La curva se deriva del ajuste ligero en JS.' : 'La curva simula el comportamiento esperado de ajuste para mantener la misma experiencia sin afirmar entrenamiento completo de DL/GNN en el navegador.'}`
+                        : `${spec.name}: ${rows.length} synthetic rows, ${diagnostics.foldResults.length} folds, PR-AUC std ${diagnostics.std.toFixed(3)}. ${spec.checkpoint ? `The curve is derived from checkpoint-backed inference ${CHECKPOINT_BUNDLE.version}.` : spec.exact ? 'The curve is derived from the lightweight JS fit.' : 'The curve simulates expected fitting behavior so the UX stays consistent without claiming full DL/GNN browser training.'}`}
                 </div>
             `;
         }
@@ -2072,10 +2422,12 @@
                         ? `Validación de navegador para ${spec.name}: partición determinista en folds, sin fuga temporal simulada y chequeo de explicación/renderizado.`
                         : `Browser validation for ${spec.name}: deterministic fold split, simulated temporal-leakage guard, and explanation/render check.`}
                 </div>
-                <div class="rounded-2xl ${spec.exact ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'} p-3 text-[10px] leading-relaxed">
-                    ${spec.exact
-                        ? (activeLang() === 'es' ? `Implementación directa en navegador: ${spec.name}.` : `Direct in-browser implementation: ${spec.name}.`)
-                        : (activeLang() === 'es' ? `Aproximación educativa específica del modelo: ${spec.name}. Traza simulada de entrenamiento/validación cruzada con métricas, explicaciones y visualizaciones equivalentes.` : `Model-specific educational approximation: ${spec.name}. Simulated training/cross-validation trace with equivalent metrics, explanations, and visualizations.`)}
+                <div class="rounded-2xl ${spec.checkpoint ? 'bg-blue-50 text-blue-800' : spec.exact ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'} p-3 text-[10px] leading-relaxed">
+                    ${spec.checkpoint
+                        ? (activeLang() === 'es' ? `Inferencia con checkpoint en navegador: ${spec.name} (${CHECKPOINT_BUNDLE.version}).` : `Checkpoint-backed in-browser inference: ${spec.name} (${CHECKPOINT_BUNDLE.version}).`)
+                        : spec.exact
+                            ? (activeLang() === 'es' ? `Implementación directa en navegador: ${spec.name}.` : `Direct in-browser implementation: ${spec.name}.`)
+                            : (activeLang() === 'es' ? `Aproximación educativa específica del modelo: ${spec.name}. Traza simulada de entrenamiento/validación cruzada con métricas, explicaciones y visualizaciones equivalentes.` : `Model-specific educational approximation: ${spec.name}. Simulated training/cross-validation trace with equivalent metrics, explanations, and visualizations.`)}
                 </div>
             `;
         }
@@ -2090,7 +2442,7 @@
             chart.innerHTML = filtered.map(r => `
                 <div data-lab-result-name="${escapeHtml(r.name)}">
                     <div class="flex justify-between gap-2 text-xs mb-1">
-                        <span class="font-medium text-slate-700">${escapeHtml(r.name)} <span class="ml-1 rounded-full ${r.spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'} px-1.5 py-0.5 text-[9px]">${r.spec.exact ? (activeLang() === 'es' ? 'exacto' : 'exact') : (activeLang() === 'es' ? 'educativo' : 'educational')}</span></span>
+                        <span class="font-medium text-slate-700">${escapeHtml(r.name)} <span class="ml-1 rounded-full ${r.spec.checkpoint ? 'bg-blue-50 text-blue-700' : r.spec.exact ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'} px-1.5 py-0.5 text-[9px]">${r.spec.checkpoint ? (activeLang() === 'es' ? 'checkpoint' : 'checkpoint') : r.spec.exact ? (activeLang() === 'es' ? 'exacto' : 'exact') : (activeLang() === 'es' ? 'educativo' : 'educational')}</span></span>
                         <span class="font-mono text-emerald-700">PR-AUC ${r.prAuc.toFixed(3)} · R@50 ${r.recall50.toFixed(2)}</span>
                     </div>
                     <div class="h-2 rounded-full bg-slate-100 overflow-hidden">

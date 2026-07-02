@@ -636,8 +636,8 @@
     "es": "Ejecuta modelos antifraude en el sitio"
   },
   "lab.desc": {
-    "en": "Generate synthetic transactions, choose from 74 model-card selections mapped to direct lightweight or educational browser runners, compute PR-AUC and Recall@K, and inspect alerts, explanation bars, cross-validation diagnostics, and representation plots without leaving the page.",
-    "es": "Genera transacciones sintéticas, elige entre 74 tarjetas de modelo conectadas a ejecutores ligeros directos o educativos del navegador, calcula PR-AUC y Recall@K, e inspecciona alertas, barras de explicación, diagnósticos de validación cruzada y visualizaciones de representación sin salir de la página."
+    "en": "Generate synthetic transactions, choose from 74 model-card selections mapped to live-fit exact or checkpoint-backed browser runners, compute PR-AUC and Recall@K, and inspect alerts, explanation bars, cross-validation diagnostics, and representation plots without leaving the page.",
+    "es": "Genera transacciones sintéticas, elige entre 74 tarjetas de modelo conectadas a ejecutores exactos con ajuste en vivo o con checkpoint, calcula PR-AUC y Recall@K, e inspecciona alertas, barras de explicación, diagnósticos de validación cruzada y visualizaciones de representación sin salir de la página."
   },
   "lab.controls": {
     "en": "Controls",
@@ -700,8 +700,8 @@
     "es": "Preparando datos, entrenando, validando y renderizando evidencia."
   },
   "lab.note": {
-    "en": "Direct lightweight runners are used for simple rules/statistics where the browser implementation matches the intended calculation. Deep trees, neural networks, GNNs, TGNNs, and generative models use model-specific educational runners plus links to Python implementations.",
-    "es": "Se usan ejecutores ligeros directos para reglas y estadísticas simples cuando el cálculo es lo bastante simple para ejecutarse fielmente en el navegador. Árboles profundos, redes neuronales, GNN, TGNN y modelos generativos usan ejecutores educativos específicos por modelo más enlaces a implementaciones Python."
+    "en": "Most runners fit or estimate their model directly from the synthetic rows in the browser. Heavyweight generative/transformer examples use a checked-in toy checkpoint for real in-browser inference without claiming live training.",
+    "es": "La mayoría de ejecutores ajustan o estiman su modelo directamente desde las filas sintéticas en el navegador. Los ejemplos generativos/transformer pesados usan un checkpoint de juguete incluido para inferencia real sin afirmar entrenamiento en vivo."
   },
   "lab.metrics": {
     "en": "Metrics",
@@ -1852,8 +1852,8 @@
     "es": "Inspecciona un modelo y ejecuta su proxy en el navegador"
   },
   "workspace.desc": {
-    "en": "Every Card and Run action now stays inside the website. Use Card to inspect model-specific guidance; use Run to execute the matching browser selection, with exact/educational status, metrics, explanation bars, and a representation view.",
-    "es": "Cada acción de Ficha y Ejemplo ejecutable ahora permanece dentro del sitio. Usa Ficha para revisar la guía del modelo; usa Ejemplo ejecutable para ejecutar la selección correspondiente del navegador, con estado exacto/educativo, métricas, barras de explicación y vista de representación."
+    "en": "Every Card and Run action now stays inside the website. Use Card to inspect model-specific guidance; use Run to execute the matching browser selection, with live-fit/checkpoint status, metrics, explanation bars, and a representation view.",
+    "es": "Cada acción de Ficha y Ejemplo ejecutable ahora permanece dentro del sitio. Usa Ficha para revisar la guía del modelo; usa Ejemplo ejecutable para ejecutar la selección correspondiente del navegador, con estado de ajuste en vivo/checkpoint, métricas, barras de explicación y vista de representación."
   },
   "workspace.selected": {
     "en": "Selected model",
@@ -1884,7 +1884,7 @@
     "es": "Precauciones"
   },
   "workspace.note": {
-    "en": "Choose any model card above. The Run action selects that exact model name in the browser lab and labels whether the runner is exact or educational.",
-    "es": "Elige cualquier tarjeta de modelo arriba. La acción de ejecución selecciona ese nombre exacto de modelo en el laboratorio del navegador e indica si el ejecutor es exacto o educativo."
+    "en": "Choose any model card above. The Run action selects that exact model name in the browser lab and labels whether the runner is live-fit exact or checkpoint-backed.",
+    "es": "Elige cualquier tarjeta de modelo arriba. La acción de ejecución selecciona ese nombre exacto de modelo en el laboratorio del navegador e indica si el ejecutor ajusta en vivo o usa checkpoint."
   }
 }

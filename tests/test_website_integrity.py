@@ -263,6 +263,38 @@ def test_browser_lab_exposes_model_specific_runner_contract():
         "GCN",
         "GraphSAGE",
         "GAT",
+        "R-GCN",
+        "HGT",
+        "Heterogeneous GNN",
+        "TGN",
+        "TGAT",
+        "JODIE",
+        "DyRep",
+        "EvolveGCN",
+        "CrimeGNN",
+        "BRIGHT",
+        "Entity Resolution",
+        "Knowledge Graph",
+        "Graph Attention Evidence",
+        "Temporal Graph Validation",
+        "TabTransformer",
+        "FT-Transformer",
+        "SAINT",
+        "TabNet",
+        "LSTM",
+        "GRU",
+        "Transformer Sequences",
+        "Interleaved RNN",
+        "MoE",
+        "Cascades",
+        "Self-Supervised Pretraining",
+        "GraphRAG",
+        "Federated Learning",
+        "Deep SVDD",
+        "DAGMM",
+        "CTGAN",
+        "Diffusion / TabDDPM",
+        "BERT4ETH",
     ]:
         assert direct_model in js
     assert "directStatisticalScores(name, rows)" in js
@@ -272,6 +304,13 @@ def test_browser_lab_exposes_model_specific_runner_contract():
     assert "directSupervisedScores(name, rows)" in js
     assert "directDeepAnomalyScores(name, rows)" in js
     assert "directGraphAnalyticsScores(name, rows)" in js
+    assert "directTabularAttentionScores(name, rows)" in js
+    assert "directSequenceScores(name, rows)" in js
+    assert "directAdvancedGraphScores(name, rows)" in js
+    assert "directDeepSpecialScores(name, rows)" in js
+    assert "directHybridSystemScores(name, rows, baseScores)" in js
+    assert "directCheckpointScores(name, rows)" in js
+    assert "CHECKPOINT_BUNDLE" in js
     assert "74 model-specific JavaScript runners" not in translations
     assert "74 tarjetas de modelo conectadas" in translations
     for model in covered:
