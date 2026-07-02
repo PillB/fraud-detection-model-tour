@@ -850,7 +850,7 @@
                                 <div id="workspace-limits" class="mt-2 text-slate-700 leading-relaxed"></div>
                             </div>
                         </div>
-                        <div id="workspace-run-note" class="mt-4 rounded-2xl bg-blue-50 px-4 py-3 text-xs text-blue-800" aria-live="polite" data-i18n="workspace.note">Choose any model card above. The Run action selects the matching lab entry and labels the runner as exact or educational.</div>
+                        <div id="workspace-run-note" class="mt-4 rounded-2xl bg-blue-50 px-4 py-3 text-xs text-blue-800" aria-live="polite" data-i18n="workspace.note">Choose any model card above. The Run action selects the matching lab entry and labels the runner as live-fit exact or checkpoint-backed.</div>
                     </div>
                 </div>
             </div>
@@ -1041,12 +1041,12 @@
             <div class="mb-5">
                 <div class="uppercase tracking-[1.5px] text-xs font-semibold text-blue-700" data-i18n="lab.badge">Runnable In-Browser Lab</div>
                 <h3 class="section-title" data-i18n="lab.title">Run Fraud Models in the Website</h3>
-                <p class="text-sm text-slate-500 mt-1 max-w-3xl" data-i18n="lab.desc">Generate synthetic transactions, choose model-card selections mapped to exact lightweight or educational JavaScript runners, compute PR-AUC and Recall@K, and inspect alerts, explanations, validation diagnostics, and representation plots without leaving the page.</p>
+                <p class="text-sm text-slate-500 mt-1 max-w-3xl" data-i18n="lab.desc">Generate synthetic transactions, choose model-card selections mapped to live-fit exact or checkpoint-backed JavaScript runners, compute PR-AUC and Recall@K, and inspect alerts, explanations, validation diagnostics, and representation plots without leaving the page.</p>
             </div>
             <div class="bg-white border rounded-3xl overflow-hidden">
                 <div class="grid lg:grid-cols-12">
                     <div class="lg:col-span-3 p-6 border-b lg:border-b-0 lg:border-r">
-                        <div class="text-xs font-semibold text-slate-500" data-i18n="lab.controls">Controls</div>
+                        <div class="section-help-trigger text-xs font-semibold text-slate-500" tabindex="0" data-i18n="lab.controls" data-help-en="Choose a model and sample size, then run everything locally in your browser. Use smaller samples for quick inspection and larger samples to stress ranking behavior." data-help-es="Elige un modelo y tamaño de muestra, luego ejecútalo localmente en tu navegador. Usa menos filas para inspección rápida y más filas para probar el ranking.">Controls</div>
                         <label for="lab-model-select" class="block text-xs font-medium text-slate-600 mt-4" data-i18n="lab.model">Model or runner</label>
                         <select id="lab-model-select" class="mt-1 w-full rounded-2xl border border-slate-200 px-3 py-2 text-sm">
                             <option value="all" data-i18n="lab.model.all">All models</option>
@@ -1066,32 +1066,32 @@
                             </div>
                             <div class="mt-1 text-[10px] text-blue-700" data-i18n="lab.loading.note">Preparing data, training, validating, and rendering evidence.</div>
                         </div>
-                        <div class="mt-4 text-[10px] text-slate-400 leading-relaxed" data-i18n="lab.note">Direct lightweight runners are used for simple rules/statistics where the browser implementation matches the intended calculation. Heavier models use educational runners plus Python implementation links.</div>
+                        <div class="mt-4 text-[10px] text-slate-400 leading-relaxed" data-i18n="lab.note">Most runners fit or estimate their model directly from the synthetic rows in the browser. Heavyweight generative/transformer examples use a checked-in toy checkpoint for real in-browser inference without claiming live training.</div>
                         <div class="mt-5 border-t pt-4">
-                            <div class="text-xs font-semibold text-slate-500 mb-3" data-i18n="lab.timeline">Training timeline</div>
+                            <div class="section-help-trigger text-xs font-semibold text-slate-500 mb-3" tabindex="0" data-i18n="lab.timeline" data-help-en="Shows whether the run was fitted live or checkpoint-backed, plus the error/validation trace over fitting or inference steps." data-help-es="Muestra si la ejecución fue ajustada en vivo o con checkpoint, junto con la traza de error/validación por pasos.">Training timeline</div>
                             <div id="lab-timeline" class="space-y-2" aria-live="polite"></div>
                         </div>
                     </div>
                     <div class="lg:col-span-5 p-6 border-b lg:border-b-0 lg:border-r">
                         <div class="flex items-center justify-between mb-3">
-                            <div class="text-xs font-semibold text-slate-500" data-i18n="lab.metrics">Metrics</div>
+                            <div class="section-help-trigger text-xs font-semibold text-slate-500" tabindex="0" data-i18n="lab.metrics" data-help-en="PR-AUC measures rare-fraud ranking quality. Recall@50 tells how much fraud appears in a limited analyst review queue." data-help-es="PR-AUC mide qué tan bien se ordena el fraude raro. Recall@50 indica cuánto fraude aparece en una cola limitada de revisión.">Metrics</div>
                             <div class="text-[10px] text-slate-400" data-i18n="lab.metric.note">PR-AUC + Recall@50</div>
                         </div>
                         <div id="lab-chart" class="space-y-2 max-h-[420px] overflow-y-auto pr-1" aria-live="polite"></div>
                         <div class="mt-5 border-t pt-4">
-                            <div class="text-xs font-semibold text-slate-500 mb-3" data-i18n="lab.explain">Explainability companion</div>
+                            <div class="section-help-trigger text-xs font-semibold text-slate-500 mb-3" tabindex="0" data-i18n="lab.explain" data-help-en="Explains why the top alert scored high using the evidence type that matches the selected model family." data-help-es="Explica por qué la alerta principal puntuó alto usando la evidencia que corresponde a la familia del modelo.">Explainability companion</div>
                             <div id="lab-explain" class="space-y-2" aria-live="polite"></div>
                         </div>
                         <div class="mt-5 border-t pt-4">
-                            <div class="text-xs font-semibold text-slate-500 mb-3" data-i18n="lab.validation">Validation diagnostics</div>
+                            <div class="section-help-trigger text-xs font-semibold text-slate-500 mb-3" tabindex="0" data-i18n="lab.validation" data-help-en="Checks fold stability and reminds you whether the score came from live fitting or checkpoint inference." data-help-es="Revisa estabilidad por folds e indica si el puntaje viene de ajuste en vivo o inferencia con checkpoint.">Validation diagnostics</div>
                             <div id="lab-validation" class="space-y-2" aria-live="polite"></div>
                         </div>
                     </div>
                     <div class="lg:col-span-4 p-6">
-                        <div class="text-xs font-semibold text-slate-500 mb-3" data-i18n="lab.alerts">Top risk alerts</div>
+                        <div class="section-help-trigger text-xs font-semibold text-slate-500 mb-3" tabindex="0" data-i18n="lab.alerts" data-help-en="These are the transactions the model would send first to analysts. Open one to carry its evidence into the workbench." data-help-es="Son las transacciones que el modelo enviaría primero a analistas. Abre una para llevar su evidencia al workbench.">Top risk alerts</div>
                         <div id="lab-alerts" class="space-y-2 text-xs" aria-live="polite"></div>
                         <div class="mt-5 border-t pt-4">
-                            <div class="text-xs font-semibold text-slate-500 mb-3" data-i18n="lab.representation">Representation view</div>
+                            <div class="section-help-trigger text-xs font-semibold text-slate-500 mb-3" tabindex="0" data-i18n="lab.representation" data-help-en="Shows the model decision layer. Green and blue are prioritized alerts; red is missed fraud outside the layer; gray is true negative background." data-help-es="Muestra la capa de decisión del modelo. Verde y azul son alertas priorizadas; rojo es fraude omitido fuera de la capa; gris es fondo negativo correcto.">Representation view</div>
                             <div id="lab-representation" aria-live="polite"></div>
                         </div>
                     </div>
@@ -1109,7 +1109,7 @@
             <div class="bg-white border rounded-3xl overflow-hidden">
                 <div class="grid lg:grid-cols-12">
                     <div class="lg:col-span-4 p-6 border-b lg:border-b-0 lg:border-r">
-                        <div class="text-xs font-semibold text-emerald-700 tracking-wider" data-i18n="workbench.alert.title">1. ALERT SUMMARY</div>
+                        <div class="section-help-trigger text-xs font-semibold text-emerald-700 tracking-wider" tabindex="0" data-i18n="workbench.alert.title" data-help-en="Summarizes the selected transaction, its risk score, the active model score, graph context, and recommended review action." data-help-es="Resume la transacción seleccionada, su riesgo, el puntaje del modelo activo, contexto de grafo y acción recomendada.">1. ALERT SUMMARY</div>
                         <div class="mt-3 flex items-start justify-between gap-4">
                             <div>
                                 <div id="workbench-txn-id" class="font-semibold text-lg">TXN002230</div>
@@ -1127,7 +1127,7 @@
                             <div class="flex justify-between"><span class="text-slate-500" data-i18n="workbench.alert.action">Review action</span><span class="font-medium text-blue-700" data-i18n="workbench.alert.manual">manual review</span></div>
                         </div>
                         <div class="mt-5 border-t pt-4">
-                            <div class="text-xs font-semibold text-slate-500 mb-3" data-i18n="workbench.explain.title">Explanation stack</div>
+                            <div class="section-help-trigger text-xs font-semibold text-slate-500 mb-3" tabindex="0" data-i18n="workbench.explain.title" data-help-en="Ranks the evidence signals behind the alert so an analyst can see which facts most influenced the decision." data-help-es="Ordena las señales de evidencia detrás de la alerta para ver qué hechos influyeron más en la decisión.">Explanation stack</div>
                             <div id="workbench-explainability" class="space-y-2 text-xs">
                                 <div>
                                     <div class="flex justify-between"><span data-i18n="workbench.explain.amount">Amount anomaly</span><span class="font-mono">0.91</span></div>
@@ -1146,7 +1146,7 @@
                         </div>
                     </div>
                     <div class="lg:col-span-4 p-6 border-b lg:border-b-0 lg:border-r">
-                        <div class="text-xs font-semibold text-blue-700 tracking-wider" data-i18n="workbench.graph.title">2. EVIDENCE GRAPH</div>
+                        <div class="section-help-trigger text-xs font-semibold text-blue-700 tracking-wider" tabindex="0" data-i18n="workbench.graph.title" data-help-en="Shows the suspicious entity neighborhood: user, merchant, device, IP, and linked peers. Edges explain why relational evidence matters." data-help-es="Muestra el vecindario de entidades sospechosas: usuario, comercio, dispositivo, IP y pares vinculados. Las aristas explican por qué importa la evidencia relacional.">2. EVIDENCE GRAPH</div>
                         <svg viewBox="0 0 320 190" class="mt-3 w-full h-auto" role="img" aria-label="Suspicious entity graph">
                             <line x1="82" y1="96" x2="160" y2="45" stroke="#94a3b8" stroke-width="2"/>
                             <line x1="82" y1="96" x2="168" y2="118" stroke="#ef4444" stroke-width="3"/>
@@ -1166,7 +1166,7 @@
                         <div class="text-xs text-slate-500 mt-2" data-i18n="workbench.graph.caption">GraphRAG input: user, merchant, device, worker access, and nearest suspicious neighbors.</div>
                     </div>
                     <div class="lg:col-span-4 p-6">
-                        <div class="text-xs font-semibold text-violet-700 tracking-wider" data-i18n="workbench.memo.title">3. CASE MEMO</div>
+                        <div class="section-help-trigger text-xs font-semibold text-violet-700 tracking-wider" tabindex="0" data-i18n="workbench.memo.title" data-help-en="Turns the score and graph evidence into a short investigation memo: what happened, why it matters, and what data is still missing." data-help-es="Convierte el puntaje y la evidencia de grafo en una nota breve: qué pasó, por qué importa y qué datos faltan.">3. CASE MEMO</div>
                         <div class="mt-3 rounded-2xl bg-slate-50 p-4 text-xs text-slate-600 leading-relaxed">
                             <div class="font-semibold text-slate-800 mb-2" data-i18n="workbench.memo.summary">Evidence-grounded summary</div>
                             <p id="workbench-memo-body" data-i18n="workbench.memo.body">Prioritize review. Retrieved evidence shows amount anomaly, unusual timing, repeated merchant-neighborhood exposure, and KYE adjacency. Missing data: device history and recent KYA change log.</p>
@@ -1411,6 +1411,6 @@
     </main>
 
     <!-- Professional interactivity and enhancements (BCG/McKinsey UX) -->
-    <script src="js/main.js?v=20260701-lab-pca-progress"></script>
+    <script src="js/main.js?v=20260701-exact-checkpoint-runners"></script>
 </body>
 </html>
